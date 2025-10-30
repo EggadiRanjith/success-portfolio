@@ -177,7 +177,7 @@ export function ProjectCard({
                 className="p-3 rounded-xl glass-base border border-border-primary hover:bg-white/20 hover:scale-110 transition-all duration-300 backdrop-blur-xl shadow-lg"
                 aria-label="View GitHub repository"
               >
-                <Github className="w-5 h-5 text-primary" />
+                <Github className="w-5 h-5 text-fg-primary" />
               </button>
             )}
             {liveUrl && (
@@ -189,7 +189,7 @@ export function ProjectCard({
                 className="p-3 rounded-xl glass-base border border-border-primary hover:bg-white/20 hover:scale-110 transition-all duration-300 backdrop-blur-xl shadow-lg"
                 aria-label="View live project"
               >
-                <ExternalLink className="w-5 h-5 text-primary" />
+                <ExternalLink className="w-5 h-5 text-fg-primary" />
               </button>
             )}
           </motion.div>
@@ -263,7 +263,7 @@ export function ProjectCard({
             }}
             transition={{ duration: 0.3 }}
           >
-            <div className="flex items-center gap-3 text-primary font-bold group/link">
+            <div className="flex items-center gap-3 text-fg-primary font-bold group/link">
               <span className="underline-sweep text-sm uppercase tracking-widest">View Case Study</span>
               <motion.div
                 animate={{
@@ -277,7 +277,7 @@ export function ProjectCard({
             </div>
 
             {/* Tech Count Indicator */}
-            <div className="text-caption text-tertiary font-medium">
+            <div className="text-caption text-fg-tertiary font-medium">
               {tags.length} {tags.length === 1 ? "tech" : "techs"}
             </div>
           </motion.div>

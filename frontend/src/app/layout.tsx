@@ -4,6 +4,8 @@ import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants";
 import { Header, Footer, LoadingScreen } from "@/components/layout";
 import { AnimationProvider } from "@/components/AnimationProvider";
+import { PageTransition } from "@/components/layout/PageTransition";
+import { MatrixMode } from "@/components/effects/MatrixMode";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -85,9 +87,12 @@ export default function RootLayout({
           }}
         />
         <LoadingScreen />
+        <MatrixMode />
         <Header />
         <AnimationProvider>
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </AnimationProvider>
         <Footer />
       </body>

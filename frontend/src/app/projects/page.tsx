@@ -190,14 +190,14 @@ export default function ProjectsPage() {
           <div className="max-w-4xl mx-auto text-center">
             <p 
               ref={eyebrowRef}
-              className="text-caption text-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+              className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
             >
               ✦ My Work ✦
             </p>
             
             <h1 
               ref={headingRef}
-              className="text-[clamp(3rem,8vw,7rem)] leading-[1.05] tracking-tight font-bold text-primary mb-8"
+              className="text-[clamp(3rem,8vw,7rem)] leading-[1.05] tracking-tight font-bold text-fg-primary mb-8"
               style={{ 
                 fontFamily: "var(--font-sans)",
                 textShadow: "0 2px 30px rgba(0,0,0,0.2)",
@@ -209,12 +209,12 @@ export default function ProjectsPage() {
 
             <p 
               ref={descriptionRef}
-              className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-secondary max-w-2xl mx-auto font-light mb-12"
+              className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-fg-secondary max-w-2xl mx-auto font-light mb-12"
             >
               A showcase of my best work, from{" "}
-              <span className="text-primary font-medium">e-commerce platforms</span> to{" "}
-              <span className="text-primary font-medium">3D experiences</span> and{" "}
-              <span className="text-primary font-medium">AI-powered solutions</span>.
+              <span className="text-fg-primary font-medium">e-commerce platforms</span> to{" "}
+              <span className="text-fg-primary font-medium">3D experiences</span> and{" "}
+              <span className="text-fg-primary font-medium">AI-powered solutions</span>.
             </p>
 
             {/* Filter Buttons */}
@@ -226,8 +226,8 @@ export default function ProjectsPage() {
                   className={`
                     px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300
                     ${selectedCategory === category
-                      ? "bg-primary text-white shadow-lg scale-105"
-                      : "bg-secondary text-secondary hover:bg-primary/10 hover:text-primary"
+                      ? "bg-fg-primary text-white shadow-lg scale-105"
+                      : "bg-bg-secondary text-fg-secondary hover:bg-fg-primary/10 hover:text-fg-primary"
                     }
                   `}
                 >

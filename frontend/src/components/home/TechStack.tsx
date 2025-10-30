@@ -86,32 +86,39 @@ export function TechStack() {
         });
       }
 
-      // Split text animation for heading
+      // Split text animation for heading - exclude gradient word
       if (headingRef.current) {
-        const split = new SplitText(headingRef.current, { type: "chars,words" });
-        
-        gsap.from(split.chars, {
-          opacity: 0,
-          y: 70,
-          rotateX: -90,
-          stagger: 0.028,
-          duration: 0.95,
-          ease: "back.out(1.7)",
-          delay: 0.2,
-        });
+        const headlineMain = headingRef.current.querySelector('.headline-main');
+        const gradientWord = headingRef.current.querySelector('.gradient-word');
 
-        // Subtle floating animation
-        gsap.to(split.chars, {
-          y: -3,
-          stagger: {
-            each: 0.035,
-            repeat: -1,
-            yoyo: true,
-          },
-          duration: 2.6,
-          ease: "sine.inOut",
-          delay: 1.3,
-        });
+        if (headlineMain) {
+          const split = new SplitText(headlineMain, { type: 'chars,words' });
+          gsap.from(split.chars, {
+            opacity: 0,
+            y: 70,
+            rotateX: -90,
+            stagger: 0.028,
+            duration: 0.95,
+            ease: 'back.out(1.7)',
+            delay: 0.2,
+          });
+          gsap.to(split.chars, {
+            y: -3,
+            stagger: { each: 0.035, repeat: -1, yoyo: true },
+            duration: 2.6,
+            ease: 'sine.inOut',
+            delay: 1.3,
+          });
+        }
+        if (gradientWord) {
+          gsap.from(gradientWord, {
+            opacity: 0,
+            y: 55,
+            duration: 0.8,
+            ease: 'power3.out',
+            delay: 0.35,
+          });
+        }
       }
 
       // Description fade in
@@ -203,30 +210,30 @@ export function TechStack() {
         <div className="text-center mb-16 lg:mb-20">
           <p 
             ref={eyebrowRef}
-            className="text-caption text-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+            className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
           >
             ✦ Tech Stack ✦
           </p>
           <h2 
             ref={headingRef}
-            className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-primary mb-8"
+            className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-fg-primary mb-8"
             style={{ 
               fontFamily: "var(--font-sans)",
               textShadow: "0 2px 30px rgba(0,0,0,0.2)",
             }}
           >
-            Technologies I
+            <span className="headline-main">Technologies I</span>
             <br />
-            <span className="text-gradient-silver inline-block">Master</span>
+            <span className="text-gradient-silver inline-block gradient-word">Master</span>
           </h2>
           <p 
             ref={descriptionRef}
-            className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-secondary max-w-2xl mx-auto font-light"
+            className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-fg-secondary max-w-2xl mx-auto font-light"
           >
             A comprehensive toolkit of{" "}
-            <span className="text-primary font-medium">modern technologies</span>,{" "}
-            <span className="text-primary font-medium">frameworks</span>, and{" "}
-            <span className="text-primary font-medium">tools</span> to bring ideas to life with precision and performance.
+            <span className="text-fg-primary font-medium">modern technologies</span>,{" "}
+            <span className="text-fg-primary font-medium">frameworks</span>, and{" "}
+            <span className="text-fg-primary font-medium">tools</span> to bring ideas to life with precision and performance.
           </p>
         </div>
 
@@ -244,7 +251,7 @@ export function TechStack() {
                   <div className="tech-icon text-5xl mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
                     {category.icon}
                   </div>
-                  <h3 className="text-h4 font-bold text-primary group-hover:text-gradient-silver transition-all duration-300">
+                  <h3 className="text-h4 font-bold text-fg-primary group-hover:text-gradient-silver transition-all duration-300">
                     {category.title}
                   </h3>
                 </div>
@@ -278,8 +285,8 @@ export function TechStack() {
         <div ref={noteRef} className="text-center mt-12">
           <Text size="body-sm" color="tertiary" className="italic">
             Always learning, always growing. Currently exploring{" "}
-            <span className="text-primary font-medium">AI/ML integration</span> and{" "}
-            <span className="text-primary font-medium">Web3 technologies</span>.
+            <span className="text-fg-primary font-medium">AI/ML integration</span> and{" "}
+            <span className="text-fg-primary font-medium">Web3 technologies</span>.
           </Text>
         </div>
       </Container>

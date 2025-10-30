@@ -8,10 +8,10 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const badgeVariants = {
   default:
-    "bg-pure-white/5 border border-primary text-secondary",
-  outline: "border border-primary text-secondary",
-  solid: "glass-base text-primary",
-  glass: "glass-base border border-border-primary text-primary backdrop-blur-xl",
+    "bg-fg-primary/5 border border-border-primary text-fg-secondary",
+  outline: "border border-border-primary text-fg-secondary",
+  solid: "glass-base text-fg-primary",
+  glass: "glass-base border border-border-primary text-fg-primary backdrop-blur-xl",
 };
 
 const badgeSizes = {

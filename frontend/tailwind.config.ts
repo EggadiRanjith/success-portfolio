@@ -35,6 +35,15 @@ const config: Config = {
         'platinum': '#C0C0C0',
         'chrome': '#E5E5E5',
         'graphite': '#464646',
+        
+        // Theme-aware colors (CSS variables)
+        'bg-primary': 'var(--color-bg-primary)',
+        'bg-secondary': 'var(--color-bg-secondary)',
+        'bg-tertiary': 'var(--color-bg-tertiary)',
+        'fg-primary': 'var(--color-text-primary)',
+        'fg-secondary': 'var(--color-text-secondary)',
+        'fg-tertiary': 'var(--color-text-tertiary)',
+        'border-primary': 'var(--color-border)',
       },
       
       // CUSTOM SPACING (Base 4px)

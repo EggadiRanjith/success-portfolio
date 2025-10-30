@@ -170,14 +170,14 @@ export default function ContactPage() {
           <div className="max-w-4xl mx-auto text-center mb-16">
             <p 
               ref={eyebrowRef}
-              className="text-caption text-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+              className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
             >
               ✦ Get In Touch ✦
             </p>
             
             <h1 
               ref={headingRef}
-              className="text-[clamp(3rem,8vw,7rem)] leading-[1.05] tracking-tight font-bold text-primary mb-8"
+              className="text-[clamp(3rem,8vw,7rem)] leading-[1.05] tracking-tight font-bold text-fg-primary mb-8"
               style={{ 
                 fontFamily: "var(--font-sans)",
                 textShadow: "0 2px 30px rgba(0,0,0,0.2)",
@@ -189,7 +189,7 @@ export default function ContactPage() {
 
             <p 
               ref={descriptionRef}
-              className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-secondary max-w-2xl mx-auto font-light"
+              className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-fg-secondary max-w-2xl mx-auto font-light"
             >
               Have a project in mind? Let's discuss how we can work together to bring your vision to life.
             </p>
@@ -201,7 +201,7 @@ export default function ContactPage() {
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="form-field">
-                    <label htmlFor="name" className="block text-sm font-medium text-primary mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-fg-primary mb-2">
                       Your Name *
                     </label>
                     <input
@@ -211,13 +211,13 @@ export default function ContactPage() {
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-fg-primary placeholder:text-fg-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                       placeholder="John Doe"
                     />
                   </div>
 
                   <div className="form-field">
-                    <label htmlFor="email" className="block text-sm font-medium text-primary mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-fg-primary mb-2">
                       Your Email *
                     </label>
                     <input
@@ -227,14 +227,14 @@ export default function ContactPage() {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-fg-primary placeholder:text-fg-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                       placeholder="john@example.com"
                     />
                   </div>
                 </div>
 
                 <div className="form-field">
-                  <label htmlFor="subject" className="block text-sm font-medium text-primary mb-2">
+                  <label htmlFor="subject" className="block text-sm font-medium text-fg-primary mb-2">
                     Subject *
                   </label>
                   <input
@@ -244,13 +244,13 @@ export default function ContactPage() {
                     required
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                    className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-fg-primary placeholder:text-fg-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                     placeholder="Project Inquiry"
                   />
                 </div>
 
                 <div className="form-field">
-                  <label htmlFor="message" className="block text-sm font-medium text-primary mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-fg-primary mb-2">
                     Message *
                   </label>
                   <textarea
@@ -260,7 +260,7 @@ export default function ContactPage() {
                     rows={6}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl glass-card border border-border-primary bg-secondary text-fg-primary placeholder:text-fg-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                     placeholder="Tell me about your project..."
                   />
                 </div>
@@ -324,11 +324,11 @@ export default function ContactPage() {
                   >
                     <div className="flex items-start gap-4">
                       <div className="p-3 rounded-xl bg-primary/10">
-                        <Icon className="w-6 h-6 text-primary" />
+                        <Icon className="w-6 h-6 text-fg-primary" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-tertiary mb-1">{info.label}</p>
-                        <p className="text-body font-semibold text-primary">{info.value}</p>
+                        <p className="text-sm font-medium text-fg-tertiary mb-1">{info.label}</p>
+                        <p className="text-body font-semibold text-fg-primary">{info.value}</p>
                       </div>
                     </div>
                   </a>
@@ -336,15 +336,15 @@ export default function ContactPage() {
               })}
 
               <div className="glass-card p-6 rounded-xl border border-border-primary">
-                <h3 className="text-h5 font-bold text-primary mb-3">Working Hours</h3>
+                <h3 className="text-h5 font-bold text-fg-primary mb-3">Working Hours</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-tertiary">Monday - Friday</span>
-                    <span className="text-primary font-medium">9:00 AM - 6:00 PM</span>
+                    <span className="text-fg-tertiary">Monday - Friday</span>
+                    <span className="text-fg-primary font-medium">9:00 AM - 6:00 PM</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-tertiary">Weekend</span>
-                    <span className="text-primary font-medium">By Appointment</span>
+                    <span className="text-fg-tertiary">Weekend</span>
+                    <span className="text-fg-primary font-medium">By Appointment</span>
                   </div>
                 </div>
               </div>

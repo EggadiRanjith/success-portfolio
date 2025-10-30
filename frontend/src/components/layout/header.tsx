@@ -22,10 +22,16 @@ export function Header() {
   const { scrolled } = useScroll(8);
   const { theme, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const firstMenuLinkRef = useRef<HTMLAnchorElement | null>(null);
   const lastActiveRef = useRef<HTMLElement | null>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const prefersReducedMotion = useReducedMotion();
+
+  // Prevent hydration mismatch by only showing theme icon after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -137,15 +143,19 @@ export function Header() {
             onClick={toggleTheme}
             className="hidden sm:inline-flex"
           >
-            <motion.div
-              key={theme}
-              initial={{ rotate: -180, scale: 0.9 }}
-              animate={{ rotate: 0, scale: 1 }}
-              exit={{ rotate: 180 }}
-              transition={{ type: "spring", stiffness: 180, damping: 18 }}
-            >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </motion.div>
+            {mounted ? (
+              <motion.div
+                key={theme}
+                initial={{ rotate: -180, scale: 0.9 }}
+                animate={{ rotate: 0, scale: 1 }}
+                exit={{ rotate: 180 }}
+                transition={{ type: "spring", stiffness: 180, damping: 18 }}
+              >
+                {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </motion.div>
+            ) : (
+              <div className="h-5 w-5" />
+            )}
           </Button>
           <div className="hidden md:block">
             <Button variant="primary" className="hover-glow pressable">Let's Talk</Button>
@@ -220,7 +230,11 @@ export function Header() {
                   Let's Talk
                 </Button>
                 <Button variant="ghost" onClick={toggleTheme} aria-label="Toggle theme">
-                  {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {mounted ? (
+                    theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />
+                  ) : (
+                    <div className="h-5 w-5" />
+                  )}
                 </Button>
               </div>
             </motion.div>

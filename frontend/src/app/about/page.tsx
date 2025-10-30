@@ -7,6 +7,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { Code2, Palette, Rocket, Award } from "lucide-react";
+import { PerformanceMetrics } from "@/components/PerformanceMetrics";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -153,10 +154,6 @@ export default function AboutPage() {
           stagger: 0.1,
           duration: 0.8,
           ease: "back.out(1.5)",
-          scrollTrigger: {
-            trigger: skillsRef.current,
-            start: "top 80%",
-          },
         });
       }
 
@@ -169,10 +166,6 @@ export default function AboutPage() {
           stagger: 0.15,
           duration: 0.8,
           ease: "power3.out",
-          scrollTrigger: {
-            trigger: timelineRef.current,
-            start: "top 80%",
-          },
         });
       }
     }, heroRef);
@@ -199,14 +192,14 @@ export default function AboutPage() {
             <div>
               <p 
                 ref={eyebrowRef}
-                className="text-caption text-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+                className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
               >
                 ✦ About Me ✦
               </p>
               
               <h1 
                 ref={headingRef}
-                className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-primary mb-8"
+                className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-fg-primary mb-8"
                 style={{ 
                   fontFamily: "var(--font-sans)",
                   textShadow: "0 2px 30px rgba(0,0,0,0.2)",
@@ -266,7 +259,7 @@ export default function AboutPage() {
       <section className="relative py-24 lg:py-32 bg-secondary">
         <Container variant="standard" size="xl">
           <div className="text-center mb-16">
-            <Heading as="h2" size="h1" className="text-primary mb-4">
+            <Heading as="h2" size="h1" className="text-fg-primary mb-4">
               Skills & Expertise
             </Heading>
             <Text size="body-xl" color="secondary">
@@ -284,10 +277,10 @@ export default function AboutPage() {
                 >
                   <div className="flex items-start gap-4 mb-6">
                     <div className="p-3 rounded-xl bg-primary/10">
-                      <Icon className="w-6 h-6 text-primary" />
+                      <Icon className="w-6 h-6 text-fg-primary" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-h4 font-bold text-primary mb-2">{skill.category}</h3>
+                      <h3 className="text-h4 font-bold text-fg-primary mb-2">{skill.category}</h3>
                       <div className="w-full bg-secondary rounded-full h-2 mb-4">
                         <motion.div
                           className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full"
@@ -317,7 +310,7 @@ export default function AboutPage() {
       <section className="relative py-24 lg:py-32 bg-primary">
         <Container variant="standard" size="xl">
           <div className="text-center mb-16">
-            <Heading as="h2" size="h1" className="text-primary mb-4">
+            <Heading as="h2" size="h1" className="text-fg-primary mb-4">
               My Journey
             </Heading>
             <Text size="body-xl" color="secondary">
@@ -333,18 +326,21 @@ export default function AboutPage() {
               >
                 <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary border-2 border-bg-primary" />
                 <div className="glass-card p-6 rounded-xl border border-border-primary">
-                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-2">
+                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-fg-primary text-sm font-semibold mb-2">
                     {item.year}
                   </span>
-                  <h3 className="text-h4 font-bold text-primary mb-1">{item.title}</h3>
-                  <p className="text-body text-secondary font-medium mb-2">{item.company}</p>
-                  <p className="text-body-sm text-tertiary">{item.description}</p>
+                  <h3 className="text-h4 font-bold text-fg-primary mb-1">{item.title}</h3>
+                  <p className="text-body text-fg-secondary font-medium mb-2">{item.company}</p>
+                  <p className="text-body-sm text-fg-tertiary">{item.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </Container>
       </section>
+
+      {/* Performance Metrics Section */}
+      <PerformanceMetrics />
     </main>
   );
 }

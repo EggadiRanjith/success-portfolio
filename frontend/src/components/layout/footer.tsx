@@ -73,9 +73,15 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-primary flex flex-col md:flex-row items-center justify-between gap-4">
-          <Text size="body-sm" color="tertiary">
-            © {new Date().getFullYear()} Your Name. All rights reserved.
-          </Text>
+          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
+            <Text size="body-sm" color="tertiary">
+              © {new Date().getFullYear()} Your Name. All rights reserved.
+            </Text>
+            <Text size="caption" color="tertiary" className="flex items-center gap-2 font-mono">
+              <span className="opacity-60">💡</span>
+              <span>Press <kbd className="px-1.5 py-0.5 rounded bg-fg-primary/10 border border-border-primary/30">M</kbd> for a tribute to where it all began.</span>
+            </Text>
+          </div>
           <div className="flex items-center gap-6 text-body-sm text-secondary">
             <Link href="#">Privacy</Link>
             <Link href="#">Terms</Link>

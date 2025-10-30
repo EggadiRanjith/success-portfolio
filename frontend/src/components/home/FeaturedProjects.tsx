@@ -90,11 +90,14 @@ export function FeaturedProjects() {
         });
       }
 
-      // Split text animation for heading
+      // Split text animation for heading - exclude gradient word
       if (headingRef.current) {
-        const split = new SplitText(headingRef.current, { type: "chars,words" });
-        
-        gsap.from(split.chars, {
+        const headlineMain = headingRef.current.querySelector('.headline-main');
+        const gradientWord = headingRef.current.querySelector('.gradient-word');
+
+        if (headlineMain) {
+          const split = new SplitText(headlineMain, { type: "chars,words" });
+          gsap.from(split.chars, {
           opacity: 0,
           y: 80,
           rotateX: -90,
@@ -103,19 +106,29 @@ export function FeaturedProjects() {
           ease: "back.out(1.7)",
           delay: 0.2,
         });
+          // Subtle floating animation
+          gsap.to(split.chars, {
+            y: -3,
+            stagger: {
+              each: 0.04,
+              repeat: -1,
+              yoyo: true,
+            },
+            duration: 2.5,
+            ease: "sine.inOut",
+            delay: 1.3,
+          });
+        }
 
-        // Subtle floating animation
-        gsap.to(split.chars, {
-          y: -3,
-          stagger: {
-            each: 0.04,
-            repeat: -1,
-            yoyo: true,
-          },
-          duration: 2.5,
-          ease: "sine.inOut",
-          delay: 1.3,
-        });
+        if (gradientWord) {
+          gsap.from(gradientWord, {
+            opacity: 0,
+            y: 60,
+            duration: 0.8,
+            ease: 'power3.out',
+            delay: 0.35,
+          });
+        }
       }
 
       // Description fade in
@@ -166,30 +179,30 @@ export function FeaturedProjects() {
         <div className="text-center mb-16 lg:mb-20">
           <p 
             ref={eyebrowRef}
-            className="text-caption text-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+              className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
           >
             ✦ Featured Work ✦
           </p>
           <h2 
             ref={headingRef}
-            className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-primary mb-8"
+            className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-fg-primary mb-8"
             style={{ 
               fontFamily: "var(--font-sans)",
               textShadow: "0 2px 30px rgba(0,0,0,0.2)",
             }}
           >
-            Projects That
+            <span className="headline-main">Projects That</span>
             <br />
-            <span className="text-gradient-silver inline-block">Define Excellence</span>
+            <span className="text-gradient-silver inline-block gradient-word">Define Excellence</span>
           </h2>
           <p 
             ref={descriptionRef}
-            className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-secondary max-w-2xl mx-auto font-light"
+            className="text-[clamp(1.125rem,1.8vw,1.375rem)] leading-relaxed text-fg-secondary max-w-2xl mx-auto font-light"
           >
             A curated selection of my most impactful work, showcasing expertise in{" "}
-            <span className="text-primary font-medium">modern web technologies</span>,{" "}
-            <span className="text-primary font-medium">3D graphics</span>, and{" "}
-            <span className="text-primary font-medium">premium user experiences</span>.
+            <span className="text-fg-primary font-medium">modern web technologies</span>,{" "}
+            <span className="text-fg-primary font-medium">3D graphics</span>, and{" "}
+            <span className="text-fg-primary font-medium">premium user experiences</span>.
           </p>
         </div>
 

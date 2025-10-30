@@ -47,32 +47,40 @@ export function AboutPreview() {
         });
       }
 
-      // Split text animation for heading
+      // Split text animation for heading - exclude gradient word
       if (headingRef.current) {
-        const split = new SplitText(headingRef.current, { type: "chars,words" });
-        
-        gsap.from(split.chars, {
-          opacity: 0,
-          y: 60,
-          rotateX: -90,
-          stagger: 0.025,
-          duration: 0.9,
-          ease: "back.out(1.7)",
-          delay: 0.2,
-        });
+        const headlineMain = headingRef.current.querySelector('.headline-main');
+        const gradientWord = headingRef.current.querySelector('.gradient-word');
 
-        // Subtle floating animation
-        gsap.to(split.chars, {
-          y: -2,
-          stagger: {
-            each: 0.03,
-            repeat: -1,
-            yoyo: true,
-          },
-          duration: 2.8,
-          ease: "sine.inOut",
-          delay: 1.2,
-        });
+        if (headlineMain) {
+          const split = new SplitText(headlineMain, { type: 'chars,words' });
+          gsap.from(split.chars, {
+            opacity: 0,
+            y: 60,
+            rotateX: -90,
+            stagger: 0.025,
+            duration: 0.9,
+            ease: 'back.out(1.7)',
+            delay: 0.2,
+          });
+          gsap.to(split.chars, {
+            y: -2,
+            stagger: { each: 0.03, repeat: -1, yoyo: true },
+            duration: 2.8,
+            ease: 'sine.inOut',
+            delay: 1.2,
+          });
+        }
+
+        if (gradientWord) {
+          gsap.from(gradientWord, {
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            ease: 'power3.out',
+            delay: 0.35,
+          });
+        }
       }
 
       // Image entrance with scale and rotation
@@ -187,23 +195,23 @@ export function AboutPreview() {
           <div>
             <p 
               ref={eyebrowRef}
-              className="text-caption text-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+              className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
             >
               ✦ About Me ✦
             </p>
             
             <h2 
               ref={headingRef}
-              className="text-[clamp(2.25rem,5vw,4rem)] leading-[1.1] tracking-tight font-bold text-primary mb-8"
+              className="text-[clamp(2.25rem,5vw,4rem)] leading-[1.1] tracking-tight font-bold text-fg-primary mb-8"
               style={{ 
                 fontFamily: "var(--font-sans)",
                 textShadow: "0 2px 30px rgba(0,0,0,0.2)",
               }}
             >
-              Pushing Boundaries
+              <span className="headline-main">Where Engineering Precision</span>
               <br />
-              Through{" "}
-              <span className="text-gradient-silver inline-block">Code & Design</span>
+              Meets{" "}
+              <span className="text-gradient-silver inline-block gradient-word">Cinematic Motion</span>
             </h2>
 
             <div ref={contentRef} className="space-y-4 mb-8">
@@ -216,8 +224,8 @@ export function AboutPreview() {
               <Text size="body" color="secondary" className="leading-relaxed">
                 Specializing in React, Next.js, and modern web technologies, I transform complex
                 challenges into elegant, performant solutions. My work spans from{" "}
-                <span className="text-primary font-medium">3D web experiences</span> to{" "}
-                <span className="text-primary font-medium">enterprise-scale applications</span>.
+                <span className="text-fg-primary font-medium">3D web experiences</span> to{" "}
+                <span className="text-fg-primary font-medium">enterprise-scale applications</span>.
               </Text>
 
               <Text size="body" color="secondary" className="leading-relaxed">
@@ -233,8 +241,8 @@ export function AboutPreview() {
                   key={index}
                   className="text-center lg:text-left"
                 >
-                  <div className="stat-value text-h2 font-bold text-primary mb-1">{stat.value}</div>
-                  <div className="text-caption text-tertiary uppercase tracking-wider">
+                  <div className="stat-value text-h2 font-bold text-fg-primary mb-1">{stat.value}</div>
+                  <div className="text-caption text-fg-tertiary uppercase tracking-wider">
                     {stat.label}
                   </div>
                 </div>

@@ -13,13 +13,13 @@ export interface LinkProps
 }
 
 const linkVariants = {
-  default: "text-light-silver hover:text-pure-white transition-smooth",
+  default: "text-fg-secondary hover:text-fg-primary transition-smooth",
   underline:
-    "text-light-silver hover:text-pure-white underline underline-offset-4 transition-smooth",
+    "text-fg-secondary hover:text-fg-primary underline underline-offset-4 transition-smooth",
   button:
-    "glass-base text-pure-white hover:glass-frosted px-4 py-2 rounded-lg inline-flex items-center gap-2 transition-smooth",
+    "glass-base text-fg-primary hover:glass-frosted px-4 py-2 rounded-lg inline-flex items-center gap-2 transition-smooth",
   ghost:
-    "text-light-silver hover:text-pure-white hover:bg-pure-white/5 p-2 rounded-lg transition-smooth inline-flex items-center",
+    "text-fg-secondary hover:text-fg-primary hover:bg-fg-primary/5 p-2 rounded-lg transition-smooth inline-flex items-center",
 };
 
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
@@ -36,6 +36,9 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     ref
   ) => {
     const baseClasses = cn(linkVariants[variant], className);
+    
+    // Links are secondary interactions by default
+    const interactionTier = variant === "button" ? "primary" : "secondary";
 
     if (external) {
       return (
@@ -44,6 +47,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           href={href}
           target="_blank"
           rel="noopener noreferrer"
+          data-interaction={interactionTier}
           className={baseClasses}
           {...props}
         >
@@ -54,7 +58,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     }
 
     return (
-      <NextLink ref={ref} href={href} className={baseClasses} {...props}>
+      <NextLink ref={ref} href={href} data-interaction={interactionTier} className={baseClasses} {...props}>
         {children}
         {showArrow && <ArrowRight className="inline h-4 w-4" />}
       </NextLink>
