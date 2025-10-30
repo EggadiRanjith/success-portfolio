@@ -29,16 +29,19 @@ export function Header() {
   }, [open]);
 
   return (
-    <header role="banner"
+    <header
+      role="banner"
       className={cn(
         "fixed inset-x-0 top-0 z-nav transition-all duration-300",
-        "py-6",
-        scrolled ? "glass-base backdrop-blur-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] border-b border-pure-white/10" : "bg-transparent"
+        scrolled ? "py-4" : "py-6",
+        scrolled
+          ? "glass-premium backdrop-blur-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] border-b border-border-primary"
+          : "bg-transparent"
       )}
     >
       <div className="max-w-standard mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-primary font-bold text-h4">
+        <Link href="/" className="text-fg-primary font-bold text-h4">
           Your Name
         </Link>
 
@@ -51,8 +54,8 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-secondary hover:text-primary transition-smooth",
-                  active && "text-primary underline underline-offset-8"
+                  "text-fg-secondary hover:text-fg-primary transition-smooth underline-sweep",
+                  active && "text-fg-primary"
                 )}
               >
                 {link.label}
@@ -76,7 +79,7 @@ export function Header() {
           </div>
           <button
             aria-label="Open menu"
-            className="md:hidden p-2 rounded-lg text-light-silver hover:text-pure-white hover:bg-pure-white/5 transition-smooth"
+            className="md:hidden p-2 rounded-lg text-fg-secondary hover:text-fg-primary hover:bg-pure-white/5 transition-smooth"
             onClick={() => setOpen(true)}
           >
             <Menu className="h-6 w-6" />
@@ -86,12 +89,12 @@ export function Header() {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="fixed inset-0 z-[1050] bg-black/90 backdrop-blur-glass md:hidden">
+        <div className="fixed inset-0 z-[1050] bg-overlay backdrop-blur-glass md:hidden">
           <div className="flex items-center justify-between px-6 py-6">
-            <span className="text-pure-white font-bold text-h4">Menu</span>
+            <span className="text-fg-primary font-bold text-h4">Menu</span>
             <button
               aria-label="Close menu"
-              className="p-2 rounded-lg text-light-silver hover:text-pure-white hover:bg-pure-white/5 transition-smooth"
+              className="p-2 rounded-lg text-fg-secondary hover:text-fg-primary hover:bg-pure-white/5 transition-smooth"
               onClick={() => setOpen(false)}
             >
               <X className="h-6 w-6" />
@@ -102,13 +105,13 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block text-pure-white text-h3"
+                className="block text-fg-primary text-h3"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="pt-6 border-t border-pure-white/10 flex items-center gap-3">
+            <div className="pt-6 border-t border-border-primary flex items-center gap-3">
               <Button variant="primary" className="flex-1" onClick={() => setOpen(false)}>
                 Let's Talk
               </Button>

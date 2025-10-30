@@ -67,8 +67,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function () {
+  try {
+    var stored = localStorage.getItem('theme');
+    var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var useDark = stored ? stored === 'dark' : systemDark;
+    var root = document.documentElement;
+    if (useDark) root.classList.add('dark'); else root.classList.remove('dark');
+  } catch (e) {}
+})();
+            `,
+          }}
+        />
         <LoadingScreen />
         <Header />
         <AnimationProvider>
