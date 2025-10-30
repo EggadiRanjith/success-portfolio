@@ -22,6 +22,8 @@
   --glass-blur: 40px;
   /* Overlay (light) */
   --overlay: rgba(255, 255, 255, 0.9);
+  /* Liquid Chrome accent (light mode - ultra subtle warm gray) */
+  --liquid-accent: 0.08, 0.08, 0.09;
 }
 
 .dark {
@@ -40,6 +42,8 @@
   --glass-blur: 40px;
   /* Overlay (dark) */
   --overlay: rgba(0, 0, 0, 0.9);
+  /* Liquid Chrome accent (dark mode - very subtle platinum) */
+  --liquid-accent: 0.12, 0.13, 0.14;
 }
 
 /* ================================================

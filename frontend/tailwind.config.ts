@@ -126,6 +126,11 @@ const config: Config = {
         'nav': '1020',
         'dropdown': '1030',
       },
+
+      // BACKGROUND IMAGES
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
+      },
     },
   },
   plugins: [],

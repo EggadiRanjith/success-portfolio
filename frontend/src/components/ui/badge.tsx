@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "outline" | "solid";
+  variant?: "default" | "outline" | "solid" | "glass";
   size?: "sm" | "md";
 }
 
@@ -11,6 +11,7 @@ const badgeVariants = {
     "bg-pure-white/5 border border-primary text-secondary",
   outline: "border border-primary text-secondary",
   solid: "glass-base text-primary",
+  glass: "glass-base border border-border-primary text-primary backdrop-blur-xl",
 };
 
 const badgeSizes = {

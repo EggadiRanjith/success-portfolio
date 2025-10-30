@@ -87,7 +87,7 @@ export default function RootLayout({
         <LoadingScreen />
         <Header />
         <AnimationProvider>
-          <div className="pt-24">{children}</div>
+          {children}
         </AnimationProvider>
         <Footer />
       </body>
