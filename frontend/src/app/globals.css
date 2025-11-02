@@ -9,17 +9,21 @@
 :root {
   /* Colors - Light Mode */
   --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #FAFAFA;
-  --color-bg-tertiary: #F5F5F5;
+  --color-bg-secondary: #F8F8F8;
+  --color-bg-tertiary: #F0F0F0;
   --color-text-primary: #0A0A0A;
-  --color-text-secondary: #464646;
-  --color-text-tertiary: #8B8B8B;
-  --color-border: #E8E8E8;
+  --color-text-secondary: #3A3A3A;
+  --color-text-tertiary: #6A6A6A;
+  --color-border: #D8D8D8;
   
-  /* Glass Effect Base */
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.18);
+  /* Glass Effect Base - Light Mode */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
   --glass-blur: 40px;
+  /* Overlay (light) */
+  --overlay: rgba(255, 255, 255, 0.95);
+  /* Liquid Chrome accent (light mode - ultra subtle warm gray) */
+  --liquid-accent: 0.08, 0.08, 0.09;
 }
 
 .dark {
@@ -36,6 +40,10 @@
   --glass-bg: rgba(20, 20, 20, 0.65);
   --glass-border: rgba(255, 255, 255, 0.125);
   --glass-blur: 40px;
+  /* Overlay (dark) */
+  --overlay: rgba(0, 0, 0, 0.9);
+  /* Liquid Chrome accent (dark mode - very subtle platinum) */
+  --liquid-accent: 0.12, 0.13, 0.14;
 }
 
 /* ================================================
@@ -50,6 +58,25 @@
 .bg-tertiary { background: var(--color-bg-tertiary); }
 
 .border-primary { border-color: var(--color-border); }
+
+/* Overlay utility */
+.bg-overlay { background: var(--overlay); }
+
+/* Premium glass */
+.glass-premium {
+  background: color-mix(in oklab, var(--glass-bg) 85%, transparent);
+  backdrop-filter: blur(60px) saturate(200%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%);
+  border: 1px solid var(--glass-border);
+}
+
+:root .glass-premium {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.dark .glass-premium {
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+}
 
 /* ================================================
    BASE RESETS
@@ -84,23 +111,52 @@ body {
   backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   border: 1px solid var(--glass-border);
+}
+
+/* Light mode shadow */
+:root .glass-base {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* Dark mode shadow */
+.dark .glass-base {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 /* Dark Glass - Heavier glass */
 .glass-dark {
-  background: rgba(20, 20, 20, 0.65);
   backdrop-filter: blur(40px) saturate(150%);
   -webkit-backdrop-filter: blur(40px) saturate(150%);
+}
+
+:root .glass-dark {
+  background: rgba(240, 240, 240, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15);
+}
+
+.dark .glass-dark {
+  background: rgba(20, 20, 20, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.125);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 }
 
 /* Frosted Glass - For panels */
 .glass-frosted {
-  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(60px) saturate(200%) brightness(110%);
   -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(110%);
+}
+
+:root .glass-frosted {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 4px 24px 0 rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.dark .glass-frosted {
+  background: rgba(255, 255, 255, 0.05);
   border: 1.5px solid rgba(255, 255, 255, 0.20);
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.4),
@@ -113,11 +169,24 @@ body {
   backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.glass-card:hover {
+:root .glass-card {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+.dark .glass-card {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+:root .glass-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.dark .glass-card:hover {
   transform: translateY(-12px);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8);
   border-color: rgba(255, 255, 255, 0.3);
@@ -148,11 +217,38 @@ body {
    TEXT EFFECTS
    ================================================ */
 
+/* Text gradient - theme-aware with proper GSAP SplitText support */
 .text-gradient-silver {
-  background: linear-gradient(135deg, #FFFFFF 0%, #A0A0A0 100%);
+  position: relative;
+  display: inline-block;
+}
+
+/* Light mode - dark gradient text */
+:root .text-gradient-silver {
+  background: linear-gradient(135deg, #1A1A1A 0%, #4A4A4A 50%, #6A6A6A 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
+}
+
+/* Dark mode - light gradient text */
+.dark .text-gradient-silver {
+  background: linear-gradient(135deg, #FFFFFF 0%, #C0C0C0 50%, #A0A0A0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Ensure child elements inherit the gradient (for GSAP SplitText) */
+.text-gradient-silver > div,
+.text-gradient-silver > span {
+  background: inherit;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .text-glass {
@@ -367,3 +463,80 @@ body {
   will-change: background, box-shadow;
   contain: paint;
 }
+
+/* ================================================
+   INTERACTION HIERARCHY SYSTEM
+   ================================================ */
+
+/* Cursor Styles for Different Interaction Tiers */
+.cursor-default {
+  cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-glow {
+  cursor: pointer;
+  position: relative;
+}
+
+.cursor-magnetic {
+  cursor: pointer;
+  position: relative;
+}
+
+/* Primary Interactions - Full animations */
+[data-interaction="primary"] {
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              filter 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (pointer: fine) {
+  [data-interaction="primary"]:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 16px 56px rgba(255, 255, 255, 0.18),
+                0 10px 36px rgba(0, 0, 0, 0.7);
+    filter: brightness(1.05);
+  }
+
+  [data-interaction="primary"]:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+/* Secondary Interactions - Subtle glow */
+[data-interaction="secondary"] {
+  transition: color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (pointer: fine) {
+  [data-interaction="secondary"]:hover {
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.08),
+                0 4px 12px rgba(0, 0, 0, 0.4);
+    filter: brightness(1.02);
+  }
+}
+
+/* Ambient Interactions - Background motion only */
+[data-interaction="ambient"] {
+  transition: opacity 500ms cubic-bezier(0.33, 1, 0.68, 1),
+              transform 500ms cubic-bezier(0.33, 1, 0.68, 1);
+  pointer-events: none;
+}
+
+/* Reduced Motion Override - Disable all interaction animations */
+@media (prefers-reduced-motion: reduce) {
+  [data-interaction="primary"],
+  [data-interaction="secondary"],
+  [data-interaction="ambient"] {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+

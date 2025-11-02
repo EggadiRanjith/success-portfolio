@@ -76,13 +76,12 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("p-6 pt-4 border-t border-primary", className)}
+    className={cn("p-6 pt-4 border-t border-border-primary", className)}
     {...props}
   />
 ));
 CardFooter.displayName = "CardFooter";
 
-Card.Header = CardHeader;
-Card.Content = CardContent;
-Card.Footer = CardFooter;
+// Export compound components
+export { CardHeader, CardContent, CardFooter };
 

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-export function usePageTransition(containerRef: React.RefObject<HTMLElement>) {
+export function usePageTransition(containerRef: React.RefObject<HTMLElement | null>) {
   const pathname = usePathname();
 
   useEffect(() => {
