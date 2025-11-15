@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.*
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Cache
+.cache
+.turbo
+.eslintcache
+
+# Logs
+*.log
+
+# Environment
+.env*
+
+# Generated
+next-env.d.ts
+*.tsbuildinfo
+
+# Public assets
+public/
+
