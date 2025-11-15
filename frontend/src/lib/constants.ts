@@ -2,16 +2,16 @@
  * Site Configuration
  */
 export const SITE_CONFIG = {
-  name: "Your Name",
-  title: "Frontend Developer | UI/UX Specialist",
-  description: "Frontend Developer specializing in premium web experiences, 3D interfaces, and pixel-perfect design systems.",
-  url: "https://yourportfolio.com",
+  name: "Ranjith Eggadi",
+  title: "Backend & Full-Stack Developer | AWS Certified",
+  description: "Computer Science graduate specializing in backend and full-stack development. Experienced in Java, Python, JavaScript, Microservices, REST APIs, and AWS (EC2, S3). Building scalable, secure, and performance-optimized applications.",
+  url: "https://ranjitheggadi.dev",
   ogImage: "/og-image.png",
   links: {
-    github: "https://github.com/yourusername",
-    linkedin: "https://linkedin.com/in/yourusername",
-    twitter: "https://twitter.com/yourusername",
-    email: "hello@yourportfolio.com",
+    github: "https://github.com/EggadiRanjith",
+    linkedin: "https://linkedin.com/in/ranjitheggadi",
+    twitter: "",
+    email: "ranjitheggadi4@gmail.com",
   },
 } as const;
 

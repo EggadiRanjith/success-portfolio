@@ -16,9 +16,9 @@ const sizeClasses = {
 };
 
 const colorClasses = {
-  primary: "text-pure-white",
-  secondary: "text-light-silver",
-  tertiary: "text-silver-gray",
+  primary: "text-fg-primary",
+  secondary: "text-fg-secondary",
+  tertiary: "text-fg-tertiary",
 };
 
 export const Text = React.forwardRef<

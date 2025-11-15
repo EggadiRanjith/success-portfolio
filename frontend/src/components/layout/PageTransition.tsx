@@ -10,10 +10,10 @@ interface PageTransitionProps {
 
 // Narrative-driven transition configurations
 const TRANSITION_MAP: Record<string, {
-  initial: Record<string, any>;
-  animate: Record<string, any>;
-  exit: Record<string, any>;
-  transition: Record<string, any>;
+  initial: Record<string, number | string>;
+  animate: Record<string, number | string>;
+  exit: Record<string, number | string>;
+  transition: Record<string, number | number[]>;
 }> = {
   // Home → Projects: "Diving into details" (swipe up with motion blur)
   "/:projects": {

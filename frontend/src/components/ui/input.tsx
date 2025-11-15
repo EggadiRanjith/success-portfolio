@@ -16,12 +16,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn(
             "w-full px-4 py-3 rounded-lg",
-            "bg-pure-white/5 border border-pure-white/15",
-            "text-pure-white placeholder:text-silver-gray",
-            "focus:outline-none focus:border-pure-white/40 focus:bg-pure-white/8",
-            "focus-visible:ring-2 focus-visible:ring-pure-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-pure-black",
+            "bg-secondary/50 border border-primary",
+            "text-primary",
+            "placeholder:text-tertiary",
+            "focus:outline-none focus:border-primary focus:bg-secondary/80 focus:ring-2 focus:ring-primary/20",
             "transition-smooth",
-            error && "border-red-500/50 focus:border-red-500/80",
+            error && "border-red-500/50 focus:border-red-500/80 focus:ring-red-500/20",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             className
           )}
@@ -31,7 +31,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <p
             className={cn(
               "mt-2 text-body-sm",
-              error ? "text-red-400" : "text-silver-gray"
+              error ? "text-red-500 dark:text-red-400" : "text-tertiary"
             )}
           >
             {helperText}

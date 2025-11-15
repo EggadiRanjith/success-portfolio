@@ -1,0 +1,22 @@
+/* Theme-aware admin password input - overrides browser autofill */
+#admin-password {
+  background-color: var(--color-bg-primary) !important;
+  color: var(--color-text-primary) !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  caret-color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+#admin-password::placeholder {
+  color: var(--color-text-tertiary) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--color-text-tertiary) !important;
+}
+
+#admin-password:focus {
+  background-color: var(--color-bg-secondary) !important;
+  border-color: var(--color-accent-blue) !important;
+  color: var(--color-text-primary) !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+}
+

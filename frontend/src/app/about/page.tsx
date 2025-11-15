@@ -1,346 +1,651 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { Container, Heading, Text, Badge } from "@/components/ui";
-import { motion, useInView } from "framer-motion";
+import { Container, Heading, Text, FrostedCard, AnimatedCounter, GlowOnHover } from "@/components/ui";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedSection } from "@/components/animations/AnimatedSection";
+import { fadeInUp, staggerContainer } from "@/lib/motionVariants";
+import { Award, Code2, Cloud, Database, Server, Zap, Badge as BadgeIcon, ExternalLink, User, GraduationCap } from "lucide-react";
+import { LeetCodeStats } from "@/components/sections/LeetCodeStats";
+import { GithubStats } from "@/components/sections/GithubStats";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { Code2, Palette, Rocket, Award } from "lucide-react";
-import { PerformanceMetrics } from "@/components/PerformanceMetrics";
+import { trackEvent } from "@/components/Analytics";
+import { getPortfolioData, type Skill, type Certification, type Education } from "@/lib/adminData";
 
-// Register GSAP plugins
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(SplitText);
-}
+// Icon mapping for skills
+const skillIcons: Record<string, JSX.Element> = {
+  "Programming Languages": <Code2 className="w-6 h-6" />,
+  "Backend Development": <Server className="w-6 h-6" />,
+  "Frontend Development": <Code2 className="w-6 h-6" />,
+  "Databases": <Database className="w-6 h-6" />,
+  "Cloud & DevOps": <Cloud className="w-6 h-6" />,
+};
 
-const SKILLS = [
-  {
-    category: "Frontend Development",
-    icon: Code2,
-    skills: ["React", "Next.js", "TypeScript", "Vue.js", "Tailwind CSS", "Sass/SCSS"],
-    level: 95,
-  },
-  {
-    category: "3D & Animation",
-    icon: Palette,
-    skills: ["Three.js", "GSAP", "Framer Motion", "WebGL", "Lottie", "Spline"],
-    level: 90,
-  },
-  {
-    category: "Backend & Database",
-    icon: Rocket,
-    skills: ["Node.js", "PostgreSQL", "MongoDB", "Prisma", "GraphQL", "REST APIs"],
-    level: 85,
-  },
-  {
-    category: "Tools & Platforms",
-    icon: Award,
-    skills: ["Git", "Docker", "Vercel", "AWS", "Figma", "VS Code"],
-    level: 92,
-  },
-];
-
-const TIMELINE = [
-  {
-    year: "2024",
-    title: "Senior Frontend Developer",
-    company: "Tech Innovations Inc.",
-    description: "Leading the development of cutting-edge web applications with focus on performance and user experience.",
-  },
-  {
-    year: "2022",
-    title: "Frontend Developer",
-    company: "Digital Solutions Co.",
-    description: "Built responsive web applications and implemented advanced animations and 3D features.",
-  },
-  {
-    year: "2020",
-    title: "Junior Developer",
-    company: "StartUp Labs",
-    description: "Started my professional journey, learning modern web technologies and best practices.",
-  },
-  {
-    year: "2019",
-    title: "Computer Science Degree",
-    company: "University",
-    description: "Graduated with honors, specializing in web development and software engineering.",
-  },
-];
+// Icon mapping for certifications
+const certIcons: Record<string, JSX.Element> = {
+  "AWS": <Cloud className="w-8 h-8" />,
+  "Java": <Code2 className="w-8 h-8" />,
+  "Python": <Code2 className="w-8 h-8" />,
+  "default": <Award className="w-8 h-8" />,
+};
 
 export default function AboutPage() {
-  const heroRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
-  const descriptionRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const skillsRef = useRef<HTMLDivElement>(null);
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(heroRef, { once: true, margin: "-100px" });
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [aboutData, setAboutData] = useState({
+    personalInfo: {
+      name: "",
+      description: "",
+      title: "",
+    },
+    skills: [] as Skill[],
+    certifications: [] as Certification[],
+    education: [] as Education[],
+    stats: {
+      productionAPIs: "10+",
+      yearsExperience: "3+",
+      cloudDeployments: "5+",
+      leetcodeSolved: "150+",
+    },
+    leetcodeData: {
+      username: "ranjitheggadi",
+      profileUrl: "https://leetcode.com/ranjitheggadi",
+      stats: {
+        problemsSolved: "150+",
+        acceptanceRate: "85%",
+        contestRating: "1650",
+        badges: ["Problem Solver", "Algorithm Master"],
+        topics: ["Arrays", "Dynamic Programming", "Trees", "Graphs", "Data Structures"],
+      },
+    },
+    githubData: {
+      username: "EggadiRanjith",
+      profileUrl: "https://github.com/EggadiRanjith",
+      stats: {
+        contributions: "500+",
+        repositories: "25+",
+        stars: "100+",
+        languages: ["Python", "JavaScript", "TypeScript", "Java"],
+        topRepos: [
+          { name: "careerpilot-ai", stars: 15, description: "AI-powered job application tracker" },
+          { name: "franchiseconnect", stars: 8, description: "Franchise management app" },
+          { name: "library-management", stars: 12, description: "Library management system" },
+        ],
+      },
+    },
+  });
 
+  // Load about data from admin
   useEffect(() => {
-    if (!isInView || !headingRef.current) return;
+    if (typeof window === "undefined") return;
 
-    const ctx = gsap.context(() => {
-      // Eyebrow animation
-      if (eyebrowRef.current) {
-        gsap.from(eyebrowRef.current, {
-          opacity: 0,
-          y: 20,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.1,
-        });
-      }
-
-      // Split text animation
-      if (headingRef.current) {
-        const split = new SplitText(headingRef.current, { type: "chars,words" });
+    const loadAboutData = () => {
+      try {
+        const data = getPortfolioData();
         
-        gsap.from(split.chars, {
-          opacity: 0,
-          y: 60,
-          rotateX: -90,
-          stagger: 0.025,
-          duration: 0.9,
-          ease: "back.out(1.7)",
-          delay: 0.2,
-        });
-
-        gsap.to(split.chars, {
-          y: -2,
-          stagger: {
-            each: 0.03,
-            repeat: -1,
-            yoyo: true,
+        setAboutData({
+          personalInfo: {
+            name: data?.personalInfo?.name || "",
+            description: data?.personalInfo?.description || "",
+            title: data?.personalInfo?.title || "",
           },
-          duration: 2.8,
-          ease: "sine.inOut",
-          delay: 1.2,
+          skills: data?.skills || [],
+          certifications: data?.certifications || [],
+          education: data?.education || [],
+          stats: {
+            productionAPIs: data?.stats?.productionAPIs || "10+",
+            yearsExperience: data?.stats?.yearsExperience || "3+",
+            cloudDeployments: data?.stats?.cloudDeployments || "5+",
+            leetcodeSolved: data?.stats?.leetcodeSolved || "150+",
+          },
+          leetcodeData: {
+            username: "ranjitheggadi",
+            profileUrl: data?.personalInfo?.links?.leetcode || "https://leetcode.com/ranjitheggadi",
+            stats: {
+              problemsSolved: data?.stats?.leetcodeSolved || "150+",
+              acceptanceRate: "85%",
+              contestRating: "1650",
+              badges: ["Problem Solver", "Algorithm Master"],
+              topics: ["Arrays", "Dynamic Programming", "Trees", "Graphs", "Data Structures"],
+            },
+          },
+          githubData: {
+            username: "EggadiRanjith",
+            profileUrl: data?.personalInfo?.links?.github || "https://github.com/EggadiRanjith",
+            stats: {
+              contributions: "500+",
+              repositories: "25+",
+              stars: "100+",
+              languages: ["Python", "JavaScript", "TypeScript", "Java"],
+              topRepos: [
+                { name: "careerpilot-ai", stars: 15, description: "AI-powered job application tracker" },
+                { name: "franchiseconnect", stars: 8, description: "Franchise management app" },
+                { name: "library-management", stars: 12, description: "Library management system" },
+              ],
+            },
+          },
         });
+      } catch (error) {
+        // Keep default values on error
       }
+    };
 
-      // Description
-      if (descriptionRef.current) {
-        const paragraphs = descriptionRef.current.querySelectorAll("p");
-        gsap.from(paragraphs, {
-          opacity: 0,
-          y: 30,
-          stagger: 0.15,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.5,
-        });
+    loadAboutData();
+
+    // Listen for updates
+    const handlePortfolioUpdate = () => {
+      loadAboutData();
+    };
+
+    window.addEventListener("portfolio-data-updated", handlePortfolioUpdate);
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "portfolio_admin_data" || e.key === null) {
+        loadAboutData();
       }
+    };
+    window.addEventListener("storage", handleStorageChange);
 
-      // Image
-      if (imageRef.current) {
-        gsap.from(imageRef.current, {
-          opacity: 0,
-          scale: 0.95,
-          duration: 1,
-          ease: "power3.out",
-          delay: 0.3,
-        });
-      }
+    return () => {
+      window.removeEventListener("portfolio-data-updated", handlePortfolioUpdate);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
-      // Skills cards
-      if (skillsRef.current) {
-        const cards = skillsRef.current.querySelectorAll(".skill-card");
-        gsap.from(cards, {
-          opacity: 0,
-          y: 60,
-          scale: 0.95,
-          stagger: 0.1,
-          duration: 0.8,
-          ease: "back.out(1.5)",
-        });
-      }
+  const slides = [
+    {
+      id: "leetcode",
+      title: "LeetCode Dashboard",
+      component: <LeetCodeStats {...aboutData.leetcodeData} />,
+    },
+    {
+      id: "github",
+      title: "GitHub Dashboard",
+      component: <GithubStats {...aboutData.githubData} />,
+    },
+  ];
 
-      // Timeline
-      if (timelineRef.current) {
-        const items = timelineRef.current.querySelectorAll(".timeline-item");
-        gsap.from(items, {
-          opacity: 0,
-          x: -40,
-          stagger: 0.15,
-          duration: 0.8,
-          ease: "power3.out",
-        });
-      }
-    }, heroRef);
+  // Auto-slide functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
 
-    return () => ctx.revert();
-  }, [isInView]);
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section
-        ref={heroRef}
-        className="relative py-32 lg:py-40 overflow-hidden border-b border-border-primary/20 bg-gradient-to-bl from-slate-100 via-white to-slate-50 dark:from-black dark:via-zinc-950 dark:to-zinc-900"
-      >
-        {/* Gradient Orbs */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-[15%] right-[5%] w-[650px] h-[650px] bg-gradient-radial from-emerald-100/35 via-teal-100/18 to-transparent dark:from-emerald-500/18 dark:via-teal-500/9 dark:to-transparent blur-3xl" />
-          <div className="absolute bottom-[25%] left-[5%] w-[700px] h-[700px] bg-gradient-radial from-cyan-100/30 via-blue-100/15 to-transparent dark:from-cyan-500/15 dark:via-blue-500/8 dark:to-transparent blur-3xl" />
+    <main role="main" className="min-h-screen bg-primary">
+      <section className="relative py-32 overflow-hidden">
+        {/* Background gradient orbs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-cyan-500/20 dark:bg-cyan-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 -left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
         </div>
 
-        <Container variant="standard" size="xl" className="relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Left: Content */}
-            <div>
-              <p 
-                ref={eyebrowRef}
-                className="text-caption text-fg-tertiary uppercase tracking-[0.3em] mb-6 font-medium"
+        <Container size="lg" className="relative z-10">
+          <AnimatedSection variant="stagger">
+            {/* Header */}
+            <motion.div variants={fadeInUp} className="text-center mb-16">
+              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
+                About Me
+              </Text>
+              <Heading
+                as="h1"
+                size="h1"
+                className="mb-6 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
+                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
               >
-                ✦ About Me ✦
-              </p>
-              
-              <h1 
-                ref={headingRef}
-                className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-tight font-bold text-fg-primary mb-8"
-                style={{ 
-                  fontFamily: "var(--font-sans)",
-                  textShadow: "0 2px 30px rgba(0,0,0,0.2)",
-                }}
-              >
-                Crafting Digital
-                <br />
-                <span className="text-gradient-silver inline-block">Experiences</span>
-              </h1>
+                {aboutData.personalInfo.title || "Backend & Full-Stack Developer"}
+              </Heading>
+            </motion.div>
 
-              <div ref={descriptionRef} className="space-y-4">
-                <Text size="body-lg" color="primary" className="leading-relaxed">
-                  I'm a passionate frontend developer with 5+ years of experience creating{" "}
-                  <span className="font-semibold">exceptional digital experiences</span> that blend
-                  cutting-edge technology with beautiful design.
-                </Text>
+            {/* Main Content */}
+            <div className="grid lg:grid-cols-2 gap-16 items-start mb-16">
+              {/* Content Side */}
+              <motion.div variants={staggerContainer} className="space-y-6">
+                {aboutData.personalInfo.description ? (
+                  <motion.div variants={fadeInUp}>
+                    <Text size="body-lg" color="primary" className="leading-relaxed whitespace-pre-line">
+                      {aboutData.personalInfo.description}
+                    </Text>
+                  </motion.div>
+                ) : (
+                  <>
+                    <motion.div variants={fadeInUp}>
+                      <Text size="body-lg" color="primary" className="leading-relaxed">
+                        I'm <strong>Ranjith Eggadi</strong>, a Computer Science graduate from Kamala Institute of Technology and Science, 
+                        based in Hyderabad, Telangana. I specialize in backend and full-stack development with strong experience in 
+                        Java, Python, and JavaScript.
+                      </Text>
+                    </motion.div>
 
-                <Text size="body" color="secondary" className="leading-relaxed">
-                  My journey in web development started with a simple curiosity about how websites work,
-                  and has evolved into a deep passion for creating immersive, performant, and accessible
-                  web applications that delight users.
-                </Text>
+                    <motion.div variants={fadeInUp}>
+                      <Text size="body" color="secondary" className="leading-relaxed">
+                        My expertise spans <strong>Spring Boot</strong>, <strong>Django</strong>, <strong>Node.js</strong>, and <strong>FastAPI</strong>, 
+                        with hands-on experience in Microservices, REST APIs, and AWS (EC2, S3). I'm skilled in building scalable, 
+                        secure, and performance-optimized applications.
+                      </Text>
+                    </motion.div>
 
-                <Text size="body" color="secondary" className="leading-relaxed">
-                  I specialize in React, Next.js, and modern web technologies, with a particular love for
-                  3D graphics, advanced animations, and creating pixel-perfect interfaces. When I'm not
-                  coding, you'll find me exploring new technologies, contributing to open source, or
-                  mentoring aspiring developers.
-                </Text>
-              </div>
-            </div>
+                    <motion.div variants={fadeInUp}>
+                      <Text size="body" color="secondary" className="leading-relaxed">
+                        I work with Agile methodologies, debugging, CI/CD pipelines, and cloud deployments. My focus is on delivering 
+                        reliable, high-quality solutions with strong problem-solving skills and attention to detail.
+                      </Text>
+                    </motion.div>
+                  </>
+                )}
+              </motion.div>
 
-            {/* Right: Image */}
-            <div ref={imageRef} className="relative">
-              <div className="relative aspect-square max-w-lg mx-auto lg:ml-auto">
-                <div className="absolute inset-0 rounded-3xl glass-base border-2 border-border-primary p-2">
-                  <div className="relative w-full h-full rounded-2xl overflow-hidden bg-secondary">
-                    <Image
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=800&fit=crop&crop=faces"
-                      alt="Profile"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-bg-primary/20" />
-                  </div>
+              {/* Stats Side with FrostedCard and AnimatedCounter */}
+              <motion.div variants={fadeInUp} className="relative">
+                <div className="grid grid-cols-2 gap-6">
+                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
+                    <GlowOnHover color="blue" intensity="medium">
+                      <FrostedCard intensity="medium" glow shimmer className="p-8">
+                        <div className="text-4xl font-bold text-fg-primary mb-2">
+                          <AnimatedCounter 
+                            key={`api-${aboutData.stats.productionAPIs}`}
+                            value={parseInt(aboutData.stats.productionAPIs.replace(/[^0-9]/g, '')) || 10} 
+                            suffix={aboutData.stats.productionAPIs.replace(/\d+/g, '') || "+"} 
+                            duration={2} 
+                          />
+                        </div>
+                        <div className="text-fg-secondary">Production APIs</div>
+                      </FrostedCard>
+                    </GlowOnHover>
+                  </motion.div>
+
+                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
+                    <GlowOnHover color="purple" intensity="medium">
+                      <FrostedCard intensity="medium" glow shimmer className="p-8">
+                        <div className="text-4xl font-bold text-fg-primary mb-2">
+                          <AnimatedCounter 
+                            key={`years-${aboutData.stats.yearsExperience}`}
+                            value={parseInt(aboutData.stats.yearsExperience.replace(/[^0-9]/g, '')) || 3} 
+                            suffix={aboutData.stats.yearsExperience.replace(/\d+/g, '') || "+"} 
+                            duration={2} 
+                          />
+                        </div>
+                        <div className="text-fg-secondary">Years Experience</div>
+                      </FrostedCard>
+                    </GlowOnHover>
+                  </motion.div>
+
+                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
+                    <GlowOnHover color="cyan" intensity="medium">
+                      <FrostedCard intensity="medium" glow shimmer className="p-8">
+                        <div className="text-4xl font-bold text-fg-primary mb-2">
+                          <AnimatedCounter 
+                            key={`cloud-${aboutData.stats.cloudDeployments}`}
+                            value={parseInt(aboutData.stats.cloudDeployments.replace(/[^0-9]/g, '')) || 5} 
+                            suffix={aboutData.stats.cloudDeployments.replace(/\d+/g, '') || "+"} 
+                            duration={2} 
+                          />
+                        </div>
+                        <div className="text-fg-secondary">Cloud Deployments</div>
+                      </FrostedCard>
+                    </GlowOnHover>
+                  </motion.div>
+
+                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
+                    <GlowOnHover color="gold" intensity="medium">
+                      <FrostedCard intensity="medium" glow shimmer className="p-8">
+                        <div className="text-4xl font-bold text-fg-primary mb-2">
+                          <AnimatedCounter 
+                            key={`leetcode-${aboutData.stats.leetcodeSolved}`}
+                            value={parseInt(aboutData.stats.leetcodeSolved.replace(/[^0-9]/g, '')) || 150} 
+                            suffix={aboutData.stats.leetcodeSolved.replace(/\d+/g, '') || "+"} 
+                            duration={2} 
+                          />
+                        </div>
+                        <div className="text-fg-secondary">LeetCode Solved</div>
+                      </FrostedCard>
+                    </GlowOnHover>
+                  </motion.div>
                 </div>
-                <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full glass-frosted border border-border-primary blur-xl opacity-60" />
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 rounded-full glass-frosted border border-border-primary blur-xl opacity-60" />
-              </div>
+              </motion.div>
             </div>
-          </div>
+
+            {/* Highlights - Generated from certifications and skills */}
+            {aboutData.certifications.length > 0 && (
+              <motion.div variants={staggerContainer} className="mb-16">
+                <Heading as="h2" size="h2" className="mb-8 text-center">
+                  Key Highlights
+                </Heading>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {aboutData.certifications.slice(0, 4).map((cert, index) => {
+                    const certIcon = cert.name.toLowerCase().includes("aws") 
+                      ? <Cloud className="w-6 h-6" />
+                      : cert.name.toLowerCase().includes("java") || cert.name.toLowerCase().includes("python")
+                      ? <Code2 className="w-6 h-6" />
+                      : <Award className="w-6 h-6" />;
+                    
+                    return (
+                      <motion.div
+                        key={cert.id || cert.name}
+                        variants={fadeInUp}
+                        custom={index}
+                        className="flex items-start gap-4 p-6 glass-base rounded-xl border border-border-primary/50"
+                      >
+                        <div className="p-2 rounded-lg bg-primary/10 text-fg-primary">
+                          {certIcon}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-fg-primary mb-1">
+                            {cert.name}
+                          </h4>
+                          <p className="text-sm text-fg-secondary">
+                            {cert.issuer} • {cert.date}
+                          </p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Skills */}
+            {aboutData.skills.length > 0 && (
+              <motion.div variants={staggerContainer}>
+                <Heading as="h2" size="h2" className="mb-8 text-center">
+                  Technical Skills
+                </Heading>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {aboutData.skills.map((skill, index) => (
+                    <motion.div
+                      key={skill.category}
+                      variants={fadeInUp}
+                      custom={index}
+                      className="glass-card p-6 rounded-xl border border-border-primary/50"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 rounded-lg bg-primary/10 text-fg-primary">
+                          {skillIcons[skill.category] || <Code2 className="w-6 h-6" />}
+                        </div>
+                        <Heading as="h3" size="h4">
+                          {skill.category}
+                        </Heading>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {skill.items.map((item) => (
+                          <span
+                            key={item}
+                            className="px-3 py-1 rounded-full text-sm bg-secondary border border-border-primary/50 text-fg-secondary"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatedSection>
         </Container>
       </section>
 
-      {/* Skills Section */}
-      <section className="relative py-24 lg:py-32 bg-secondary">
-        <Container variant="standard" size="xl">
-          <div className="text-center mb-16">
-            <Heading as="h2" size="h1" className="text-fg-primary mb-4">
-              Skills & Expertise
-            </Heading>
-            <Text size="body-xl" color="secondary">
-              Technologies I've mastered over the years
-            </Text>
-          </div>
+      {/* Education Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-green-500/20 dark:bg-green-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/2 -left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
+        </div>
 
-          <div ref={skillsRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {SKILLS.map((skill, index) => {
-              const Icon = skill.icon;
-              return (
-                <motion.div
-                  key={skill.category}
-                  className="skill-card glass-card p-8 rounded-2xl border border-border-primary"
-                >
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="p-3 rounded-xl bg-primary/10">
-                      <Icon className="w-6 h-6 text-fg-primary" />
+        <Container size="lg" className="relative z-10">
+          <AnimatedSection variant="stagger">
+            <motion.div variants={fadeInUp} className="text-center mb-12">
+              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
+                Education
+              </Text>
+              <Heading
+                as="h2"
+                size="h2"
+                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
+                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+              >
+                Academic{" "}
+                <span className="bg-gradient-to-r from-green-600 via-blue-600 to-cyan-600 dark:from-green-400 dark:via-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                  Background
+                </span>
+              </Heading>
+            </motion.div>
+
+            <div className="space-y-6">
+              {aboutData.education.length > 0 ? (
+                aboutData.education.map((edu, index) => (
+                  <motion.div key={index} variants={fadeInUp} custom={index} className="max-w-3xl mx-auto">
+                    <div className="glass-card p-8 rounded-xl border border-border-primary/50">
+                      <div className="flex items-start gap-6">
+                        <div className="p-4 rounded-xl bg-primary/10 text-fg-primary">
+                          <GraduationCap className="w-8 h-8" />
+                        </div>
+                        <div className="flex-1">
+                          <Heading as="h3" size="h3" className="mb-2">
+                            {edu.degree}
+                          </Heading>
+                          <Text size="body-lg" color="primary" className="font-semibold mb-2">
+                            {edu.institution}
+                          </Text>
+                          <Text size="body" color="secondary" className="mb-4">
+                            {edu.location}
+                          </Text>
+                          <div className="flex items-center gap-2 text-fg-tertiary">
+                            <span>{edu.startDate} – {edu.endDate}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-h4 font-bold text-fg-primary mb-2">{skill.category}</h3>
-                      <div className="w-full bg-secondary rounded-full h-2 mb-4">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full"
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.level}%` }}
-                          transition={{ duration: 1, delay: index * 0.1 }}
-                          viewport={{ once: true }}
-                        />
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div variants={fadeInUp} className="max-w-3xl mx-auto">
+                  <div className="glass-card p-8 rounded-xl border border-border-primary/50">
+                    <div className="flex items-start gap-6">
+                      <div className="p-4 rounded-xl bg-primary/10 text-fg-primary">
+                        <GraduationCap className="w-8 h-8" />
+                      </div>
+                      <div className="flex-1">
+                        <Heading as="h3" size="h3" className="mb-2">
+                          Bachelor of Technology in Computer Science
+                        </Heading>
+                        <Text size="body-lg" color="primary" className="font-semibold mb-2">
+                          Kamala Institute of Technology and Science
+                        </Text>
+                        <Text size="body" color="secondary" className="mb-4">
+                          Karimnagar, Telangana
+                        </Text>
+                        <div className="flex items-center gap-2 text-fg-tertiary">
+                          <span>Sep. 2020 – Jun. 2024</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {skill.skills.map((s) => (
-                      <Badge key={s} variant="glass" size="md">
-                        {s}
-                      </Badge>
-                    ))}
-                  </div>
                 </motion.div>
-              );
-            })}
-          </div>
+              )}
+            </div>
+          </AnimatedSection>
         </Container>
       </section>
 
-      {/* Timeline Section */}
-      <section className="relative py-24 lg:py-32 bg-primary">
-        <Container variant="standard" size="xl">
-          <div className="text-center mb-16">
-            <Heading as="h2" size="h1" className="text-fg-primary mb-4">
-              My Journey
-            </Heading>
-            <Text size="body-xl" color="secondary">
-              The path that led me here
-            </Text>
-          </div>
+      {/* Certifications Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/2 -left-1/4 w-96 h-96 bg-cyan-500/20 dark:bg-cyan-400/10 rounded-full blur-3xl" />
+        </div>
 
-          <div ref={timelineRef} className="max-w-3xl mx-auto">
-            {TIMELINE.map((item, index) => (
-              <div
-                key={index}
-                className="timeline-item relative pl-8 pb-12 last:pb-0 border-l-2 border-border-primary"
+        <Container size="lg" className="relative z-10">
+          <AnimatedSection variant="stagger">
+            <motion.div variants={fadeInUp} className="text-center mb-12">
+              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
+                Certifications
+              </Text>
+              <Heading
+                as="h2"
+                size="h2"
+                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
+                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
               >
-                <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary border-2 border-bg-primary" />
-                <div className="glass-card p-6 rounded-xl border border-border-primary">
-                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-fg-primary text-sm font-semibold mb-2">
-                    {item.year}
-                  </span>
-                  <h3 className="text-h4 font-bold text-fg-primary mb-1">{item.title}</h3>
-                  <p className="text-body text-fg-secondary font-medium mb-2">{item.company}</p>
-                  <p className="text-body-sm text-fg-tertiary">{item.description}</p>
+                Professional{" "}
+                <span className="bg-gradient-to-r from-purple-600 via-cyan-600 to-blue-600 dark:from-purple-400 dark:via-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+                  Certifications
+                </span>
+              </Heading>
+              <Text size="body" color="secondary" className="max-w-2xl mx-auto">
+                Validated expertise through industry-recognized certifications
+              </Text>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {aboutData.certifications.length > 0 ? (
+                aboutData.certifications.map((cert, index) => {
+                  const certIcon = cert.name.toLowerCase().includes("aws")
+                    ? <Cloud className="w-8 h-8" />
+                    : cert.name.toLowerCase().includes("java") || cert.name.toLowerCase().includes("python")
+                    ? <Code2 className="w-8 h-8" />
+                    : <Award className="w-8 h-8" />;
+                  
+                  return (
+                    <motion.div
+                      key={cert.credentialId || cert.name}
+                      variants={fadeInUp}
+                      custom={index}
+                      className="glass-card p-0 rounded-xl border border-border-primary/50 hover:border-border-primary hover:shadow-xl transition-all duration-500 group overflow-hidden"
+                      whileHover={{ y: -8, scale: 1.02 }}
+                    >
+                      {/* Certificate Image */}
+                      <div className="relative w-full h-48 overflow-hidden bg-gradient-to-br from-primary/20 via-secondary to-primary/10">
+                        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
+                        <div className="absolute top-3 right-3">
+                          <div className="p-2 rounded-lg bg-primary/90 backdrop-blur-sm">
+                            {certIcon}
+                          </div>
+                        </div>
+                        {/* Fallback gradient pattern */}
+                        <div className="absolute inset-0 opacity-30">
+                          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.05)_25%,rgba(255,255,255,.05)_50%,transparent_50%,transparent_75%,rgba(255,255,255,.05)_75%,rgba(255,255,255,.05))] bg-[length:20px_20px]" />
+                        </div>
+                      </div>
+
+                      {/* Certificate Details */}
+                      <div className="p-6">
+                        <div className="mb-4">
+                          <Heading as="h3" size="h4" className="mb-2">
+                            {cert.name}
+                          </Heading>
+                          <Text size="body-sm" color="secondary" className="mb-2">
+                            {cert.issuer}
+                          </Text>
+                          <div className="flex items-center gap-2 mb-2">
+                            <User className="w-4 h-4 text-fg-tertiary" />
+                            <Text size="body-sm" color="tertiary">
+                              {aboutData.personalInfo.name || "Ranjith Eggadi"}
+                            </Text>
+                          </div>
+                          <Text size="body-sm" color="tertiary" className="mb-3">
+                            Issued: {cert.date}
+                          </Text>
+                        </div>
+
+                        <div className="pt-4 border-t border-border-primary/50 space-y-3">
+                          <div className="flex items-center gap-2">
+                            <BadgeIcon className="w-4 h-4 text-fg-tertiary" />
+                            <Text size="body-sm" color="tertiary" className="font-mono">
+                              {cert.credentialId}
+                            </Text>
+                          </div>
+                          <a
+                            href={cert.verificationLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-sm text-fg-primary hover:text-gradient-silver transition-colors group/link"
+                          >
+                            <span className="font-semibold">Verify Certificate</span>
+                            <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })
+              ) : (
+                <div className="col-span-full text-center py-8">
+                  <Text size="body" color="secondary">
+                    No certifications available. Please add certifications in the admin panel.
+                  </Text>
+                </div>
+              )}
+            </div>
+          </AnimatedSection>
+        </Container>
+      </section>
+
+      {/* LeetCode & GitHub Dashboard Carousel */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 -left-1/4 w-96 h-96 bg-green-500/20 dark:bg-green-400/10 rounded-full blur-3xl" />
+        </div>
+
+        <Container size="lg" className="relative z-10">
+          <AnimatedSection variant="stagger">
+            <motion.div variants={fadeInUp} className="text-center mb-12">
+              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
+                Coding Activity
+              </Text>
+              <Heading
+                as="h2"
+                size="h2"
+                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
+                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+              >
+                Platform{" "}
+                <span className="bg-gradient-to-r from-blue-600 via-green-600 to-cyan-600 dark:from-blue-400 dark:via-green-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                  Dashboards
+                </span>
+              </Heading>
+              <Text size="body" color="secondary" className="max-w-2xl mx-auto">
+                Track my coding progress and contributions across platforms
+              </Text>
+            </motion.div>
+
+            {/* Carousel */}
+            <motion.div variants={fadeInUp} className="relative">
+              <div className="relative overflow-hidden rounded-2xl">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentSlide}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  >
+                    {slides[currentSlide].component}
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Slide Indicators - Non-interactive */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                  {slides.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        index === currentSlide
+                          ? "w-8 bg-fg-primary"
+                          : "w-2 bg-fg-tertiary/30"
+                      }`}
+                      aria-label={`Slide ${index + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          </AnimatedSection>
         </Container>
       </section>
-
-      {/* Performance Metrics Section */}
-      <PerformanceMetrics />
     </main>
   );
 }
+

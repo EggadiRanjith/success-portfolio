@@ -44,7 +44,7 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       Component,
       {
         ref,
-        className: cn("text-pure-white", sizeClass, className),
+        className: cn("text-fg-primary", sizeClass, className),
         ...props,
       },
       children

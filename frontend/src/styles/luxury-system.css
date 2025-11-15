@@ -1,0 +1,909 @@
+/**
+ * ULTRA-LUXURY FOUNDATION
+ * Premium theme system with distinct luxury styles for Light & Dark modes
+ * Each theme has its own luxury gradients, colors, fonts, animations, and hover effects
+ */
+
+/* ================================================
+   LIGHT MODE LUXURY (WHITE/BRIGHT THEME)
+   Premium bright luxury with elegant gradients
+   ================================================ */
+
+:root {
+  /* === FOUNDATIONAL COLORS === */
+  --luxury-pure-black: #000000;
+  --luxury-deep-void: #0A0A0A;
+  --luxury-rich-charcoal: #141414;
+  --luxury-pure-white: #FFFFFF;
+  --luxury-snow: #FAFAFA;
+  --luxury-mist: #F5F5F5;
+  --luxury-cream: #FFFEF7;
+  --luxury-pearl: #F8F8F6;
+
+  /* === LIGHT MODE GRADIENT STOPS (Premium Bright) === */
+  --luxury-light-blue-start: #3B82F6;
+  --luxury-light-blue-mid: #2563EB;
+  --luxury-light-blue-end: #1D4ED8;
+  --luxury-light-blue-glow: rgba(59, 130, 246, 0.4);
+  
+  --luxury-light-purple-start: #8B5CF6;
+  --luxury-light-purple-mid: #7C3AED;
+  --luxury-light-purple-end: #6D28D9;
+  --luxury-light-purple-glow: rgba(139, 92, 246, 0.4);
+  
+  --luxury-light-cyan-start: #06B6D4;
+  --luxury-light-cyan-mid: #0891B2;
+  --luxury-light-cyan-end: #0E7490;
+  --luxury-light-cyan-glow: rgba(6, 182, 212, 0.4);
+  
+  --luxury-light-gold-start: #F59E0B;
+  --luxury-light-gold-mid: #D97706;
+  --luxury-light-gold-end: #B45309;
+  --luxury-light-gold-glow: rgba(245, 158, 11, 0.4);
+  
+  --luxury-light-rose-start: #F43F5E;
+  --luxury-light-rose-mid: #E11D48;
+  --luxury-light-rose-end: #BE123C;
+  --luxury-light-rose-glow: rgba(244, 63, 94, 0.4);
+
+  /* === LIGHT MODE ACCENT COLORS === */
+  --luxury-light-primary: #3B82F6;
+  --luxury-light-secondary: #8B5CF6;
+  --luxury-light-tertiary: #06B6D4;
+  --luxury-light-success: #10B981;
+  --luxury-light-warning: #F59E0B;
+  --luxury-light-error: #EF4444;
+  --luxury-light-info: #06B6D4;
+
+  /* === LIGHT MODE TEXT COLORS === */
+  --luxury-light-text-primary: #0A0A0A;
+  --luxury-light-text-secondary: #3A3A3A;
+  --luxury-light-text-tertiary: #6A6A6A;
+  --luxury-light-text-accent: #2563EB;
+
+  /* === LIGHT MODE BACKGROUND COLORS === */
+  --luxury-light-bg-primary: #FFFFFF;
+  --luxury-light-bg-secondary: #FAFAFA;
+  --luxury-light-bg-tertiary: #F5F5F5;
+  --luxury-light-bg-glass: rgba(255, 255, 255, 0.90);
+
+  /* === LIGHT MODE GLASSMORPHISM === */
+  --luxury-light-glass-bg: rgba(255, 255, 255, 0.85);
+  --luxury-light-glass-border: rgba(0, 0, 0, 0.08);
+  --luxury-light-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --luxury-light-glass-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
+  
+  /* === LIGHT MODE LUXURY SHADOWS === */
+  --luxury-light-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --luxury-light-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --luxury-light-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --luxury-light-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+  --luxury-light-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.09);
+  --luxury-light-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.1);
+  --luxury-light-shadow-3xl: 0 35px 60px rgba(0, 0, 0, 0.12);
+  
+  /* === LIGHT MODE PREMIUM GLOW EFFECTS === */
+  --luxury-light-glow-blue: 0 0 30px rgba(59, 130, 246, 0.4);
+  --luxury-light-glow-purple: 0 0 30px rgba(139, 92, 246, 0.4);
+  --luxury-light-glow-cyan: 0 0 30px rgba(6, 182, 212, 0.4);
+  --luxury-light-glow-gold: 0 0 30px rgba(245, 158, 11, 0.4);
+  --luxury-light-glow-rose: 0 0 30px rgba(244, 63, 94, 0.4);
+
+  /* === SEMANTIC COLOR SYSTEM (Light Mode) === */
+  --color-semantic-success: var(--luxury-light-success);
+  --color-semantic-error: var(--luxury-light-error);
+  --color-semantic-warning: var(--luxury-light-warning);
+  --color-semantic-info: var(--luxury-light-info);
+  
+  --color-surface-1: var(--luxury-light-bg-primary);
+  --color-surface-2: var(--luxury-light-bg-secondary);
+  --color-surface-3: var(--luxury-light-bg-tertiary);
+  
+  --color-text-on-primary: var(--luxury-light-text-primary);
+  --color-text-on-secondary: var(--luxury-light-text-secondary);
+  --color-text-on-tertiary: var(--luxury-light-text-tertiary);
+}
+
+/* ================================================
+   DARK MODE LUXURY (BLACK/DARK THEME)
+   Premium dark luxury with vibrant gradients
+   ================================================ */
+
+.dark {
+  /* === DARK MODE GRADIENT STOPS (Premium Vibrant) === */
+  --luxury-dark-blue-start: #60A5FA;
+  --luxury-dark-blue-mid: #3B82F6;
+  --luxury-dark-blue-end: #2563EB;
+  --luxury-dark-blue-glow: rgba(96, 165, 250, 0.6);
+  
+  --luxury-dark-purple-start: #A78BFA;
+  --luxury-dark-purple-mid: #8B5CF6;
+  --luxury-dark-purple-end: #7C3AED;
+  --luxury-dark-purple-glow: rgba(167, 139, 250, 0.6);
+  
+  --luxury-dark-cyan-start: #22D3EE;
+  --luxury-dark-cyan-mid: #06B6D4;
+  --luxury-dark-cyan-end: #0891B2;
+  --luxury-dark-cyan-glow: rgba(34, 211, 238, 0.6);
+  
+  --luxury-dark-gold-start: #FCD34D;
+  --luxury-dark-gold-mid: #F59E0B;
+  --luxury-dark-gold-end: #D97706;
+  --luxury-dark-gold-glow: rgba(252, 211, 77, 0.6);
+  
+  --luxury-dark-rose-start: #FB7185;
+  --luxury-dark-rose-mid: #F43F5E;
+  --luxury-dark-rose-end: #E11D48;
+  --luxury-dark-rose-glow: rgba(251, 113, 133, 0.6);
+
+  /* === DARK MODE ACCENT COLORS === */
+  --luxury-dark-primary: #60A5FA;
+  --luxury-dark-secondary: #A78BFA;
+  --luxury-dark-tertiary: #22D3EE;
+  --luxury-dark-success: #34D399;
+  --luxury-dark-warning: #FCD34D;
+  --luxury-dark-error: #F87171;
+  --luxury-dark-info: #22D3EE;
+
+  /* === DARK MODE TEXT COLORS === */
+  --luxury-dark-text-primary: #FFFFFF;
+  --luxury-dark-text-secondary: #E0E0E0;
+  --luxury-dark-text-tertiary: #A0A0A0;
+  --luxury-dark-text-accent: #60A5FA;
+
+  /* === DARK MODE BACKGROUND COLORS === */
+  --luxury-dark-bg-primary: #000000;
+  --luxury-dark-bg-secondary: #0A0A0A;
+  --luxury-dark-bg-tertiary: #141414;
+  --luxury-dark-bg-glass: rgba(10, 10, 10, 0.70);
+
+  /* === DARK MODE GLASSMORPHISM === */
+  --luxury-dark-glass-bg: rgba(10, 10, 10, 0.70);
+  --luxury-dark-glass-border: rgba(255, 255, 255, 0.12);
+  --luxury-dark-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --luxury-dark-glass-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.8);
+  
+  /* === DARK MODE LUXURY SHADOWS === */
+  --luxury-dark-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --luxury-dark-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --luxury-dark-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
+  --luxury-dark-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
+  --luxury-dark-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.75);
+  --luxury-dark-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.8);
+  --luxury-dark-shadow-3xl: 0 35px 60px rgba(0, 0, 0, 0.9);
+  
+  /* === DARK MODE PREMIUM GLOW EFFECTS === */
+  --luxury-dark-glow-blue: 0 0 40px rgba(96, 165, 250, 0.6);
+  --luxury-dark-glow-purple: 0 0 40px rgba(167, 139, 250, 0.6);
+  --luxury-dark-glow-cyan: 0 0 40px rgba(34, 211, 238, 0.6);
+  --luxury-dark-glow-gold: 0 0 40px rgba(252, 211, 77, 0.6);
+  --luxury-dark-glow-rose: 0 0 40px rgba(251, 113, 133, 0.6);
+
+  /* === SEMANTIC COLOR SYSTEM (Dark Mode) === */
+  --color-semantic-success: var(--luxury-dark-success);
+  --color-semantic-error: var(--luxury-dark-error);
+  --color-semantic-warning: var(--luxury-dark-warning);
+  --color-semantic-info: var(--luxury-dark-info);
+  
+  --color-surface-1: var(--luxury-dark-bg-primary);
+  --color-surface-2: var(--luxury-dark-bg-secondary);
+  --color-surface-3: var(--luxury-dark-bg-tertiary);
+  
+  --color-text-on-primary: var(--luxury-dark-text-primary);
+  --color-text-on-secondary: var(--luxury-dark-text-secondary);
+  --color-text-on-tertiary: var(--luxury-dark-text-tertiary);
+}
+
+/* ================================================
+   LIGHT MODE LUXURY GRADIENTS
+   Bright, elegant gradients for white theme
+   ================================================ */
+
+.luxury-gradient-primary-light {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-blue-start) 0%, 
+    var(--luxury-light-purple-mid) 50%, 
+    var(--luxury-light-cyan-end) 100%
+  );
+}
+
+.luxury-gradient-secondary-light {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-purple-start) 0%, 
+    var(--luxury-light-rose-mid) 50%, 
+    var(--luxury-light-gold-end) 100%
+  );
+}
+
+.luxury-gradient-mesh-light {
+  background: 
+    radial-gradient(at 27% 37%, var(--luxury-light-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, var(--luxury-light-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, var(--luxury-light-cyan-glow) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, var(--luxury-light-rose-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, var(--luxury-light-gold-glow) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, var(--luxury-light-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, var(--luxury-light-purple-glow) 0px, transparent 50%),
+    var(--luxury-light-bg-primary);
+}
+
+/* Light Mode Text Gradients */
+.luxury-text-gradient-light-1 {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-blue-start), 
+    var(--luxury-light-purple-mid), 
+    var(--luxury-light-cyan-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-text-gradient-light-2 {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-purple-start), 
+    var(--luxury-light-rose-mid), 
+    var(--luxury-light-gold-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-text-gradient-light-3 {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-cyan-start), 
+    var(--luxury-light-blue-mid), 
+    var(--luxury-light-purple-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ================================================
+   DARK MODE LUXURY GRADIENTS
+   Vibrant, deep gradients for dark theme
+   ================================================ */
+
+.luxury-gradient-primary-dark {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-blue-start) 0%, 
+    var(--luxury-dark-purple-mid) 50%, 
+    var(--luxury-dark-cyan-end) 100%
+  );
+}
+
+.luxury-gradient-secondary-dark {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-purple-start) 0%, 
+    var(--luxury-dark-rose-mid) 50%, 
+    var(--luxury-dark-gold-end) 100%
+  );
+}
+
+.luxury-gradient-mesh-dark {
+  background: 
+    radial-gradient(at 27% 37%, var(--luxury-dark-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, var(--luxury-dark-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, var(--luxury-dark-cyan-glow) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, var(--luxury-dark-rose-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, var(--luxury-dark-gold-glow) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, var(--luxury-dark-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, var(--luxury-dark-purple-glow) 0px, transparent 50%),
+    var(--luxury-dark-bg-primary);
+}
+
+/* Dark Mode Text Gradients */
+.luxury-text-gradient-dark-1 {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-blue-start), 
+    var(--luxury-dark-purple-mid), 
+    var(--luxury-dark-cyan-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-text-gradient-dark-2 {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-purple-start), 
+    var(--luxury-dark-rose-mid), 
+    var(--luxury-dark-gold-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-text-gradient-dark-3 {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-cyan-start), 
+    var(--luxury-dark-blue-mid), 
+    var(--luxury-dark-purple-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ================================================
+   THEME-AWARE LUXURY GRADIENTS
+   Automatically switches based on theme
+   ================================================ */
+
+.luxury-gradient-primary {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-blue-start) 0%, 
+    var(--luxury-light-purple-mid) 50%, 
+    var(--luxury-light-cyan-end) 100%
+  );
+}
+
+.dark .luxury-gradient-primary {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-blue-start) 0%, 
+    var(--luxury-dark-purple-mid) 50%, 
+    var(--luxury-dark-cyan-end) 100%
+  );
+}
+
+.luxury-gradient-secondary {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-purple-start) 0%, 
+    var(--luxury-light-rose-mid) 50%, 
+    var(--luxury-light-gold-end) 100%
+  );
+}
+
+.dark .luxury-gradient-secondary {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-purple-start) 0%, 
+    var(--luxury-dark-rose-mid) 50%, 
+    var(--luxury-dark-gold-end) 100%
+  );
+}
+
+.luxury-gradient-mesh {
+  background: 
+    radial-gradient(at 27% 37%, var(--luxury-light-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, var(--luxury-light-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, var(--luxury-light-cyan-glow) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, var(--luxury-light-rose-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, var(--luxury-light-gold-glow) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, var(--luxury-light-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, var(--luxury-light-purple-glow) 0px, transparent 50%),
+    var(--luxury-light-bg-primary);
+}
+
+.dark .luxury-gradient-mesh {
+  background: 
+    radial-gradient(at 27% 37%, var(--luxury-dark-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, var(--luxury-dark-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, var(--luxury-dark-cyan-glow) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, var(--luxury-dark-rose-glow) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, var(--luxury-dark-gold-glow) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, var(--luxury-dark-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, var(--luxury-dark-purple-glow) 0px, transparent 50%),
+    var(--luxury-dark-bg-primary);
+}
+
+/* Theme-aware text gradients */
+.luxury-text-gradient-1 {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-blue-start), 
+    var(--luxury-light-purple-mid), 
+    var(--luxury-light-cyan-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .luxury-text-gradient-1 {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-blue-start), 
+    var(--luxury-dark-purple-mid), 
+    var(--luxury-dark-cyan-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-text-gradient-2 {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-purple-start), 
+    var(--luxury-light-rose-mid), 
+    var(--luxury-light-gold-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .luxury-text-gradient-2 {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-purple-start), 
+    var(--luxury-dark-rose-mid), 
+    var(--luxury-dark-gold-start)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-text-gradient-3 {
+  background: linear-gradient(135deg, 
+    var(--luxury-light-cyan-start), 
+    var(--luxury-light-blue-mid), 
+    var(--luxury-light-purple-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .luxury-text-gradient-3 {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-cyan-start), 
+    var(--luxury-dark-blue-mid), 
+    var(--luxury-dark-purple-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ================================================
+   PREMIUM CARD SYSTEM (Theme-Aware)
+   ================================================ */
+
+.luxury-card-base {
+  position: relative;
+  background: var(--luxury-light-glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--luxury-light-glass-border);
+  box-shadow: var(--luxury-light-glass-shadow);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .luxury-card-base {
+  background: var(--luxury-dark-glass-bg);
+  border-color: var(--luxury-dark-glass-border);
+  box-shadow: var(--luxury-dark-glass-shadow);
+}
+
+/* Light Mode Hover */
+.luxury-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--luxury-light-shadow-3xl), var(--luxury-light-glow-blue);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Dark Mode Hover */
+.dark .luxury-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--luxury-dark-shadow-3xl), var(--luxury-dark-glow-blue);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
+.luxury-card-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, 
+    var(--luxury-light-blue-start), 
+    var(--luxury-light-purple-mid), 
+    var(--luxury-light-cyan-start)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.dark .luxury-card-glow::before {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-blue-start), 
+    var(--luxury-dark-purple-mid), 
+    var(--luxury-dark-cyan-start)
+  );
+}
+
+.luxury-card-glow:hover::before {
+  opacity: 1;
+}
+
+/* Card floating animation */
+.luxury-card-float {
+  animation: luxuryFloat 6s ease-in-out infinite;
+}
+
+@keyframes luxuryFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ================================================
+   LUXURY BUTTON SYSTEM (Theme-Aware)
+   ================================================ */
+
+.luxury-btn-primary {
+  position: relative;
+  background: linear-gradient(135deg, 
+    var(--luxury-light-blue-start), 
+    var(--luxury-light-purple-mid)
+  );
+  color: white;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  border-radius: 0.875rem;
+  border: none;
+  box-shadow: var(--luxury-light-shadow-lg), var(--luxury-light-glow-blue);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .luxury-btn-primary {
+  background: linear-gradient(135deg, 
+    var(--luxury-dark-blue-start), 
+    var(--luxury-dark-purple-mid)
+  );
+  box-shadow: var(--luxury-dark-shadow-lg), var(--luxury-dark-glow-blue);
+}
+
+.luxury-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--luxury-light-shadow-2xl), var(--luxury-light-glow-purple);
+}
+
+.dark .luxury-btn-primary:hover {
+  box-shadow: var(--luxury-dark-shadow-2xl), var(--luxury-dark-glow-purple);
+}
+
+.luxury-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Button shine effect */
+.luxury-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.luxury-btn-primary:hover::before {
+  left: 100%;
+}
+
+/* ================================================
+   LUXURY BACKDROP EFFECTS
+   ================================================ */
+
+.luxury-backdrop-blur {
+  backdrop-filter: blur(60px) saturate(200%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%);
+}
+
+.luxury-backdrop-mesh {
+  background-image: 
+    radial-gradient(at 40% 20%, var(--luxury-light-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, var(--luxury-light-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, var(--luxury-light-cyan-glow) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, var(--luxury-light-gold-glow) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, var(--luxury-light-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, var(--luxury-light-blue-glow) 0px, transparent 50%);
+}
+
+.dark .luxury-backdrop-mesh {
+  background-image: 
+    radial-gradient(at 40% 20%, var(--luxury-dark-blue-glow) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, var(--luxury-dark-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, var(--luxury-dark-cyan-glow) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, var(--luxury-dark-gold-glow) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, var(--luxury-dark-purple-glow) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, var(--luxury-dark-blue-glow) 0px, transparent 50%);
+}
+
+/* ================================================
+   LUXURY ANIMATION KEYFRAMES
+   ================================================ */
+
+@keyframes luxuryPulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes luxuryShimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes luxuryGlow {
+  0%, 100% { 
+    box-shadow: var(--luxury-light-glow-blue); 
+  }
+  33% { 
+    box-shadow: var(--luxury-light-glow-purple); 
+  }
+  66% { 
+    box-shadow: var(--luxury-light-glow-cyan); 
+  }
+}
+
+@keyframes luxuryGlowDark {
+  0%, 100% { 
+    box-shadow: var(--luxury-dark-glow-blue); 
+  }
+  33% { 
+    box-shadow: var(--luxury-dark-glow-purple); 
+  }
+  66% { 
+    box-shadow: var(--luxury-dark-glow-cyan); 
+  }
+}
+
+.dark .luxury-glow-animate {
+  animation: luxuryGlowDark 3s ease-in-out infinite;
+}
+
+/* ================================================
+   LUXURY TYPOGRAPHY (Theme-Aware)
+   ================================================ */
+
+.luxury-heading {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--luxury-light-text-primary);
+}
+
+.dark .luxury-heading {
+  color: var(--luxury-dark-text-primary);
+}
+
+.luxury-body {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.7;
+  color: var(--luxury-light-text-secondary);
+}
+
+.dark .luxury-body {
+  color: var(--luxury-dark-text-secondary);
+}
+
+.luxury-text-shadow-light {
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dark .luxury-text-shadow-light {
+  text-shadow: 0 2px 40px rgba(255, 255, 255, 0.08);
+}
+
+/* ================================================
+   PREMIUM HOVER EFFECTS (Theme-Aware)
+   ================================================ */
+
+.luxury-hover-glow {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.luxury-hover-glow:hover {
+  box-shadow: 
+    0 0 20px var(--luxury-light-blue-glow),
+    0 0 40px var(--luxury-light-purple-glow),
+    0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.dark .luxury-hover-glow:hover {
+  box-shadow: 
+    0 0 20px var(--luxury-dark-blue-glow),
+    0 0 40px var(--luxury-dark-purple-glow),
+    0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.luxury-hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.luxury-hover-scale {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* ================================================
+   RESPONSIVE LUXURY
+   ================================================ */
+
+@media (max-width: 768px) {
+  .luxury-card-hover:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+  
+  .luxury-backdrop-blur {
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+  }
+}
+
+/* ================================================
+   UTILITY CLASSES
+   ================================================ */
+
+.luxury-transition {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-transition-fast {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.luxury-pointer {
+  cursor: pointer;
+}
+
+/* ================================================
+   THEME TRANSITION ANIMATION
+   Smooth theme switching
+   ================================================ */
+
+* {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exclude elements that should not transition */
+.motion-reduce,
+[data-framer-name],
+motion,
+[style*="transform"] {
+  transition: none !important;
+}
+
+/* ================================================
+   ANIMATED GRADIENT SYSTEM
+   Premium animated backgrounds
+   ================================================ */
+
+@keyframes animateGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.gradient-animated {
+  background-size: 200% 200%;
+  animation: animateGradient 15s ease infinite;
+}
+
+.gradient-animated-fast {
+  background-size: 200% 200%;
+  animation: animateGradient 8s ease infinite;
+}
+
+.gradient-animated-slow {
+  background-size: 200% 200%;
+  animation: animateGradient 25s ease infinite;
+}
+
+/* ================================================
+   REDUCED MOTION SUPPORT
+   ================================================ */
+
+/* ================================================
+   ADVANCED DARK MODE ENHANCEMENTS
+   Enhanced features for premium dark experience
+   ================================================ */
+
+@media (prefers-color-scheme: dark) {
+  /* Reduce brightness of images in dark mode */
+  img {
+    opacity: 0.95;
+    transition: opacity 0.3s ease;
+  }
+
+  img:hover {
+    opacity: 1;
+  }
+
+  /* Enhanced text rendering in dark */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Subtle grid overlay in dark mode for depth */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.02) 75%, rgba(255, 255, 255, 0.02) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.02) 75%, rgba(255, 255, 255, 0.02) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.5;
+  }
+
+  /* Enhanced shadows for depth in dark mode */
+  .shadow-glass-lg {
+    box-shadow: 
+      0 0 1px rgba(255, 255, 255, 0.1),
+      0 20px 60px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Glow effects for interactive elements */
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid rgba(96, 165, 250, 0.5);
+    outline-offset: 2px;
+  }
+}
+
+/* ================================================
+   REDUCED MOTION SUPPORT
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .luxury-card-float,
+  .gradient-animated,
+  .gradient-animated-fast,
+  .gradient-animated-slow {
+    animation: none;
+  }
+}

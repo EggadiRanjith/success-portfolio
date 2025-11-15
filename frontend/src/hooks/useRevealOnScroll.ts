@@ -1,49 +1,43 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useReducedMotion } from "./useReducedMotion";
 
+/**
+ * Hook for scroll-triggered reveal animations using IntersectionObserver
+ * Replaces GSAP ScrollTrigger with native browser API + Framer Motion
+ */
 export function useRevealOnScroll() {
   const reduced = useReducedMotion();
+  const [visibleElements, setVisibleElements] = useState<Set<Element>>(new Set());
 
   useEffect(() => {
-    let ctx: any;
-    let ScrollTrigger: any;
+    if (reduced || typeof window === "undefined") return;
 
-    async function run() {
-      if (reduced) return;
-      if (typeof window === "undefined") return;
-      const gsap = (await import("gsap")).default;
-      ScrollTrigger = (await import("gsap/ScrollTrigger")).default;
-      // @ts-ignore register
-      gsap.registerPlugin(ScrollTrigger);
-      ctx = gsap.context(() => {
-        const elements = gsap.utils.toArray<HTMLElement>(".reveal-on-scroll");
-        elements.forEach((el, index) => {
-          gsap.from(el, {
-            scrollTrigger: {
-              trigger: el,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-            y: 24,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            delay: index * 0.05,
-          });
+    const elements = document.querySelectorAll(".reveal-on-scroll");
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleElements((prev) => new Set(prev).add(entry.target));
+            observer.unobserve(entry.target);
+          }
         });
-      });
-    }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -20% 0px", // Trigger when element is 20% from bottom
+      }
+    );
 
-    run();
+    elements.forEach((el) => observer.observe(el));
 
     return () => {
-      try {
-        ctx?.revert?.();
-        // @ts-ignore
-        ScrollTrigger?.getAll?.().forEach((t: any) => t?.kill());
-      } catch {}
+      elements.forEach((el) => observer.unobserve(el));
     };
   }, [reduced]);
+
+  return visibleElements;
 }

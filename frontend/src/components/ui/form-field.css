@@ -1,0 +1,30 @@
+/* Theme-aware input styles - overrides browser autofill */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  background-color: var(--color-bg-primary) !important;
+  color: var(--color-text-primary) !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  caret-color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-tertiary) !important;
+  opacity: 0.7 !important;
+  -webkit-text-fill-color: var(--color-text-tertiary) !important;
+}
+
+/* Focus states */
+input:focus,
+textarea:focus {
+  background-color: var(--color-bg-secondary) !important;
+  border-color: var(--color-accent-blue) !important;
+  color: var(--color-text-primary) !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+}
+

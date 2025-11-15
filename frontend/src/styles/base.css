@@ -1,0 +1,666 @@
+/* Import Ultra-Luxury Foundation */
+@import url('./luxury-system.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================
+   CSS CUSTOM PROPERTIES (Luxury Theme Variables)
+   ================================================ */
+
+:root {
+  /* Colors - Light Mode */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F8F8F8;
+  --color-bg-tertiary: #F0F0F0;
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #3A3A3A;
+  --color-text-tertiary: #6A6A6A;
+  --color-border: #E0E0E0;
+  
+  /* Luxury Accent Colors - Light Mode */
+  --color-accent-blue: #3B82F6;
+  --color-accent-purple: #8B5CF6;
+  --color-accent-cyan: #06B6D4;
+  --color-accent-gold: #F59E0B;
+  
+  /* Glass Effect Base - Light Mode */
+  --glass-bg: rgba(255, 255, 255, 0.90);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-blur: 40px;
+  --glass-blur-mobile: 20px;
+  --overlay: rgba(255, 255, 255, 0.95);
+}
+
+.dark {
+  /* Colors - Dark Mode */
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0A0A0A;
+  --color-bg-tertiary: #141414;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #E0E0E0;
+  --color-text-tertiary: #A0A0A0;
+  --color-border: rgba(255, 255, 255, 0.15);
+  
+  /* Luxury Accent Colors - Dark Mode */
+  --color-accent-blue: #60A5FA;
+  --color-accent-purple: #A78BFA;
+  --color-accent-cyan: #22D3EE;
+  --color-accent-gold: #FCD34D;
+  
+  /* Glass Effect - Dark Mode */
+  --glass-bg: rgba(10, 10, 10, 0.70);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 40px;
+  --glass-blur-mobile: 20px;
+  --overlay: rgba(0, 0, 0, 0.9);
+}
+
+/* ================================================
+   SEMANTIC THEME UTILITIES
+   ================================================ */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+
+.bg-primary { background: var(--color-bg-primary); }
+.bg-secondary { background: var(--color-bg-secondary); }
+.bg-tertiary { background: var(--color-bg-tertiary); }
+
+.border-primary { border-color: var(--color-border); }
+
+/* ================================================
+   LUXURY GRADIENT BACKGROUNDS
+   ================================================ */
+.luxury-gradient-bg {
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.15), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.10), transparent 50%),
+    var(--color-bg-primary);
+}
+
+.dark .luxury-gradient-bg {
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.08), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(167, 139, 250, 0.08), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.06), transparent 50%),
+    var(--color-bg-primary);
+}
+
+/* ================================================
+   PREMIUM GLASS EFFECTS
+   ================================================ */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile optimization: Reduce backdrop blur for performance */
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(var(--glass-blur-mobile)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-mobile)) saturate(150%);
+  }
+}
+
+.dark .glass-card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-card:hover {
+  border-color: var(--color-border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.dark .glass-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.glass-base {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-frosted {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.dark .glass-frosted {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Overlay background utility */
+.bg-overlay {
+  background: var(--overlay);
+}
+
+/* ================================================
+   LUXURY TEXT GRADIENTS
+   ================================================ */
+.text-gradient-luxury {
+  background: linear-gradient(135deg, 
+    var(--color-accent-blue) 0%, 
+    var(--color-accent-purple) 50%, 
+    var(--color-accent-cyan) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, 
+    #F59E0B 0%, 
+    #F97316 50%, 
+    #DC2626 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-silver {
+  background: linear-gradient(135deg, 
+    #6B7280 0%, 
+    #9CA3AF 50%, 
+    #D1D5DB 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ================================================
+   LUXURY HOVER EFFECTS
+   ================================================ */
+.hover-glow {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-glow:hover {
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.3),
+    0 0 40px rgba(139, 92, 246, 0.2),
+    0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.dark .hover-glow:hover {
+  box-shadow: 
+    0 0 20px rgba(96, 165, 250, 0.4),
+    0 0 40px rgba(167, 139, 250, 0.3),
+    0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.pressable {
+  transition: transform 0.1s ease;
+}
+
+.pressable:active {
+  transform: scale(0.98);
+}
+
+/* ================================================
+   LUXURY BORDER GLOWS
+   ================================================ */
+.border-glow {
+  border: 2px solid transparent;
+  background-image: 
+    linear-gradient(var(--color-bg-primary), var(--color-bg-primary)),
+    linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.5), 
+      rgba(139, 92, 246, 0.5), 
+      rgba(6, 182, 212, 0.5)
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.dark .border-glow {
+  background-image: 
+    linear-gradient(var(--color-bg-primary), var(--color-bg-primary)),
+    linear-gradient(135deg, 
+      rgba(96, 165, 250, 0.6), 
+      rgba(167, 139, 250, 0.6), 
+      rgba(34, 211, 238, 0.6)
+    );
+}
+
+/* ================================================
+   THEME TRANSITION (Enhanced with Luxury)
+   Smooth transitions when theme toggles
+   ================================================ */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, background-image, background;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exclude elements that should not transition */
+.motion-reduce,
+[data-framer-name],
+motion,
+[style*="transform"],
+[style*="backdrop-filter"],
+motion[style*="backdrop-filter"],
+/* Exclude Framer Motion animated elements */
+[data-framer-component] {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, background-image, background !important;
+  /* Explicitly exclude backdrop-filter from transitions */
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Smooth theme toggle animation */
+html {
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================================================
+   BASE RESETS
+   ================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans, 'Inter', system-ui, -apple-system, sans-serif);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ================================================
+   ANIMATION UTILITIES
+   ================================================ */
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.fade-in {
+  opacity: 0;
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ================================================
+   MOBILE OPTIMIZATIONS
+   ================================================ */
+
+/* Touch-friendly button sizes */
+button, a, input, textarea, select {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Prevent input zoom on focus (iOS) */
+input, textarea, select {
+  font-size: 16px;
+}
+
+/* Disable double-tap zoom */
+html {
+  touch-action: manipulation;
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .hover-glow:hover,
+  .glass-card:hover {
+    transform: none;
+    box-shadow: inherit;
+  }
+  
+  .glass-card:active {
+    transform: scale(0.98);
+  }
+  
+  /* Preserve header backdrop-filter on touch devices */
+  header [style*="backdrop-filter"] {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+}
+
+/* ================================================
+   ACCESSIBILITY
+   ================================================ */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass-base,
+  .glass-card {
+    border-width: 2px;
+  }
+}
+
+/* ================================================
+   SCROLLBAR STYLING
+   ================================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-tertiary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-tertiary) var(--color-bg-secondary);
+}
+
+/* ================================================
+   LUXURY GRADIENT ORBS (for backgrounds)
+   ================================================ */
+
+.gradient-orb-blue {
+  background: radial-gradient(circle, 
+    rgba(59, 130, 246, 0.4) 0%, 
+    rgba(59, 130, 246, 0.2) 50%, 
+    transparent 100%
+  );
+}
+
+.dark .gradient-orb-blue {
+  background: radial-gradient(circle, 
+    rgba(96, 165, 250, 0.25) 0%, 
+    rgba(96, 165, 250, 0.12) 50%, 
+    transparent 100%
+  );
+}
+
+.gradient-orb-purple {
+  background: radial-gradient(circle, 
+    rgba(139, 92, 246, 0.4) 0%, 
+    rgba(139, 92, 246, 0.2) 50%, 
+    transparent 100%
+  );
+}
+
+.dark .gradient-orb-purple {
+  background: radial-gradient(circle, 
+    rgba(167, 139, 250, 0.25) 0%, 
+    rgba(167, 139, 250, 0.12) 50%, 
+    transparent 100%
+  );
+}
+
+.gradient-orb-cyan {
+  background: radial-gradient(circle, 
+    rgba(6, 182, 212, 0.3) 0%, 
+    rgba(6, 182, 212, 0.15) 50%, 
+    transparent 100%
+  );
+}
+
+.dark .gradient-orb-cyan {
+  background: radial-gradient(circle, 
+    rgba(34, 211, 238, 0.2) 0%, 
+    rgba(34, 211, 238, 0.1) 50%, 
+    transparent 100%
+  );
+}
+
+/* ================================================
+   PREMIUM BUTTON STYLES
+   ================================================ */
+
+.btn-luxury {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, 
+    var(--color-accent-blue), 
+    var(--color-accent-purple)
+  );
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-luxury:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.5),
+    0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.btn-luxury::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-luxury:hover::before {
+  left: 100%;
+}
+
+/* ================================================
+   MICRO-INTERACTIONS
+   ================================================ */
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.shine-effect:hover::after {
+  left: 150%;
+}
+
+.dark .shine-effect::after {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent
+  );
+}
+
+/* ================================================
+   UTILITY CLASSES
+   ================================================ */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Blur background for modals/overlays */
+.backdrop-blur-luxury {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* ================================================
+   LOADER TRANSITIONS (Prevent Flicker)
+   ================================================ */
+
+/* Prevent content flash during loader */
+body:has([data-loader-active="true"]) {
+  overflow: hidden;
+}
+
+/* Smooth loader transitions */
+[data-loader-container] {
+  will-change: opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Prevent layout shift during loader */
+.page-gate-content {
+  will-change: opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ================================================
+   PREMIUM CLEAN HEADER STYLES
+   ================================================ */
+
+.premium-header {
+  position: relative;
+  isolation: isolate;
+  will-change: transform, box-shadow, backdrop-filter;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
