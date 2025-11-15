@@ -175,7 +175,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                             <Text size="body-sm" color="secondary" className="mb-1">
                               <span className="font-semibold">Click to upload</span> or drag and drop
                             </Text>
-                            <Text size="body-xs" color="tertiary">
+                            <Text size="body-sm" color="tertiary">
                               PNG, JPG, GIF up to 10MB
                             </Text>
                           </div>
@@ -219,7 +219,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
 
                       {/* Or use URL */}
                       <div className="pt-2 border-t border-primary/30">
-                        <Text size="body-xs" color="tertiary" className="mb-2">
+                        <Text size="body-sm" color="tertiary" className="mb-2">
                           Or enter image URL:
                         </Text>
                         <FormField
@@ -570,7 +570,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                         <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-primary/50 rounded-lg cursor-pointer hover:border-primary transition-colors bg-secondary/50">
                           <div className="flex flex-col items-center justify-center pt-3 pb-3">
                             <ImageIcon className="w-6 h-6 mb-1 text-primary" />
-                            <Text size="body-xs" color="secondary">
+                            <Text size="body-sm" color="secondary">
                               <span className="font-semibold">Upload image</span> for gallery
                             </Text>
                           </div>
@@ -618,7 +618,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
 
                       {/* Or use URLs */}
                       <div className="pt-2 border-t border-primary/30">
-                        <Text size="body-xs" color="tertiary" className="mb-2">
+                        <Text size="body-sm" color="tertiary" className="mb-2">
                           Or enter image URLs (one per line):
                         </Text>
                         <FormField

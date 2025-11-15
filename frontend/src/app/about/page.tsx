@@ -7,13 +7,13 @@ import { fadeInUp, staggerContainer } from "@/lib/motionVariants";
 import { Award, Code2, Cloud, Database, Server, Zap, Badge as BadgeIcon, ExternalLink, User, GraduationCap } from "lucide-react";
 import { LeetCodeStats } from "@/components/sections/LeetCodeStats";
 import { GithubStats } from "@/components/sections/GithubStats";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { trackEvent } from "@/components/Analytics";
 import { getPortfolioData, type Skill, type Certification, type Education } from "@/lib/adminData";
 
 // Icon mapping for skills
-const skillIcons: Record<string, JSX.Element> = {
+const skillIcons: Record<string, React.ReactElement> = {
   "Programming Languages": <Code2 className="w-6 h-6" />,
   "Backend Development": <Server className="w-6 h-6" />,
   "Frontend Development": <Code2 className="w-6 h-6" />,
@@ -22,7 +22,7 @@ const skillIcons: Record<string, JSX.Element> = {
 };
 
 // Icon mapping for certifications
-const certIcons: Record<string, JSX.Element> = {
+const certIcons: Record<string, React.ReactElement> = {
   "AWS": <Cloud className="w-8 h-8" />,
   "Java": <Code2 className="w-8 h-8" />,
   "Python": <Code2 className="w-8 h-8" />,
@@ -212,7 +212,7 @@ export default function AboutPage() {
                   <>
                     <motion.div variants={fadeInUp}>
                       <Text size="body-lg" color="primary" className="leading-relaxed">
-                        I'm <strong>Ranjith Eggadi</strong>, a Computer Science graduate from Kamala Institute of Technology and Science, 
+                        I&apos;m <strong>Ranjith Eggadi</strong>, a Computer Science graduate from Kamala Institute of Technology and Science, 
                         based in Hyderabad, Telangana. I specialize in backend and full-stack development with strong experience in 
                         Java, Python, and JavaScript.
                       </Text>
@@ -221,7 +221,7 @@ export default function AboutPage() {
                     <motion.div variants={fadeInUp}>
                       <Text size="body" color="secondary" className="leading-relaxed">
                         My expertise spans <strong>Spring Boot</strong>, <strong>Django</strong>, <strong>Node.js</strong>, and <strong>FastAPI</strong>, 
-                        with hands-on experience in Microservices, REST APIs, and AWS (EC2, S3). I'm skilled in building scalable, 
+                        with hands-on experience in Microservices, REST APIs, and AWS (EC2, S3). I&apos;m skilled in building scalable, 
                         secure, and performance-optimized applications.
                       </Text>
                     </motion.div>
@@ -322,7 +322,7 @@ export default function AboutPage() {
                     
                     return (
                       <motion.div
-                        key={cert.id || cert.name}
+                        key={cert.credentialId || cert.name || `cert-${index}`}
                         variants={fadeInUp}
                         custom={index}
                         className="flex items-start gap-4 p-6 glass-base rounded-xl border border-border-primary/50"

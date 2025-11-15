@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Button, Container, Heading, Text } from '@/components/ui';
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
@@ -89,22 +89,29 @@ function ErrorFallback({
       
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(4)].map((_, i) => (
+        {useMemo(() => {
+          return [...Array(4)].map((_, i) => ({
+            left: Math.random() * 100,
+            top: Math.random() * 100,
+            duration: 3 + Math.random() * 2,
+            key: i,
+          }));
+        }, []).map((particle) => (
           <motion.div
-            key={i}
+            key={particle.key}
             className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-orange-400 opacity-20"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             animate={{
               y: [0, -30, 0],
               opacity: [0.2, 0.4, 0.2],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: particle.key * 0.5,
               ease: "easeInOut",
             }}
           />

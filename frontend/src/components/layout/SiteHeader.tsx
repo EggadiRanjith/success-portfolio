@@ -346,18 +346,7 @@ export function SiteHeader() {
 
             <div className="relative flex items-center justify-between gap-2 sm:gap-3 md:gap-4 w-full min-h-[44px] sm:min-h-[48px]">
               {/* Premium Logo */}
-              <Link 
-                href="/" 
-                className={cn(
-                  "relative inline-flex items-center font-semibold tracking-tight",
-                  "px-2 py-1 sm:px-2.5 sm:py-1.5 md:px-3 md:py-1.5 lg:px-3 lg:py-1.5",
-                  "rounded-lg",
-                  "text-base sm:text-lg md:text-xl lg:text-2xl xl:text-h4",
-                  "leading-none sm:leading-tight",
-                  "flex-shrink min-w-0",
-                  "truncate sm:truncate-none",
-                  "transition-all duration-200 ease-out"
-                )}
+              <motion.div
                 whileHover={prefersReducedMotion || prefersReducedMotionMedia ? {} : {
                   scale: 1.02,
                 }}
@@ -366,10 +355,24 @@ export function SiteHeader() {
                 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <span className="relative z-10 inline-block text-primary">
-                  {siteName}
-                </span>
-              </Link>
+                <Link 
+                  href="/" 
+                  className={cn(
+                    "relative inline-flex items-center font-semibold tracking-tight",
+                    "px-2 py-1 sm:px-2.5 sm:py-1.5 md:px-3 md:py-1.5 lg:px-3 lg:py-1.5",
+                    "rounded-lg",
+                    "text-base sm:text-lg md:text-xl lg:text-2xl xl:text-h4",
+                    "leading-none sm:leading-tight",
+                    "flex-shrink min-w-0",
+                    "truncate sm:truncate-none",
+                    "transition-all duration-200 ease-out"
+                  )}
+                >
+                  <span className="relative z-10 inline-block text-primary">
+                    {siteName}
+                  </span>
+                </Link>
+              </motion.div>
 
               {/* Desktop Nav */}
               <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8" aria-label="Primary">

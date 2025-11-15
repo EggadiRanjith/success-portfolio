@@ -11,6 +11,8 @@ const inter = Inter({
   variable: "--font-sans",
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {

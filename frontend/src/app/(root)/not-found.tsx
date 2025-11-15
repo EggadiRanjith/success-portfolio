@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Container, Heading, Text, Button } from "@/components/ui";
 import { Home, ArrowLeft, Search, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 const floatingVariants = {
   animate: {
@@ -54,19 +54,26 @@ export default function NotFound() {
       
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
+        {useMemo(() => {
+          return [...Array(6)].map((_, i) => ({
+            left: Math.random() * 100,
+            top: Math.random() * 100,
+            duration: 3 + Math.random() * 2,
+            key: i,
+          }));
+        }, []).map((particle) => (
           <motion.div
-            key={i}
+            key={particle.key}
             className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             variants={floatingVariants}
             animate="animate"
             transition={{
-              delay: i * 0.5,
-              duration: 3 + Math.random() * 2,
+              delay: particle.key * 0.5,
+              duration: particle.duration,
             }}
           />
         ))}
@@ -120,7 +127,7 @@ export default function NotFound() {
           {/* Description */}
           <motion.div variants={itemVariants} className="mb-8">
             <Text size="body-lg" color="secondary" className="max-w-md mx-auto">
-              The page you're looking for doesn't exist or has been moved to a
+              The page you&apos;re looking for doesn&apos;t exist or has been moved to a
               different location. Let's get you back on track.
             </Text>
           </motion.div>

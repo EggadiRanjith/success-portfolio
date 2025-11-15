@@ -77,11 +77,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
             Project Not Found
           </Heading>
           <Text size="body-lg" color="secondary" className="mb-8">
-            The project you're looking for doesn't exist.
+            The project you&apos;re looking for doesn&apos;t exist.
           </Text>
-          <Button asChild variant="primary">
-            <Link href="/projects">Back to Projects</Link>
-          </Button>
+          <Link href="/projects">
+            <Button variant="primary">Back to Projects</Button>
+          </Link>
         </Container>
       </main>
     );
@@ -152,38 +152,38 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4">
                 {project.liveUrl && (
-                  <Button
-                    asChild
-                    variant="primary"
-                    size="lg"
-                    className="group"
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block"
                   >
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      className="group"
                     >
                       <ExternalLink className="w-4 h-4 mr-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                       View Live Demo
-                    </a>
-                  </Button>
+                    </Button>
+                  </a>
                 )}
                 {project.githubUrl && (
-                  <Button
-                    asChild
-                    variant="glass"
-                    size="lg"
-                    className="group"
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block"
                   >
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Button
+                      variant="glass"
+                      size="lg"
+                      className="group"
                     >
                       <Github className="w-4 h-4 mr-2" />
                       View on GitHub
-                    </a>
-                  </Button>
+                    </Button>
+                  </a>
                 )}
               </div>
             </motion.div>
@@ -392,9 +392,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                         Results
                       </Heading>
                       <div className="grid grid-cols-2 gap-4">
-                        {project.results.map((result: any, index: number) => (
+                        {project.results.map((result: { metric: string; label: string }, index: number) => (
                           <div key={index} className="text-center">
-                            <Text size="h3" color="primary" className="font-bold mb-1 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                            <Text size="body-lg" color="primary" className="font-bold mb-1 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                               {result.metric}
                             </Text>
                             <Text size="body-sm" color="tertiary">

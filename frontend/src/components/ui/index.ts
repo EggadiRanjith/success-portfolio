@@ -5,8 +5,8 @@ export type { ButtonProps } from "./button";
 export { Badge } from "./badge";
 export type { BadgeProps } from "./badge";
 
-export { Card } from "./Card";
-export type { CardProps } from "./Card";
+export { Card } from "./card";
+export type { CardProps } from "./card";
 
 export { Link } from "./link";
 export type { LinkProps } from "./link";

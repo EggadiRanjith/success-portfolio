@@ -121,7 +121,7 @@ export default function ContactPage() {
                 </span>
               </Heading>
               <Text size="body-lg" color="secondary" className="max-w-2xl mx-auto">
-                Have a project in mind? Want to collaborate? I'm always open to discussing new opportunities.
+                Have a project in mind? Want to collaborate? I&apos;m always open to discussing new opportunities.
               </Text>
             </motion.div>
 
