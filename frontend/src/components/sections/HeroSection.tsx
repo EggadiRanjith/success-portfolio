@@ -23,6 +23,7 @@ import {
 } from "@/constants/heroSection";
 import { getPortfolioData } from "@/lib/adminData";
 import { LiquidChrome } from "@/components/LiquidChrome";
+import { heroHeadingFont, monoFont } from "@/styles/fonts";
 
 export function HeroSection() {
   const router = useRouter();
@@ -174,7 +175,7 @@ export function HeroSection() {
   const handleResumeDownload = () => {
     try {
       // Try to download resume from public folder
-      const resumeUrl = "/resume.pdf";
+      const resumeUrl = "/RanjithREsume.pdf";
       const link = document.createElement("a");
       link.href = resumeUrl;
       link.download = "Ranjith_Eggadi_Resume.pdf";
@@ -281,7 +282,7 @@ export function HeroSection() {
           >
             <h1 
               suppressHydrationWarning
-              className="leading-[1.08] tracking-tight"
+              className={`leading-[1.08] tracking-tight ${heroHeadingFont.className}`}
               style={{
                 // Optimized for: very small phones (280px), small (320px), medium (375px), large (414px), tablets (768px), laptops (1024px), desktops (1440px+), ultrawide (2560px+)
                 fontSize: "clamp(1.5rem, 3.5vw + 0.5rem, 4rem)", // Better scaling across all resolutions
@@ -532,6 +533,7 @@ export function HeroSection() {
                       value={numValue}
                       suffix={suffixValue}
                       duration={2}
+                      className={monoFont.className}
                     />
                   </div>
                   <div 

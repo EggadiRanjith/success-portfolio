@@ -4,6 +4,7 @@ import React from "react";
 import { Badge } from "@/components/ui";
 import { motion } from "framer-motion";
 import { Code, Trophy, TrendingUp, Star, ExternalLink } from "lucide-react";
+import { monoFont } from "@/styles/fonts";
 
 interface LeetCodeStatsProps {
   username: string;
@@ -53,21 +54,21 @@ export function LeetCodeStats({ username, profileUrl, stats }: LeetCodeStatsProp
           <div className="flex items-center justify-center gap-2 mb-2">
             <Trophy className="w-4 h-4 text-fg-primary" />
           </div>
-          <p className="text-2xl font-bold text-fg-primary mb-1">{stats.problemsSolved}</p>
+          <p className={`text-2xl font-bold text-fg-primary mb-1 ${monoFont.className}`}>{stats.problemsSolved}</p>
           <p className="text-xs text-fg-tertiary">Problems Solved</p>
         </div>
         <div className="glass-card p-4 rounded-lg border border-border-primary/50 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <TrendingUp className="w-4 h-4 text-fg-primary" />
           </div>
-          <p className="text-2xl font-bold text-fg-primary mb-1">{stats.acceptanceRate}</p>
+          <p className={`text-2xl font-bold text-fg-primary mb-1 ${monoFont.className}`}>{stats.acceptanceRate}</p>
           <p className="text-xs text-fg-tertiary">Acceptance Rate</p>
         </div>
         <div className="glass-card p-4 rounded-lg border border-border-primary/50 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Star className="w-4 h-4 text-fg-primary" />
           </div>
-          <p className="text-2xl font-bold text-fg-primary mb-1">{stats.contestRating}</p>
+          <p className={`text-2xl font-bold text-fg-primary mb-1 ${monoFont.className}`}>{stats.contestRating}</p>
           <p className="text-xs text-fg-tertiary">Contest Rating</p>
         </div>
       </div>

@@ -47,12 +47,12 @@ export const HERO_ANIMATION_CONFIG = {
 // CTA button configuration
 export const HERO_CTA_BUTTONS = [
   {
-    text: "View Projects",
+    text: "View My Work",
     href: "/projects",
     variant: "primary" as const,
   },
   {
-    text: "Get in Touch",
+    text: "Contact Me",
     href: "/contact",
     variant: "secondary" as const,
   },

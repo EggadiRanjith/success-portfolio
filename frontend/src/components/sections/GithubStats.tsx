@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Github, GitBranch, Star, TrendingUp, ExternalLink, Code, GitCommit } from "lucide-react";
+import { monoFont } from "@/styles/fonts";
 
 interface GitHubStatsProps {
   username: string;
@@ -77,7 +78,7 @@ export function GithubStats({ username, profileUrl, stats }: GitHubStatsProps) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <GitBranch className="w-5 h-5 text-fg-primary" />
           </div>
-          <p className="text-3xl font-bold text-fg-primary mb-1 text-gradient-stats-blue">
+          <p className={`text-3xl font-bold text-fg-primary mb-1 text-gradient-stats-blue ${monoFont.className}`}>
             {stats.repositories}
           </p>
           <p className="text-xs text-fg-tertiary font-medium uppercase tracking-wide">Repositories</p>
@@ -90,7 +91,7 @@ export function GithubStats({ username, profileUrl, stats }: GitHubStatsProps) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <Star className="w-5 h-5 text-warning fill-warning" />
           </div>
-          <p className="text-3xl font-bold text-fg-primary mb-1 text-gradient-stats-yellow">
+          <p className={`text-3xl font-bold text-fg-primary mb-1 text-gradient-stats-yellow ${monoFont.className}`}>
             {stats.stars}
           </p>
           <p className="text-xs text-fg-tertiary font-medium uppercase tracking-wide">Stars Earned</p>
@@ -103,7 +104,7 @@ export function GithubStats({ username, profileUrl, stats }: GitHubStatsProps) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <GitCommit className="w-5 h-5 text-fg-primary" />
           </div>
-          <p className="text-3xl font-bold text-fg-primary mb-1 text-gradient-stats-green">
+          <p className={`text-3xl font-bold text-fg-primary mb-1 text-gradient-stats-green ${monoFont.className}`}>
             {stats.contributions}
           </p>
           <p className="text-xs text-fg-tertiary font-medium uppercase tracking-wide">Contributions</p>
@@ -116,7 +117,7 @@ export function GithubStats({ username, profileUrl, stats }: GitHubStatsProps) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <Code className="w-5 h-5 text-fg-primary" />
           </div>
-          <p className="text-3xl font-bold text-fg-primary mb-1 text-gradient-quinary">
+          <p className={`text-3xl font-bold text-fg-primary mb-1 text-gradient-quinary ${monoFont.className}`}>
             {stats.languages.length}
           </p>
           <p className="text-xs text-fg-tertiary font-medium uppercase tracking-wide">Languages</p>
@@ -210,7 +211,7 @@ export function GithubStats({ username, profileUrl, stats }: GitHubStatsProps) {
               <div className="flex items-center gap-3 ml-4">
                 <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary/5 border border-border-primary/30">
                   <Star className="w-3.5 h-3.5 text-warning fill-warning" />
-                  <span className="text-xs font-semibold text-fg-primary">{repo.stars}</span>
+                  <span className={`text-xs font-semibold text-fg-primary ${monoFont.className}`}>{repo.stars}</span>
                 </div>
                 <ExternalLink className="w-4 h-4 text-fg-tertiary group-hover/repo:text-fg-primary group-hover/repo:translate-x-0.5 group-hover/repo:-translate-y-0.5 transition-all" />
               </div>

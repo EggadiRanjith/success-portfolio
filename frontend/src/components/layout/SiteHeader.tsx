@@ -885,12 +885,18 @@ export function SiteHeader() {
                             closeMenu();
                           }}
                           className={cn(
-                            "block text-primary transition-all duration-300 rounded-lg relative",
+                            "block transition-all duration-300 rounded-xl relative",
                             "px-4 py-3.5 sm:px-5 sm:py-4",
-                            "text-base sm:text-lg", // Reduced from text-lg sm:text-xl md:text-2xl
-                            "min-h-[52px] flex items-center gap-3", // Touch-friendly height
+                            "text-base sm:text-lg",
+                            "min-h-[52px] flex items-center gap-3",
                             "hover:bg-secondary/30 active:bg-secondary/50",
-                            active && "text-primary font-semibold bg-secondary/30 border-l-2 border-primary"
+                            active
+                              ? cn(
+                                  "text-primary font-semibold",
+                                  "bg-[var(--drawer-active-bg,rgba(59,130,246,0.12))]",
+                                  "border border-primary/40 shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
+                                )
+                              : "text-secondary"
                           )}
                         >
                           {(() => {
@@ -912,7 +918,7 @@ export function SiteHeader() {
                 </motion.nav>
 
                 <motion.div 
-                  className="pt-8 border-t border-border-primary flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-8"
+                  className="pt-8 border-t border-border-primary flex flex-col items-stretch gap-3 mt-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.3 }}
@@ -944,42 +950,6 @@ export function SiteHeader() {
                         </span>
                       ) : (
                         "Let's Talk"
-                      )}
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    whileHover={prefersReducedMotion || prefersReducedMotionMedia ? {} : { scale: 1.05 }}
-                    whileTap={prefersReducedMotion || prefersReducedMotionMedia ? {} : { scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  >
-                    <Button 
-                      variant="ghost" 
-                      onClick={toggleTheme} 
-                      aria-label="Toggle theme"
-                      className={cn(
-                        "w-full sm:w-auto",
-                        "min-h-[48px] sm:min-h-[44px]",
-                        "p-3 sm:p-2.5"
-                      )}
-                    >
-                      {mounted ? (
-                        <AnimatePresence mode="wait">
-                          <motion.div
-                            key={theme}
-                            initial={{ rotate: -180, scale: 0.9 }}
-                            animate={{ rotate: 0, scale: 1 }}
-                            exit={{ rotate: 180, scale: 0.9 }}
-                            transition={{ type: "spring", stiffness: 180, damping: 18 }}
-                          >
-                            {theme === "dark" ? (
-                              <Sun className="h-6 w-6" />
-                            ) : (
-                              <Moon className="h-6 w-6" />
-                            )}
-                          </motion.div>
-                        </AnimatePresence>
-                      ) : (
-                        <div className="h-6 w-6" />
                       )}
                     </Button>
                   </motion.div>

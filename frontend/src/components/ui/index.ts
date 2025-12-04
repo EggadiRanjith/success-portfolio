@@ -29,22 +29,13 @@ export type { TextProps } from "./text";
 export { Container } from "./container";
 export type { ContainerProps } from "./container";
 
-export { LoadingSpinner } from "./LoadingSpinner";
 export { SkeletonLoader } from "./SkeletonLoader";
 export { CardSkeleton } from "./CardSkeleton";
 
 export { FrostedCard } from "./FrostedCard";
 export type { FrostedCardProps } from "./FrostedCard";
 
-export {
-  AnimatedCounter,
-  GlowOnHover,
-  AnimatedUnderline,
-  MagneticButton,
-  RippleEffect,
-  TiltCard,
-  PulseOnHover,
-} from "./InteractiveElements";
+export { AnimatedCounter } from "./InteractiveElements";
 
 export { FormField } from "./FormField";
 export type { FormFieldProps } from "./FormField";
