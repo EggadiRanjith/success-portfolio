@@ -19,7 +19,7 @@ export const SITE_CONFIG = {
  * Navigation Links
  */
 export const NAV_LINKS = [
-  { href: "/", label: "Home" },
+  { href: "/home", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

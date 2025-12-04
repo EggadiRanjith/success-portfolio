@@ -73,16 +73,14 @@ export function useTheme() {
   }, [applyThemeClass]);
 
   const setTheme = useCallback((t: Theme) => {
-    setThemeState((prevTheme) => {
-      return t;
-    });
+    setThemeState(t);
     try {
       window.localStorage.setItem(STORAGE_KEY, t);
     } catch (e) {
       // Error saving to localStorage silently
     }
     applyThemeClass(t);
-  }, [applyThemeClass, theme]);
+  }, [applyThemeClass]);
 
   const toggleTheme = useCallback(() => {
     const newTheme = theme === "dark" ? "light" : "dark";

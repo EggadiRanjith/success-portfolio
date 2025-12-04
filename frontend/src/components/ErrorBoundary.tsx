@@ -85,7 +85,7 @@ function ErrorFallback({
       className="min-h-screen bg-primary flex items-center justify-center p-4 relative overflow-hidden"
     >
       {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-orange-500/5 to-yellow-500/5 dark:from-red-500/3 dark:via-orange-500/3 dark:to-yellow-500/3" />
+      <div className="absolute inset-0 bg-gradient-error opacity-30" />
       
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -99,7 +99,7 @@ function ErrorFallback({
         }, []).map((particle) => (
           <motion.div
             key={particle.key}
-            className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-orange-400 opacity-20"
+            className="absolute w-2 h-2 rounded-full bg-error opacity-20"
             style={{
               left: `${particle.left}%`,
               top: `${particle.top}%`,
@@ -126,8 +126,8 @@ function ErrorFallback({
         >
           {/* Icon */}
           <motion.div variants={itemVariants} className="mb-6">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-border-primary/50 backdrop-blur-sm">
-              <AlertTriangle className="w-10 h-10 text-red-400" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-orb-red border border-border-primary/50 backdrop-blur-sm">
+              <AlertTriangle className="w-10 h-10 text-error" />
             </div>
           </motion.div>
 

@@ -12,8 +12,9 @@ export function MainSiteLayout({ children }: { children: React.ReactNode }) {
       <Analytics />
       <Loader />
       <PageLoader />
+      {/* Header outside PageGate to ensure fixed positioning works */}
+      <SiteHeader />
       <PageGate>
-        <SiteHeader />
         <AnimationProvider>
           <PageTransition>
             {children}

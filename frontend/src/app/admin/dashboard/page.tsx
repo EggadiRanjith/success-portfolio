@@ -37,54 +37,75 @@ export default function AdminDashboard() {
       return;
     }
 
-    // Load data
-    const portfolioData = getPortfolioData();
-    // Ensure hero field exists
-    if (!portfolioData.hero) {
-      portfolioData.hero = {
-        title: {
-          line1: "Backend & Full-Stack",
-          line2: {
-            prefix: "Developer ",
-            highlight: "Building Scalable Systems",
-          },
-        },
-        description:
-          "Computer Science graduate specializing in backend and full-stack development. Experienced in Java, Python, JavaScript, Microservices, REST APIs, and AWS. Building scalable, secure, and performance-optimized applications.",
-        stats: [
-          { label: "Production APIs", value: "10+" },
-          { label: "Years Experience", value: "3+" },
-          { label: "Cloud Deployments", value: "5+" },
-        ],
-        socialLinks: [
-          { href: "https://github.com/EggadiRanjith", label: "GitHub" },
-          { href: "https://linkedin.com/in/ranjitheggadi", label: "LinkedIn" },
-          { href: "https://leetcode.com/ranjitheggadi", label: "LeetCode" },
-        ],
-        ctaButtons: [
-          { text: "View Projects", href: "/projects", variant: "primary" },
-          { text: "Get in Touch", href: "/contact", variant: "secondary" },
-        ],
-      };
-      savePortfolioData(portfolioData);
-    }
-    setData(portfolioData);
+    // Load data from API
+    const loadData = async () => {
+      try {
+        const portfolioData = await getPortfolioData();
+        // Ensure hero field exists
+        if (!portfolioData.hero) {
+          portfolioData.hero = {
+            title: {
+              line1: "Backend & Full-Stack",
+              line2: {
+                prefix: "Developer ",
+                highlight: "Building Scalable Systems",
+              },
+            },
+            description:
+              "Computer Science graduate specializing in backend and full-stack development. Experienced in Java, Python, JavaScript, Microservices, REST APIs, and AWS. Building scalable, secure, and performance-optimized applications.",
+            stats: [
+              { label: "Production APIs", value: "10+" },
+              { label: "Years Experience", value: "3+" },
+              { label: "Cloud Deployments", value: "5+" },
+            ],
+            socialLinks: [
+              { href: "https://github.com/EggadiRanjith", label: "GitHub" },
+              { href: "https://linkedin.com/in/ranjitheggadi", label: "LinkedIn" },
+              { href: "https://leetcode.com/ranjitheggadi", label: "LeetCode" },
+            ],
+            ctaButtons: [
+              { text: "View Projects", href: "/projects", variant: "primary" },
+              { text: "Get in Touch", href: "/contact", variant: "secondary" },
+            ],
+          };
+          await savePortfolioData(portfolioData);
+        }
+        setData(portfolioData);
+      } catch (error) {
+        console.error("Error loading portfolio data:", error);
+        // Fallback: try to get default data
+        try {
+          const fallbackData = await getPortfolioData();
+          setData(fallbackData);
+        } catch (fallbackError) {
+          console.error("Error loading fallback data:", fallbackError);
+          // If all else fails, set null and show error
+          setData(null);
+        }
+      }
+    };
+
+    loadData();
   }, [isAuthenticated, router]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!data) return;
 
     setIsSaving(true);
-    savePortfolioData(data);
-    
-    setTimeout(() => {
-      setIsSaving(false);
-      setSaveMessage("Data saved successfully!");
+    try {
+      await savePortfolioData(data);
+      setSaveMessage("Data saved successfully to server! All users will see the changes.");
       setTimeout(() => setSaveMessage(""), 3000);
-    }, 500);
+    } catch (error) {
+      console.error("Error saving data:", error);
+      setSaveMessage("Error saving data. Please try again.");
+      setTimeout(() => setSaveMessage(""), 3000);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     const confirmed = window.confirm(
       "⚠️ WARNING: This will reset ALL your portfolio data to the default values.\n\n" +
       "This includes:\n" +
@@ -98,11 +119,17 @@ export default function AdminDashboard() {
     );
     
     if (confirmed) {
-      resetToDefaults();
-      const defaultData = getPortfolioData();
-      setData(defaultData);
-      setSaveMessage("⚠️ Data reset to defaults - Remember to save!");
-      setTimeout(() => setSaveMessage(""), 5000);
+      try {
+        await resetToDefaults();
+        const defaultData = await getPortfolioData();
+        setData(defaultData);
+        setSaveMessage("⚠️ Data reset to defaults - Remember to save!");
+        setTimeout(() => setSaveMessage(""), 5000);
+      } catch (error) {
+        console.error("Error resetting data:", error);
+        setSaveMessage("Error resetting data. Please try again.");
+        setTimeout(() => setSaveMessage(""), 3000);
+      }
     }
   };
 
@@ -141,7 +168,7 @@ export default function AdminDashboard() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                 >
-                  <Text size="body-sm" className="text-green-500 dark:text-green-400">
+                  <Text size="body-sm" className="text-success">
                     {saveMessage}
                   </Text>
                 </motion.div>

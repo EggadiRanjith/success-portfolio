@@ -124,13 +124,13 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                     {project.title || "Untitled Project"}
                   </Text>
                   {project.featured && (
-                    <Badge variant="glass" size="sm" className="bg-blue-500/20 dark:bg-blue-500/30 text-blue-600 dark:text-blue-400 border border-blue-500/30">
+                    <Badge variant="glass" size="sm" className="bg-orb-blue text-accent-blue border border-accent-blue/30">
                       Featured
                     </Badge>
                   )}
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => removeProject(project.id)} className="hover:bg-red-500/10">
-                  <Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" />
+                <Button variant="ghost" size="sm" onClick={() => removeProject(project.id)} className="hover:bg-orb-red">
+                  <Trash2 className="w-4 h-4 text-error" />
                 </Button>
               </div>
 
@@ -209,7 +209,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                           </div>
                           <button
                             onClick={() => updateProject(project.id, "image", "")}
-                            className="absolute top-2 right-2 p-1 bg-red-500/80 hover:bg-red-500 rounded text-white"
+                            className="absolute top-2 right-2 p-1 bg-error/80 hover:bg-error rounded text-fg-primary"
                             type="button"
                           >
                             <X className="w-4 h-4" />
@@ -293,7 +293,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                           {tag}
                           <button
                             onClick={() => removeTag(project.id, index)}
-                            className="ml-1 hover:text-red-500"
+                            className="ml-1 hover:text-error"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -303,7 +303,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                     <input
                       type="text"
                       placeholder="Add tag and press Enter"
-                      className="w-full px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
@@ -344,7 +344,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               const techs = project.technologies || [];
                               updateProject(project.id, "technologies", techs.filter((_, i) => i !== index));
                             }}
-                            className="ml-1 hover:text-red-500"
+                            className="ml-1 hover:text-error"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -354,7 +354,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                     <input
                       type="text"
                       placeholder="Add technology and press Enter"
-                      className="w-full px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
@@ -384,7 +384,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               updated[index] = e.target.value;
                               updateProject(project.id, "features", updated);
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                             placeholder="Feature description"
                           />
                           <button
@@ -392,7 +392,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               const features = project.features || [];
                               updateProject(project.id, "features", features.filter((_, i) => i !== index));
                             }}
-                            className="p-1 hover:text-red-500"
+                            className="p-1 hover:text-error"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -429,7 +429,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               updated[index] = e.target.value;
                               updateProject(project.id, "challenges", updated);
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                             placeholder="Challenge description"
                           />
                           <button
@@ -437,7 +437,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               const challenges = project.challenges || [];
                               updateProject(project.id, "challenges", challenges.filter((_, i) => i !== index));
                             }}
-                            className="p-1 hover:text-red-500"
+                            className="p-1 hover:text-error"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -474,7 +474,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               updated[index] = e.target.value;
                               updateProject(project.id, "solutions", updated);
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                             placeholder="Solution description"
                           />
                           <button
@@ -482,7 +482,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               const solutions = project.solutions || [];
                               updateProject(project.id, "solutions", solutions.filter((_, i) => i !== index));
                             }}
-                            className="p-1 hover:text-red-500"
+                            className="p-1 hover:text-error"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -519,7 +519,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               updated[index] = { ...updated[index], metric: e.target.value };
                               updateProject(project.id, "results", updated);
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                             placeholder="Metric (e.g., 25%)"
                           />
                           <input
@@ -531,7 +531,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               updated[index] = { ...updated[index], label: e.target.value };
                               updateProject(project.id, "results", updated);
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="flex-1 px-3 py-2 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                             placeholder="Label (e.g., Response Time Improvement)"
                           />
                           <button
@@ -539,7 +539,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               const results = project.results || [];
                               updateProject(project.id, "results", results.filter((_, i) => i !== index));
                             }}
-                            className="p-1 hover:text-red-500"
+                            className="p-1 hover:text-error"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -606,7 +606,7 @@ export function ProjectsForm({ data, onChange }: ProjectsFormProps) {
                               </div>
                               <button
                                 onClick={() => removeGalleryImage(project.id, index)}
-                                className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 rounded text-white"
+                                className="absolute top-1 right-1 p-1 bg-error/80 hover:bg-error rounded text-fg-primary"
                                 type="button"
                               >
                                 <X className="w-3 h-3" />

@@ -1,16 +1,12 @@
 "use client";
 
-import { Container, Heading, Text, FrostedCard, AnimatedCounter, GlowOnHover } from "@/components/ui";
-import { motion, AnimatePresence } from "framer-motion";
-import { AnimatedSection } from "@/components/animations/AnimatedSection";
-import { fadeInUp, staggerContainer } from "@/lib/motionVariants";
-import { Award, Code2, Cloud, Database, Server, Zap, Badge as BadgeIcon, ExternalLink, User, GraduationCap } from "lucide-react";
-import { LeetCodeStats } from "@/components/sections/LeetCodeStats";
-import { GithubStats } from "@/components/sections/GithubStats";
+import { Container, Heading, Text } from "@/components/ui";
+import { Award, Code2, Cloud, Database, Server, Badge as BadgeIcon, ExternalLink, User, GraduationCap, MapPin, Calendar } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { trackEvent } from "@/components/Analytics";
-import { getPortfolioData, type Skill, type Certification, type Education } from "@/lib/adminData";
+import { getPortfolioData, clearCache, type Skill, type Certification, type Education } from "@/lib/adminData";
+import { useTheme } from "@/context/ThemeContext";
+import Beams from "@/components/backgrounds/Beams";
 
 // Icon mapping for skills
 const skillIcons: Record<string, React.ReactElement> = {
@@ -30,12 +26,13 @@ const certIcons: Record<string, React.ReactElement> = {
 };
 
 export default function AboutPage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const { theme } = useTheme();
   const [aboutData, setAboutData] = useState({
     personalInfo: {
       name: "",
       description: "",
       title: "",
+      profileImage: "/profile.png",
     },
     skills: [] as Skill[],
     certifications: [] as Certification[],
@@ -46,513 +43,720 @@ export default function AboutPage() {
       cloudDeployments: "5+",
       leetcodeSolved: "150+",
     },
-    leetcodeData: {
-      username: "ranjitheggadi",
-      profileUrl: "https://leetcode.com/ranjitheggadi",
-      stats: {
-        problemsSolved: "150+",
-        acceptanceRate: "85%",
-        contestRating: "1650",
-        badges: ["Problem Solver", "Algorithm Master"],
-        topics: ["Arrays", "Dynamic Programming", "Trees", "Graphs", "Data Structures"],
-      },
-    },
-    githubData: {
-      username: "EggadiRanjith",
-      profileUrl: "https://github.com/EggadiRanjith",
-      stats: {
-        contributions: "500+",
-        repositories: "25+",
-        stars: "100+",
-        languages: ["Python", "JavaScript", "TypeScript", "Java"],
-        topRepos: [
-          { name: "careerpilot-ai", stars: 15, description: "AI-powered job application tracker" },
-          { name: "franchiseconnect", stars: 8, description: "Franchise management app" },
-          { name: "library-management", stars: 12, description: "Library management system" },
-        ],
-      },
-    },
   });
 
   // Load about data from admin
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const loadAboutData = () => {
+    const loadAboutData = async (force: boolean = false) => {
       try {
-        const data = getPortfolioData();
+        const data = await getPortfolioData(force);
+        
+        // Get profile image from personalInfo or use default
+        let profileImage = data?.personalInfo?.profileImage || "/profile.png";
+        if (profileImage === "/profile.jpg") {
+          profileImage = "/profile.png";
+        }
         
         setAboutData({
           personalInfo: {
             name: data?.personalInfo?.name || "",
             description: data?.personalInfo?.description || "",
             title: data?.personalInfo?.title || "",
+            profileImage: profileImage,
           },
           skills: data?.skills || [],
           certifications: data?.certifications || [],
           education: data?.education || [],
           stats: {
-            productionAPIs: data?.stats?.productionAPIs || "10+",
-            yearsExperience: data?.stats?.yearsExperience || "3+",
-            cloudDeployments: data?.stats?.cloudDeployments || "5+",
-            leetcodeSolved: data?.stats?.leetcodeSolved || "150+",
-          },
-          leetcodeData: {
-            username: "ranjitheggadi",
-            profileUrl: data?.personalInfo?.links?.leetcode || "https://leetcode.com/ranjitheggadi",
-            stats: {
-              problemsSolved: data?.stats?.leetcodeSolved || "150+",
-              acceptanceRate: "85%",
-              contestRating: "1650",
-              badges: ["Problem Solver", "Algorithm Master"],
-              topics: ["Arrays", "Dynamic Programming", "Trees", "Graphs", "Data Structures"],
-            },
-          },
-          githubData: {
-            username: "EggadiRanjith",
-            profileUrl: data?.personalInfo?.links?.github || "https://github.com/EggadiRanjith",
-            stats: {
-              contributions: "500+",
-              repositories: "25+",
-              stars: "100+",
-              languages: ["Python", "JavaScript", "TypeScript", "Java"],
-              topRepos: [
-                { name: "careerpilot-ai", stars: 15, description: "AI-powered job application tracker" },
-                { name: "franchiseconnect", stars: 8, description: "Franchise management app" },
-                { name: "library-management", stars: 12, description: "Library management system" },
-              ],
-            },
+            productionAPIs: (data?.stats?.productionAPIs !== undefined && data?.stats?.productionAPIs !== null) 
+              ? String(data.stats.productionAPIs) 
+              : "10+",
+            yearsExperience: (data?.stats?.yearsExperience !== undefined && data?.stats?.yearsExperience !== null) 
+              ? String(data.stats.yearsExperience) 
+              : "3+",
+            cloudDeployments: (data?.stats?.cloudDeployments !== undefined && data?.stats?.cloudDeployments !== null) 
+              ? String(data.stats.cloudDeployments) 
+              : "5+",
+            leetcodeSolved: (data?.stats?.leetcodeSolved !== undefined && data?.stats?.leetcodeSolved !== null) 
+              ? String(data.stats.leetcodeSolved) 
+              : "150+",
           },
         });
       } catch (error) {
         // Keep default values on error
+        console.error("Error loading about data:", error);
       }
     };
 
-    loadAboutData();
+    // Initial load - always fetch fresh data
+    loadAboutData(true);
 
-    // Listen for updates
-    const handlePortfolioUpdate = () => {
-      loadAboutData();
+    // Listen for updates from admin panel
+    const handlePortfolioUpdate = async () => {
+      // Clear cache and force fresh data fetch
+      clearCache();
+      // Add a small delay to ensure server has finished writing
+      await new Promise(resolve => setTimeout(resolve, 100));
+      // Force refresh to get latest data from server
+      loadAboutData(true);
     };
 
     window.addEventListener("portfolio-data-updated", handlePortfolioUpdate);
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "portfolio_admin_data" || e.key === null) {
-        loadAboutData();
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener("portfolio-data-updated", handlePortfolioUpdate);
-      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
-  const slides = [
-    {
-      id: "leetcode",
-      title: "LeetCode Dashboard",
-      component: <LeetCodeStats {...aboutData.leetcodeData} />,
-    },
-    {
-      id: "github",
-      title: "GitHub Dashboard",
-      component: <GithubStats {...aboutData.githubData} />,
-    },
-  ];
-
-  // Auto-slide functionality
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // Change slide every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
   return (
     <main role="main" className="min-h-screen bg-primary">
-      <section className="relative py-32 overflow-hidden">
-        {/* Background gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-cyan-500/20 dark:bg-cyan-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 -left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
+      {/* Hero Section with Beams Background */}
+      <section 
+        className="relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 overflow-hidden px-4 sm:px-6" 
+        style={{ 
+          backgroundColor: "var(--color-bg-primary)",
+          isolation: "isolate",
+          position: "relative",
+        }}
+      >
+        {/* Beams Background */}
+        <div 
+          className="absolute inset-0 overflow-hidden pointer-events-none" 
+          style={{ 
+            zIndex: 2,
+            backgroundColor: "transparent",
+          }}
+        >
+          <Beams
+            beamWidth={2}
+            beamHeight={15}
+            beamNumber={12}
+            lightColor="#ffffff"
+            speed={2}
+            noiseIntensity={1.75}
+            scale={0.2}
+            rotation={0}
+          />
         </div>
 
-        <Container size="lg" className="relative z-10">
-          <AnimatedSection variant="stagger">
-            {/* Header */}
-            <motion.div variants={fadeInUp} className="text-center mb-16">
-              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
-                About Me
-              </Text>
-              <Heading
-                as="h1"
-                size="h1"
-                className="mb-6 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
-              >
-                {aboutData.personalInfo.title || "Backend & Full-Stack Developer"}
-              </Heading>
-            </motion.div>
+        {/* Background gradient orbs - Reduced opacity to work with Beams, hidden in light mode */}
+        {theme === "dark" && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1, opacity: 0.2 }}>
+            <div className="absolute top-1/3 -right-1/4 w-48 sm:w-64 md:w-96 h-48 sm:h-64 md:h-96 bg-orb-cyan rounded-full blur-3xl" />
+            <div className="absolute bottom-1/3 -left-1/4 w-48 sm:w-64 md:w-96 h-48 sm:h-64 md:h-96 bg-orb-blue rounded-full blur-3xl" />
+          </div>
+        )}
 
-            {/* Main Content */}
-            <div className="grid lg:grid-cols-2 gap-16 items-start mb-16">
-              {/* Content Side */}
-              <motion.div variants={staggerContainer} className="space-y-6">
-                {aboutData.personalInfo.description ? (
-                  <motion.div variants={fadeInUp}>
-                    <Text size="body-lg" color="primary" className="leading-relaxed whitespace-pre-line">
-                      {aboutData.personalInfo.description}
-                    </Text>
-                  </motion.div>
-                ) : (
-                  <>
-                    <motion.div variants={fadeInUp}>
-                      <Text size="body-lg" color="primary" className="leading-relaxed">
-                        I&apos;m <strong>Ranjith Eggadi</strong>, a Computer Science graduate from Kamala Institute of Technology and Science, 
-                        based in Hyderabad, Telangana. I specialize in backend and full-stack development with strong experience in 
-                        Java, Python, and JavaScript.
-                      </Text>
-                    </motion.div>
+        <Container size="lg" className="relative px-4 sm:px-6" style={{ zIndex: 3, backgroundColor: "transparent" }}>
+          {/* Hero Section - Pure Hero Design with Profile Image */}
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 items-center mb-8 sm:mb-12 md:mb-16">
+            {/* Content Side - Left on desktop, top on mobile */}
+            <div className="space-y-4 sm:space-y-5 md:space-y-6 order-2 lg:order-1">
+              {/* Label */}
+              <div>
+                <Text size="body-sm" className="font-semibold uppercase tracking-wider mb-3 sm:mb-4 text-xs sm:text-sm" style={{ color: "#FFFFFF" }}>
+                  About Me
+                </Text>
+              </div>
 
-                    <motion.div variants={fadeInUp}>
-                      <Text size="body" color="secondary" className="leading-relaxed">
-                        My expertise spans <strong>Spring Boot</strong>, <strong>Django</strong>, <strong>Node.js</strong>, and <strong>FastAPI</strong>, 
-                        with hands-on experience in Microservices, REST APIs, and AWS (EC2, S3). I&apos;m skilled in building scalable, 
-                        secure, and performance-optimized applications.
-                      </Text>
-                    </motion.div>
+              {/* Title */}
+              <div>
+                <Heading
+                  as="h1"
+                  size="h1"
+                  className="mb-4 sm:mb-5 md:mb-6"
+                  style={{
+                    fontSize: "clamp(1.5rem, 8vw, 3.5rem)",
+                    lineHeight: "1.1",
+                    color: "#FFFFFF",
+                    }}
+                  >
+                    {aboutData.personalInfo.title || "Backend & Full-Stack Developer"}
+                </Heading>
+              </div>
 
-                    <motion.div variants={fadeInUp}>
-                      <Text size="body" color="secondary" className="leading-relaxed">
-                        I work with Agile methodologies, debugging, CI/CD pipelines, and cloud deployments. My focus is on delivering 
-                        reliable, high-quality solutions with strong problem-solving skills and attention to detail.
-                      </Text>
-                    </motion.div>
-                  </>
-                )}
-              </motion.div>
-
-              {/* Stats Side with FrostedCard and AnimatedCounter */}
-              <motion.div variants={fadeInUp} className="relative">
-                <div className="grid grid-cols-2 gap-6">
-                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
-                    <GlowOnHover color="blue" intensity="medium">
-                      <FrostedCard intensity="medium" glow shimmer className="p-8">
-                        <div className="text-4xl font-bold text-fg-primary mb-2">
-                          <AnimatedCounter 
-                            key={`api-${aboutData.stats.productionAPIs}`}
-                            value={parseInt(aboutData.stats.productionAPIs.replace(/[^0-9]/g, '')) || 10} 
-                            suffix={aboutData.stats.productionAPIs.replace(/\d+/g, '') || "+"} 
-                            duration={2} 
-                          />
-                        </div>
-                        <div className="text-fg-secondary">Production APIs</div>
-                      </FrostedCard>
-                    </GlowOnHover>
-                  </motion.div>
-
-                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
-                    <GlowOnHover color="purple" intensity="medium">
-                      <FrostedCard intensity="medium" glow shimmer className="p-8">
-                        <div className="text-4xl font-bold text-fg-primary mb-2">
-                          <AnimatedCounter 
-                            key={`years-${aboutData.stats.yearsExperience}`}
-                            value={parseInt(aboutData.stats.yearsExperience.replace(/[^0-9]/g, '')) || 3} 
-                            suffix={aboutData.stats.yearsExperience.replace(/\d+/g, '') || "+"} 
-                            duration={2} 
-                          />
-                        </div>
-                        <div className="text-fg-secondary">Years Experience</div>
-                      </FrostedCard>
-                    </GlowOnHover>
-                  </motion.div>
-
-                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
-                    <GlowOnHover color="cyan" intensity="medium">
-                      <FrostedCard intensity="medium" glow shimmer className="p-8">
-                        <div className="text-4xl font-bold text-fg-primary mb-2">
-                          <AnimatedCounter 
-                            key={`cloud-${aboutData.stats.cloudDeployments}`}
-                            value={parseInt(aboutData.stats.cloudDeployments.replace(/[^0-9]/g, '')) || 5} 
-                            suffix={aboutData.stats.cloudDeployments.replace(/\d+/g, '') || "+"} 
-                            duration={2} 
-                          />
-                        </div>
-                        <div className="text-fg-secondary">Cloud Deployments</div>
-                      </FrostedCard>
-                    </GlowOnHover>
-                  </motion.div>
-
-                  <motion.div whileHover={{ y: -8, scale: 1.02 }}>
-                    <GlowOnHover color="gold" intensity="medium">
-                      <FrostedCard intensity="medium" glow shimmer className="p-8">
-                        <div className="text-4xl font-bold text-fg-primary mb-2">
-                          <AnimatedCounter 
-                            key={`leetcode-${aboutData.stats.leetcodeSolved}`}
-                            value={parseInt(aboutData.stats.leetcodeSolved.replace(/[^0-9]/g, '')) || 150} 
-                            suffix={aboutData.stats.leetcodeSolved.replace(/\d+/g, '') || "+"} 
-                            duration={2} 
-                          />
-                        </div>
-                        <div className="text-fg-secondary">LeetCode Solved</div>
-                      </FrostedCard>
-                    </GlowOnHover>
-                  </motion.div>
+              {/* Description */}
+              {aboutData.personalInfo.description ? (
+                <div>
+                  <Text size="body-lg" className="leading-relaxed whitespace-pre-line" style={{
+                    fontSize: "clamp(0.875rem, 2vw + 0.5rem, 1.25rem)",
+                    lineHeight: 1.6,
+                    color: "#FFFFFF",
+                  }}>
+                    {aboutData.personalInfo.description}
+                  </Text>
                 </div>
-              </motion.div>
+              ) : (
+                <>
+                  <div>
+                    <Text size="body-lg" className="leading-relaxed" style={{
+                      fontSize: "clamp(0.875rem, 2vw + 0.5rem, 1.25rem)",
+                      lineHeight: 1.6,
+                      color: "#FFFFFF",
+                    }}>
+                      I&apos;m <strong>Ranjith Eggadi</strong>, a Computer Science graduate from Kamala Institute of Technology and Science, 
+                      based in Hyderabad, Telangana. I specialize in backend and full-stack development with strong experience in 
+                      Java, Python, and JavaScript.
+                    </Text>
+                  </div>
+
+                  <div>
+                    <Text size="body" className="leading-relaxed mt-3 sm:mt-4" style={{
+                      fontSize: "clamp(0.8125rem, 1.8vw + 0.4rem, 1.125rem)",
+                      lineHeight: 1.6,
+                      color: "#FFFFFF",
+                    }}>
+                      My expertise spans <strong>Spring Boot</strong>, <strong>Django</strong>, <strong>Node.js</strong>, and <strong>FastAPI</strong>, 
+                      with hands-on experience in Microservices, REST APIs, and AWS (EC2, S3). I&apos;m skilled in building scalable, 
+                      secure, and performance-optimized applications.
+                    </Text>
+                  </div>
+
+                  <div>
+                    <Text size="body" className="leading-relaxed mt-3 sm:mt-4" style={{
+                      fontSize: "clamp(0.8125rem, 1.8vw + 0.4rem, 1.125rem)",
+                      lineHeight: 1.6,
+                      color: "#FFFFFF",
+                    }}>
+                      I work with Agile methodologies, debugging, CI/CD pipelines, and cloud deployments. My focus is on delivering 
+                      reliable, high-quality solutions with strong problem-solving skills and attention to detail.
+                    </Text>
+                  </div>
+                </>
+              )}
             </div>
 
-            {/* Highlights - Generated from certifications and skills */}
-            {aboutData.certifications.length > 0 && (
-              <motion.div variants={staggerContainer} className="mb-16">
-                <Heading as="h2" size="h2" className="mb-8 text-center">
-                  Key Highlights
-                </Heading>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {aboutData.certifications.slice(0, 4).map((cert, index) => {
-                    const certIcon = cert.name.toLowerCase().includes("aws") 
-                      ? <Cloud className="w-6 h-6" />
-                      : cert.name.toLowerCase().includes("java") || cert.name.toLowerCase().includes("python")
-                      ? <Code2 className="w-6 h-6" />
-                      : <Award className="w-6 h-6" />;
-                    
-                    return (
-                      <motion.div
-                        key={cert.credentialId || cert.name || `cert-${index}`}
-                        variants={fadeInUp}
-                        custom={index}
-                        className="flex items-start gap-4 p-6 glass-base rounded-xl border border-border-primary/50"
-                      >
-                        <div className="p-2 rounded-lg bg-primary/10 text-fg-primary">
-                          {certIcon}
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-fg-primary mb-1">
-                            {cert.name}
-                          </h4>
-                          <p className="text-sm text-fg-secondary">
-                            {cert.issuer} • {cert.date}
-                          </p>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Skills */}
-            {aboutData.skills.length > 0 && (
-              <motion.div variants={staggerContainer}>
-                <Heading as="h2" size="h2" className="mb-8 text-center">
-                  Technical Skills
-                </Heading>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {aboutData.skills.map((skill, index) => (
-                    <motion.div
-                      key={skill.category}
-                      variants={fadeInUp}
-                      custom={index}
-                      className="glass-card p-6 rounded-xl border border-border-primary/50"
-                    >
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-lg bg-primary/10 text-fg-primary">
-                          {skillIcons[skill.category] || <Code2 className="w-6 h-6" />}
-                        </div>
-                        <Heading as="h3" size="h4">
-                          {skill.category}
-                        </Heading>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {skill.items.map((item) => (
-                          <span
-                            key={item}
-                            className="px-3 py-1 rounded-full text-sm bg-secondary border border-border-primary/50 text-fg-secondary"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatedSection>
+            {/* Profile Image Side - Right on desktop, top on mobile */}
+            <div className="relative flex justify-center lg:justify-end order-1 lg:order-2 mb-6 sm:mb-8 lg:mb-0">
+              <div 
+                className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] lg:max-w-[450px]"
+                style={{
+                  aspectRatio: "1 / 1",
+                }}
+              >
+                <Image
+                  src={aboutData.personalInfo.profileImage}
+                  alt="Profile Picture"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 280px, (max-width: 768px) 320px, (max-width: 1024px) 380px, 450px"
+                  priority
+                  style={{
+                    objectFit: "cover",
+                  }}
+                  onError={(e) => {
+                    // Fallback to a placeholder if image doesn't exist
+                    const target = e.target as HTMLImageElement;
+                    target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='450' height='450'%3E%3Crect fill='%23ddd' width='450' height='450'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='24' dy='10.5' font-weight='bold' x='50%25' y='50%25' text-anchor='middle'%3EProfile%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </Container>
       </section>
 
-      {/* Education Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-green-500/20 dark:bg-green-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/2 -left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
-        </div>
+      {/* Key Highlights Section */}
+            {aboutData.certifications.length > 0 && (
+        <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden px-4 sm:px-6">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/2 -right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-purple rounded-full blur-3xl" />
+            <div className="absolute bottom-1/2 -left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-cyan rounded-full blur-3xl" />
+          </div>
 
-        <Container size="lg" className="relative z-10">
-          <AnimatedSection variant="stagger">
-            <motion.div variants={fadeInUp} className="text-center mb-12">
-              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
-                Education
-              </Text>
-              <Heading
-                as="h2"
-                size="h2"
-                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+          <Container size="lg" className="relative z-10 px-4 sm:px-6">
+            <div className="mb-8 sm:mb-12 md:mb-16">
+              <Heading 
+                as="h2" 
+                size="h2" 
+                className="mb-6 sm:mb-8 text-center px-2"
+                style={{
+                  fontSize: "clamp(1.5rem, 5vw + 0.5rem, 2.5rem)",
+                  lineHeight: "1.2",
+                }}
               >
-                Academic{" "}
-                <span className="bg-gradient-to-r from-green-600 via-blue-600 to-cyan-600 dark:from-green-400 dark:via-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                  Background
+                <span
+                  style={{
+                    backgroundImage: theme === "dark"
+                      ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                      : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozBackgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozTextFillColor: "transparent",
+                    boxDecorationBreak: "clone",
+                    WebkitBoxDecorationBreak: "clone",
+                  }}
+                >
+                  Key Highlights
                 </span>
               </Heading>
-            </motion.div>
-
-            <div className="space-y-6">
-              {aboutData.education.length > 0 ? (
-                aboutData.education.map((edu, index) => (
-                  <motion.div key={index} variants={fadeInUp} custom={index} className="max-w-3xl mx-auto">
-                    <div className="glass-card p-8 rounded-xl border border-border-primary/50">
-                      <div className="flex items-start gap-6">
-                        <div className="p-4 rounded-xl bg-primary/10 text-fg-primary">
-                          <GraduationCap className="w-8 h-8" />
-                        </div>
-                        <div className="flex-1">
-                          <Heading as="h3" size="h3" className="mb-2">
-                            {edu.degree}
-                          </Heading>
-                          <Text size="body-lg" color="primary" className="font-semibold mb-2">
-                            {edu.institution}
-                          </Text>
-                          <Text size="body" color="secondary" className="mb-4">
-                            {edu.location}
-                          </Text>
-                          <div className="flex items-center gap-2 text-fg-tertiary">
-                            <span>{edu.startDate} – {edu.endDate}</span>
-                          </div>
-                        </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+                {aboutData.certifications.slice(0, 4).map((cert, index) => {
+                  const certIcon = cert.name.toLowerCase().includes("aws") 
+                    ? <Cloud className="w-5 h-5 sm:w-6 sm:h-6" />
+                    : cert.name.toLowerCase().includes("java") || cert.name.toLowerCase().includes("python")
+                    ? <Code2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                    : <Award className="w-5 h-5 sm:w-6 sm:h-6" />;
+                  
+                  return (
+                    <div
+                      key={cert.credentialId || cert.name || `cert-${index}`}
+                      className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 glass-base rounded-xl border border-border-primary/50"
+                    >
+                      <div className="p-2 rounded-lg bg-primary/10 text-fg-primary flex-shrink-0">
+                        {certIcon}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-fg-primary mb-1 text-sm sm:text-base break-words">
+                          {cert.name}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-fg-secondary break-words">
+                          {cert.issuer} • {cert.date}
+                        </p>
                       </div>
                     </div>
-                  </motion.div>
-                ))
-              ) : (
-                <motion.div variants={fadeInUp} className="max-w-3xl mx-auto">
-                  <div className="glass-card p-8 rounded-xl border border-border-primary/50">
-                    <div className="flex items-start gap-6">
-                      <div className="p-4 rounded-xl bg-primary/10 text-fg-primary">
-                        <GraduationCap className="w-8 h-8" />
+                  );
+                })}
+              </div>
+            </div>
+          </Container>
+        </section>
+            )}
+
+      {/* Skills Section */}
+            {aboutData.skills.length > 0 && (
+        <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden px-4 sm:px-6">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/2 -right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-blue rounded-full blur-3xl" />
+            <div className="absolute bottom-1/2 -left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-green rounded-full blur-3xl" />
+          </div>
+
+          <Container size="lg" className="relative z-10 px-4 sm:px-6">
+            <div>
+              <Heading 
+                as="h2" 
+                size="h2" 
+                className="mb-6 sm:mb-8 text-center px-2"
+                style={{
+                  fontSize: "clamp(1.5rem, 5vw + 0.5rem, 2.5rem)",
+                  lineHeight: "1.2",
+                }}
+              >
+                <span
+                  style={{
+                    backgroundImage: theme === "dark"
+                      ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                      : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozBackgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozTextFillColor: "transparent",
+                    boxDecorationBreak: "clone",
+                    WebkitBoxDecorationBreak: "clone",
+                  }}
+                >
+                  Technical Skills
+                </span>
+              </Heading>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+                {aboutData.skills.map((skill, index) => (
+                  <div
+                    key={skill.category}
+                    className="glass-card p-4 sm:p-5 md:p-6 rounded-xl border border-border-primary/50"
+                  >
+                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                      <div className="p-2 rounded-lg bg-primary/10 text-fg-primary flex-shrink-0">
+                        {skillIcons[skill.category] || <Code2 className="w-5 h-5 sm:w-6 sm:h-6" />}
                       </div>
-                      <div className="flex-1">
-                        <Heading as="h3" size="h3" className="mb-2">
-                          Bachelor of Technology in Computer Science
-                        </Heading>
-                        <Text size="body-lg" color="primary" className="font-semibold mb-2">
-                          Kamala Institute of Technology and Science
-                        </Text>
-                        <Text size="body" color="secondary" className="mb-4">
-                          Karimnagar, Telangana
-                        </Text>
-                        <div className="flex items-center gap-2 text-fg-tertiary">
-                          <span>Sep. 2020 – Jun. 2024</span>
+                      <Heading as="h3" size="h4" className="text-base sm:text-lg md:text-xl">
+                        {skill.category}
+                      </Heading>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {skill.items.map((item) => (
+                        <span
+                          key={item}
+                          className="px-2.5 sm:px-3 py-1 rounded-full text-xs sm:text-sm bg-secondary border border-border-primary/50 text-fg-secondary"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+        </Container>
+      </section>
+      )}
+
+      {/* Education Section */}
+      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden px-4 sm:px-6">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 -right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-green rounded-full blur-3xl" />
+          <div className="absolute bottom-1/2 -left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-blue rounded-full blur-3xl" />
+        </div>
+
+        <Container size="lg" className="relative z-10 px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2">
+            <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-3 sm:mb-4 text-xs sm:text-sm">
+              Education
+            </Text>
+            <Heading
+              as="h2"
+              size="h2"
+              className="mb-3 sm:mb-4 text-shadow-theme"
+              style={{
+                fontSize: "clamp(1.5rem, 5vw + 0.5rem, 2.5rem)",
+                lineHeight: "1.2",
+              }}
+            >
+              <span
+                style={{
+                  backgroundImage: theme === "dark"
+                    ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                    : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  // @ts-ignore - Mozilla-specific properties
+                  MozBackgroundClip: "text",
+                  // @ts-ignore - Mozilla-specific properties
+                  MozTextFillColor: "transparent",
+                  boxDecorationBreak: "clone",
+                  WebkitBoxDecorationBreak: "clone",
+                }}
+              >
+                Academic Background
+              </span>
+            </Heading>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            {/* Timeline line */}
+            <div 
+              className="absolute left-4 sm:left-6 md:left-8 top-0 bottom-0 w-0.5 hidden md:block"
+              style={{
+                background: theme === "dark"
+                  ? "linear-gradient(to bottom, rgba(59, 130, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(16, 185, 129, 0.3))"
+                  : "linear-gradient(to bottom, rgba(30, 64, 175, 0.2), rgba(8, 145, 178, 0.2), rgba(5, 150, 105, 0.2))",
+              }}
+            />
+            
+            <div className="space-y-6 sm:space-y-8">
+            {aboutData.education.length > 0 ? (
+              aboutData.education.map((edu, index) => (
+                  <div 
+                    key={index} 
+                    className="relative"
+                  >
+                    {/* Timeline dot */}
+                    <div 
+                      className="absolute left-0 top-4 sm:top-6 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-lg z-10 hidden md:flex"
+                      style={{
+                        background: theme === "dark"
+                          ? "linear-gradient(135deg, #3B82F6, #06B6D4)"
+                          : "linear-gradient(135deg, #1E40AF, #0891B2)",
+                      }}
+                    >
+                      <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                      </div>
+                    
+                    <div className="ml-0 md:ml-20">
+                      <div className="glass-card p-4 sm:p-5 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-border-primary/50 relative overflow-hidden">
+                          
+                          <div className="relative z-10">
+                            {/* Degree Badge */}
+                            <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="flex-1">
+                                <div 
+                                  className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full border mb-2 sm:mb-3"
+                                  style={{
+                                    background: theme === "dark"
+                                      ? "linear-gradient(to right, rgba(59, 130, 246, 0.2), rgba(6, 182, 212, 0.2))"
+                                      : "linear-gradient(to right, rgba(30, 64, 175, 0.15), rgba(8, 145, 178, 0.15))",
+                                    borderColor: theme === "dark" ? "rgba(59, 130, 246, 0.3)" : "rgba(30, 64, 175, 0.25)",
+                                  }}
+                                >
+                                  <GraduationCap 
+                                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0"
+                                    style={{ color: theme === "dark" ? "#3B82F6" : "#1E40AF" }}
+                                  />
+                                  <Text 
+                                    size="body-sm" 
+                                    className="font-semibold text-xs sm:text-sm"
+                                    style={{ color: theme === "dark" ? "#3B82F6" : "#1E40AF" }}
+                                  >
+                            {edu.degree}
+                                  </Text>
+                                </div>
+                                <Heading as="h3" size="h3" className="mb-2 sm:mb-3 mt-1 sm:mt-2 text-lg sm:text-xl md:text-2xl break-words">
+                            {edu.institution}
+                                </Heading>
+                              </div>
+                            </div>
+                            
+                            {/* Details Grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-5 md:mt-6">
+                              <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-border-primary/30">
+                                <div 
+                                  className="p-1.5 sm:p-2 rounded-lg flex-shrink-0"
+                                  style={{
+                                    backgroundColor: theme === "dark" ? "rgba(59, 130, 246, 0.1)" : "rgba(30, 64, 175, 0.1)",
+                                  }}
+                                >
+                                  <MapPin 
+                                    className="w-4 h-4 sm:w-5 sm:h-5"
+                                    style={{ color: theme === "dark" ? "#3B82F6" : "#1E40AF" }}
+                                  />
+                                </div>
+                                <div className="min-w-0">
+                                  <Text size="body-sm" color="tertiary" className="text-xs uppercase tracking-wide">
+                                    Location
+                          </Text>
+                                  <Text size="body" color="primary" className="font-medium text-sm sm:text-base break-words">
+                            {edu.location}
+                          </Text>
+                          </div>
                         </div>
+                              
+                              <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-border-primary/30">
+                                <div 
+                                  className="p-1.5 sm:p-2 rounded-lg flex-shrink-0"
+                                  style={{
+                                    backgroundColor: theme === "dark" ? "rgba(6, 182, 212, 0.1)" : "rgba(8, 145, 178, 0.1)",
+                                  }}
+                                >
+                                  <Calendar 
+                                    className="w-4 h-4 sm:w-5 sm:h-5"
+                                    style={{ color: theme === "dark" ? "#06B6D4" : "#0891B2" }}
+                                  />
+                                </div>
+                                <div className="min-w-0">
+                                  <Text size="body-sm" color="tertiary" className="text-xs uppercase tracking-wide">
+                                    Duration
+                                  </Text>
+                                  <Text size="body" color="primary" className="font-medium text-sm sm:text-base break-words">
+                                    {edu.startDate} – {edu.endDate}
+                                  </Text>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                ))
+              ) : (
+                  <div className="relative">
+                    {/* Timeline dot */}
+                    <div 
+                      className="absolute left-0 top-4 sm:top-6 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-lg z-10 hidden md:flex"
+                      style={{
+                        background: theme === "dark"
+                          ? "linear-gradient(135deg, #3B82F6, #06B6D4)"
+                          : "linear-gradient(135deg, #1E40AF, #0891B2)",
+                      }}
+                    >
+                      <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                      </div>
+                    
+                    <div className="ml-0 md:ml-20">
+                      <div className="glass-card p-4 sm:p-5 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-border-primary/50 relative overflow-hidden">
+                        
+                        <div className="relative z-10">
+                          {/* Degree Badge */}
+                          <div className="flex items-start justify-between gap-4 mb-4">
+                      <div className="flex-1">
+                              <div 
+                                className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full border mb-2 sm:mb-3"
+                                style={{
+                                  background: theme === "dark"
+                                    ? "linear-gradient(to right, rgba(59, 130, 246, 0.2), rgba(6, 182, 212, 0.2))"
+                                    : "linear-gradient(to right, rgba(30, 64, 175, 0.15), rgba(8, 145, 178, 0.15))",
+                                  borderColor: theme === "dark" ? "rgba(59, 130, 246, 0.3)" : "rgba(30, 64, 175, 0.25)",
+                                }}
+                              >
+                                <GraduationCap 
+                                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0"
+                                  style={{ color: theme === "dark" ? "#3B82F6" : "#1E40AF" }}
+                                />
+                                <Text 
+                                  size="body-sm" 
+                                  className="font-semibold text-xs sm:text-sm"
+                                  style={{ color: theme === "dark" ? "#3B82F6" : "#1E40AF" }}
+                                >
+                                  Bachelor of Technology
+                                </Text>
+                              </div>
+                              <Heading as="h3" size="h3" className="mb-2 sm:mb-3 mt-1 sm:mt-2 text-lg sm:text-xl md:text-2xl break-words">
+                          Kamala Institute of Technology and Science
+                              </Heading>
+                            </div>
+                          </div>
+                          
+                          {/* Details Grid */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-5 md:mt-6">
+                            <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-border-primary/30">
+                              <div 
+                                className="p-1.5 sm:p-2 rounded-lg flex-shrink-0"
+                                style={{
+                                  backgroundColor: theme === "dark" ? "rgba(59, 130, 246, 0.1)" : "rgba(30, 64, 175, 0.1)",
+                                }}
+                              >
+                                <MapPin 
+                                  className="w-4 h-4 sm:w-5 sm:h-5"
+                                  style={{ color: theme === "dark" ? "#3B82F6" : "#1E40AF" }}
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <Text size="body-sm" color="tertiary" className="text-xs uppercase tracking-wide">
+                                  Location
+                        </Text>
+                                <Text size="body" color="primary" className="font-medium text-sm sm:text-base break-words">
+                          Karimnagar, Telangana
+                        </Text>
+                        </div>
+                      </div>
+                            
+                            <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-border-primary/30">
+                              <div 
+                                className="p-1.5 sm:p-2 rounded-lg flex-shrink-0"
+                                style={{
+                                  backgroundColor: theme === "dark" ? "rgba(6, 182, 212, 0.1)" : "rgba(8, 145, 178, 0.1)",
+                                }}
+                              >
+                                <Calendar 
+                                  className="w-4 h-4 sm:w-5 sm:h-5"
+                                  style={{ color: theme === "dark" ? "#06B6D4" : "#0891B2" }}
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <Text size="body-sm" color="tertiary" className="text-xs uppercase tracking-wide">
+                                  Duration
+                                </Text>
+                                <Text size="body" color="primary" className="font-medium text-sm sm:text-base break-words">
+                                  Sep. 2020 – Jun. 2024
+                                </Text>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
               )}
+              </div>
             </div>
-          </AnimatedSection>
         </Container>
       </section>
 
       {/* Certifications Section */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden px-4 sm:px-6">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/2 -left-1/4 w-96 h-96 bg-cyan-500/20 dark:bg-cyan-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 -right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-purple rounded-full blur-3xl" />
+          <div className="absolute bottom-1/2 -left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-orb-cyan rounded-full blur-3xl" />
         </div>
 
-        <Container size="lg" className="relative z-10">
-          <AnimatedSection variant="stagger">
-            <motion.div variants={fadeInUp} className="text-center mb-12">
-              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
-                Certifications
-              </Text>
-              <Heading
-                as="h2"
-                size="h2"
-                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+        <Container size="lg" className="relative z-10 px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2">
+            <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-3 sm:mb-4 text-xs sm:text-sm">
+              Certifications
+            </Text>
+            <Heading
+              as="h2"
+              size="h2"
+              className="mb-3 sm:mb-4 text-shadow-theme"
+              style={{
+                fontSize: "clamp(1.5rem, 5vw + 0.5rem, 2.5rem)",
+                lineHeight: "1.2",
+              }}
+            >
+              <span
+                style={{
+                  backgroundImage: theme === "dark"
+                    ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                    : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  // @ts-ignore - Mozilla-specific properties
+                  MozBackgroundClip: "text",
+                  // @ts-ignore - Mozilla-specific properties
+                  MozTextFillColor: "transparent",
+                  boxDecorationBreak: "clone",
+                  WebkitBoxDecorationBreak: "clone",
+                }}
               >
-                Professional{" "}
-                <span className="bg-gradient-to-r from-purple-600 via-cyan-600 to-blue-600 dark:from-purple-400 dark:via-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
-                  Certifications
-                </span>
-              </Heading>
-              <Text size="body" color="secondary" className="max-w-2xl mx-auto">
-                Validated expertise through industry-recognized certifications
-              </Text>
-            </motion.div>
+                Professional Certifications
+              </span>
+            </Heading>
+            <Text size="body" color="secondary" className="max-w-2xl mx-auto text-sm sm:text-base px-2">
+              Validated expertise through industry-recognized certifications
+            </Text>
+          </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              {aboutData.certifications.length > 0 ? (
-                aboutData.certifications.map((cert, index) => {
-                  const certIcon = cert.name.toLowerCase().includes("aws")
-                    ? <Cloud className="w-8 h-8" />
-                    : cert.name.toLowerCase().includes("java") || cert.name.toLowerCase().includes("python")
-                    ? <Code2 className="w-8 h-8" />
-                    : <Award className="w-8 h-8" />;
-                  
-                  return (
-                    <motion.div
-                      key={cert.credentialId || cert.name}
-                      variants={fadeInUp}
-                      custom={index}
-                      className="glass-card p-0 rounded-xl border border-border-primary/50 hover:border-border-primary hover:shadow-xl transition-all duration-500 group overflow-hidden"
-                      whileHover={{ y: -8, scale: 1.02 }}
-                    >
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4 lg:gap-5">
+            {aboutData.certifications.length > 0 ? (
+              aboutData.certifications.map((cert, index) => {
+                const certIcon = cert.name.toLowerCase().includes("aws")
+                  ? <Cloud className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+                  : cert.name.toLowerCase().includes("java") || cert.name.toLowerCase().includes("python")
+                  ? <Code2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+                  : <Award className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />;
+                
+                return (
+                  <div
+                    key={cert.credentialId || cert.name}
+                    className="glass-card p-0 rounded-lg sm:rounded-xl border border-border-primary/50 overflow-hidden flex flex-col"
+                  >
                       {/* Certificate Image */}
-                      <div className="relative w-full h-48 overflow-hidden bg-gradient-to-br from-primary/20 via-secondary to-primary/10">
+                      <div className="relative w-full h-28 sm:h-32 md:h-36 lg:h-40 overflow-hidden bg-gradient-to-br from-primary/20 via-secondary to-primary/10">
                         <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
-                        <div className="absolute top-3 right-3">
-                          <div className="p-2 rounded-lg bg-primary/90 backdrop-blur-sm">
+                        <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 md:top-3 md:right-3">
+                          <div className="p-1 sm:p-1.5 md:p-2 rounded-lg bg-primary/90 backdrop-blur-sm">
                             {certIcon}
                           </div>
                         </div>
                         {/* Fallback gradient pattern */}
                         <div className="absolute inset-0 opacity-30">
-                          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.05)_25%,rgba(255,255,255,.05)_50%,transparent_50%,transparent_75%,rgba(255,255,255,.05)_75%,rgba(255,255,255,.05))] bg-[length:20px_20px]" />
+                          <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'linear-gradient(45deg, transparent 25%, var(--color-text-primary) 25%, var(--color-text-primary) 50%, transparent 50%, transparent 75%, var(--color-text-primary) 75%, var(--color-text-primary))', backgroundSize: '20px 20px', opacity: 0.05 }} />
                         </div>
                       </div>
 
                       {/* Certificate Details */}
-                      <div className="p-6">
-                        <div className="mb-4">
-                          <Heading as="h3" size="h4" className="mb-2">
+                      <div className="p-2.5 sm:p-3 md:p-4 lg:p-5 flex-1 flex flex-col">
+                        <div className="mb-2 sm:mb-2.5 md:mb-3 flex-1">
+                          <Heading as="h3" size="h4" className="mb-1 sm:mb-1.5 md:mb-2 text-xs sm:text-sm md:text-base lg:text-lg line-clamp-2">
                             {cert.name}
                           </Heading>
-                          <Text size="body-sm" color="secondary" className="mb-2">
+                          <Text size="body-sm" color="secondary" className="mb-1 sm:mb-1.5 md:mb-2 text-[10px] sm:text-xs md:text-sm line-clamp-1">
                             {cert.issuer}
                           </Text>
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="w-4 h-4 text-fg-tertiary" />
-                            <Text size="body-sm" color="tertiary">
+                          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 mb-1 sm:mb-1.5 md:mb-2">
+                            <User className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-fg-tertiary flex-shrink-0" />
+                            <Text size="body-sm" color="tertiary" className="text-[10px] sm:text-xs md:text-sm break-words line-clamp-1">
                               {aboutData.personalInfo.name || "Ranjith Eggadi"}
                             </Text>
                           </div>
-                          <Text size="body-sm" color="tertiary" className="mb-3">
+                          <Text size="body-sm" color="tertiary" className="mb-2 sm:mb-2.5 md:mb-3 text-[10px] sm:text-xs md:text-sm">
                             Issued: {cert.date}
                           </Text>
                         </div>
 
-                        <div className="pt-4 border-t border-border-primary/50 space-y-3">
-                          <div className="flex items-center gap-2">
-                            <BadgeIcon className="w-4 h-4 text-fg-tertiary" />
-                            <Text size="body-sm" color="tertiary" className="font-mono">
+                        <div className="pt-2 sm:pt-2.5 md:pt-3 border-t border-border-primary/50 space-y-1.5 sm:space-y-2">
+                          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
+                            <BadgeIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-fg-tertiary flex-shrink-0" />
+                            <Text size="body-sm" color="tertiary" className="font-mono text-[9px] sm:text-[10px] md:text-xs lg:text-sm break-all line-clamp-1">
                               {cert.credentialId}
                             </Text>
                           </div>
@@ -560,91 +764,27 @@ export default function AboutPage() {
                             href={cert.verificationLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm text-fg-primary hover:text-gradient-silver transition-colors group/link"
+                            className="flex items-center gap-1 sm:gap-1.5 md:gap-2 text-[10px] sm:text-xs md:text-sm text-fg-primary hover:text-gradient-silver transition-colors group/link"
                           >
-                            <span className="font-semibold">Verify Certificate</span>
-                            <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
+                            <span className="font-semibold">Verify</span>
+                            <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform flex-shrink-0" />
                           </a>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })
               ) : (
-                <div className="col-span-full text-center py-8">
-                  <Text size="body" color="secondary">
+                <div className="col-span-full text-center py-8 px-4">
+                  <Text size="body" color="secondary" className="text-sm sm:text-base">
                     No certifications available. Please add certifications in the admin panel.
                   </Text>
                 </div>
               )}
             </div>
-          </AnimatedSection>
         </Container>
       </section>
 
-      {/* LeetCode & GitHub Dashboard Carousel */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 -left-1/4 w-96 h-96 bg-green-500/20 dark:bg-green-400/10 rounded-full blur-3xl" />
-        </div>
-
-        <Container size="lg" className="relative z-10">
-          <AnimatedSection variant="stagger">
-            <motion.div variants={fadeInUp} className="text-center mb-12">
-              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
-                Coding Activity
-              </Text>
-              <Heading
-                as="h2"
-                size="h2"
-                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
-              >
-                Platform{" "}
-                <span className="bg-gradient-to-r from-blue-600 via-green-600 to-cyan-600 dark:from-blue-400 dark:via-green-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                  Dashboards
-                </span>
-              </Heading>
-              <Text size="body" color="secondary" className="max-w-2xl mx-auto">
-                Track my coding progress and contributions across platforms
-              </Text>
-            </motion.div>
-
-            {/* Carousel */}
-            <motion.div variants={fadeInUp} className="relative">
-              <div className="relative overflow-hidden rounded-2xl">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentSlide}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  >
-                    {slides[currentSlide].component}
-                  </motion.div>
-                </AnimatePresence>
-
-                {/* Slide Indicators - Non-interactive */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-                  {slides.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`h-2 rounded-full transition-all duration-500 ${
-                        index === currentSlide
-                          ? "w-8 bg-fg-primary"
-                          : "w-2 bg-fg-tertiary/30"
-                      }`}
-                      aria-label={`Slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </AnimatedSection>
-        </Container>
-      </section>
     </main>
   );
 }

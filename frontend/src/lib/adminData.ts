@@ -1,6 +1,7 @@
 /**
  * Admin Data Management
- * Handles reading and writing portfolio data to localStorage
+ * Handles reading and writing portfolio data from/to API (server-side storage)
+ * Falls back to localStorage for backward compatibility
  */
 
 export interface PersonalInfo {
@@ -11,6 +12,7 @@ export interface PersonalInfo {
   phone: string;
   location: string;
   url: string;
+  profileImage?: string;
   links: {
     github: string;
     linkedin: string;
@@ -113,6 +115,7 @@ const defaultData: PortfolioData = {
     phone: "+91-6301945962",
     location: "Hyderabad, Telangana, India",
     url: "https://ranjitheggadi.dev",
+    profileImage: "/profile.png",
     links: {
       github: "https://github.com/EggadiRanjith",
       linkedin: "https://linkedin.com/in/ranjitheggadi",
@@ -296,45 +299,186 @@ const defaultData: PortfolioData = {
   },
 };
 
-export function getPortfolioData(): PortfolioData {
+// Cache for client-side data to avoid repeated API calls
+let cachedData: PortfolioData | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 60000; // 1 minute cache
+
+/**
+ * Fetch portfolio data from API (server-side storage)
+ * Falls back to localStorage for backward compatibility
+ * @param forceRefresh - If true, bypasses cache and forces fresh fetch from API
+ */
+export async function getPortfolioData(forceRefresh: boolean = false): Promise<PortfolioData> {
+  // Server-side: return default data
   if (typeof window === "undefined") {
     return defaultData;
   }
 
+  // Check cache first (unless forcing refresh)
+  const now = Date.now();
+  if (!forceRefresh && cachedData && (now - cacheTimestamp) < CACHE_DURATION) {
+    return cachedData;
+  }
+
+  try {
+    // Try to fetch from API first
+    // Add cache-busting parameter when forcing refresh
+    const url = forceRefresh 
+      ? `/api/portfolio?t=${Date.now()}` 
+      : "/api/portfolio";
+    
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+      },
+      cache: "no-store", // Always fetch fresh data
+    });
+
+    if (response.ok) {
+      const data = await response.json() as PortfolioData;
+      // Ensure hero field exists (migration)
+      if (!data.hero) {
+        data.hero = defaultData.hero;
+        await savePortfolioData(data);
+      }
+      cachedData = data;
+      cacheTimestamp = now;
+      return data;
+    } else {
+      console.warn(`API returned status ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.warn("Failed to fetch from API, falling back to localStorage:", error);
+  }
+
+  // Fallback to localStorage for backward compatibility
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try {
       const data = JSON.parse(stored) as PortfolioData;
-      // Migration: Ensure hero field exists (for existing users)
+      // Migration: Ensure hero field exists
       if (!data.hero) {
         data.hero = defaultData.hero;
-        savePortfolioData(data);
+        await savePortfolioData(data);
       }
+      cachedData = data;
+      cacheTimestamp = now;
       return data;
     } catch (e) {
-      return defaultData;
+      console.error("Error parsing localStorage data:", e);
     }
   }
 
   // Initialize with default data if nothing exists
-  savePortfolioData(defaultData);
+  await savePortfolioData(defaultData);
   return defaultData;
 }
 
-export function savePortfolioData(data: PortfolioData): void {
+/**
+ * Synchronous version for backward compatibility (uses cache or localStorage)
+ * Use this only when you need synchronous access (e.g., in SSR)
+ */
+export function getPortfolioDataSync(): PortfolioData {
+  if (typeof window === "undefined") {
+    return defaultData;
+  }
+
+  // Return cached data if available
+  if (cachedData) {
+    return cachedData;
+  }
+
+  // Fallback to localStorage
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    try {
+      const data = JSON.parse(stored) as PortfolioData;
+      if (!data.hero) {
+        data.hero = defaultData.hero;
+      }
+      cachedData = data;
+      return data;
+    } catch (e) {
+      console.error("Error parsing localStorage data:", e);
+    }
+  }
+
+  return defaultData;
+}
+
+/**
+ * Save portfolio data to API (server-side storage)
+ * Also saves to localStorage as backup
+ */
+export async function savePortfolioData(data: PortfolioData): Promise<void> {
   if (typeof window === "undefined") return;
-  
+
   try {
+    // Save to API (server-side storage)
+    const response = await fetch("/api/portfolio", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API save failed: ${response.statusText}`);
+    }
+
+    // Clear cache first to force fresh fetch
+    cachedData = null;
+    cacheTimestamp = 0;
+
+    // Also save to localStorage as backup
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
     // Dispatch custom event to notify components of data update
-    window.dispatchEvent(new Event("portfolio-data-updated"));
-  } catch (e) {
-    // Error saving data silently
+    // Use a small delay to ensure server write is complete
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("portfolio-data-updated", { 
+        detail: { timestamp: Date.now() } 
+      }));
+    }, 50);
+  } catch (error) {
+    console.error("Error saving to API, saving to localStorage only:", error);
+    
+    // Fallback to localStorage only
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      // Clear cache to force fresh fetch
+      cachedData = null;
+      cacheTimestamp = 0;
+      // Dispatch event with delay
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("portfolio-data-updated", { 
+          detail: { timestamp: Date.now() } 
+        }));
+      }, 50);
+    } catch (e) {
+      console.error("Error saving to localStorage:", e);
+    }
   }
 }
 
-export function resetToDefaults(): void {
+/**
+ * Reset portfolio data to defaults
+ */
+export async function resetToDefaults(): Promise<void> {
   if (typeof window === "undefined") return;
-  savePortfolioData(defaultData);
+  await savePortfolioData(defaultData);
+}
+
+/**
+ * Clear cache (useful for forcing refresh)
+ */
+export function clearCache(): void {
+  cachedData = null;
+  cacheTimestamp = 0;
 }
 

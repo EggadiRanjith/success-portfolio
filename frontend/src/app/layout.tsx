@@ -5,6 +5,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AdminProvider } from "@/context/AdminContext";
 import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -129,11 +130,13 @@ export default function RootLayout({
           }}
         />
         <ErrorBoundaryWrapper>
+        <ThemeProvider>
         <AdminProvider>
         <ConditionalLayout>
             {children}
         </ConditionalLayout>
         </AdminProvider>
+        </ThemeProvider>
         </ErrorBoundaryWrapper>
       </body>
     </html>

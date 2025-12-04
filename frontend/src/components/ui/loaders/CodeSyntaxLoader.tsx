@@ -113,9 +113,9 @@ export function CodeSyntaxLoader({ visible }: CodeSyntaxLoaderProps) {
             {/* File header */}
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border-primary/30">
               <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                <div className="w-3 h-3 rounded-full bg-error/80" />
+                <div className="w-3 h-3 rounded-full bg-warning/80" />
+                <div className="w-3 h-3 rounded-full bg-success/80" />
               </div>
               <span className="text-body-sm text-fg-secondary ml-2">
                 portfolio.ts
@@ -165,7 +165,7 @@ export function CodeSyntaxLoader({ visible }: CodeSyntaxLoaderProps) {
                   transition={{ delay: 0.2 }}
                 >
                   <motion.div
-                    className="w-2 h-2 rounded-full bg-green-500"
+                    className="w-2 h-2 rounded-full bg-success"
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{
                       duration: 1,

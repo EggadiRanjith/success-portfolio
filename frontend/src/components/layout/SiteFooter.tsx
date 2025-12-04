@@ -17,64 +17,52 @@ export function SiteFooter() {
     <footer 
       className="relative overflow-hidden border-t border-border-primary/20"
       style={{
-        paddingTop: "clamp(1.5rem, 3vh + 0.5rem, 2.5rem)",
-        paddingBottom: "clamp(1rem, 2.5vh + 0.5rem, 1.5rem)",
+        paddingTop: "clamp(2.5rem, 4vh + 0.5rem, 4rem)",
+        paddingBottom: "clamp(1rem, 2vh + 0.5rem, 1.25rem)",
         background: "var(--color-bg-secondary)",
       }}
     >
       {/* Subtle background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-blue-500/3 dark:bg-blue-400/2 rounded-full blur-3xl"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-orb-blue rounded-full blur-3xl opacity-20"
           style={{
-            width: "clamp(8rem, 20vw, 16rem)",
-            height: "clamp(8rem, 20vw, 16rem)",
+            width: "clamp(6rem, 15vw, 12rem)",
+            height: "clamp(6rem, 15vw, 12rem)",
           }}
         />
       </div>
 
-      <Container size="lg" className="relative z-10 px-4 sm:px-6">
-        {/* Mobile: 2 Columns, Desktop: 4 Columns - Content Adaptive */}
+      <Container size="lg" className="relative z-10 px-4 sm:px-6 !py-0">
+        {/* Clean Centered Layout - Mobile First */}
         <div 
-          className="grid grid-cols-2 md:grid-cols-4"
-          style={{
-            gap: "clamp(1rem, 3vw + 0.5rem, 2rem)",
-            marginBottom: "clamp(1rem, 3vh + 0.5rem, 1.5rem)",
-          }}
+          className="flex flex-col items-center text-center mb-3 sm:mb-4 md:mb-5"
         >
-          {/* Brand Section - Full width on mobile */}
-          <div 
-            className="col-span-2 md:col-span-1"
+          {/* Brand Section */}
+          <h3 
+            className="font-bold text-fg-primary leading-tight mb-2 sm:mb-2.5"
             style={{
-              marginBottom: "clamp(1rem, 2.5vh, 1.5rem)",
-            }}
-          >
-            <h3 
-              className="font-bold text-fg-primary leading-tight"
-              style={{
-                marginBottom: "clamp(0.75rem, 2vh, 1rem)",
-                fontSize: "clamp(1rem, 2.5vw + 0.5rem, 1.25rem)",
+              fontSize: "clamp(1rem, 3vw, 1.5rem)",
               }}
             >
               Ranjith Eggadi
             </h3>
+          
             <Text 
               size="body-sm" 
               color="secondary" 
-              className="leading-relaxed"
+            className="leading-relaxed mb-3 sm:mb-3.5 max-w-2xl mx-auto"
               style={{
-                marginBottom: "clamp(0.75rem, 2vh, 1rem)",
-                fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                lineHeight: "1.65",
+              fontSize: "clamp(0.75rem, 1.8vw, 0.875rem)",
+              lineHeight: "1.6",
               }}
             >
               Backend-focused Full-Stack Developer building scalable systems and reliable APIs.
             </Text>
+          
+          {/* Social Links */}
             <div 
-              className="flex items-center"
-              style={{
-                gap: "clamp(0.5rem, 1.5vw, 0.75rem)",
-              }}
+            className="flex items-center justify-center gap-3 sm:gap-4"
             >
               <Link 
                 href={HERO_SOCIAL_LINKS[0].href}
@@ -82,17 +70,10 @@ export function SiteFooter() {
                 aria-label="GitHub"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-all duration-300 hover:opacity-80 active:scale-95 touch-manipulation"
-                style={{
-                  padding: "clamp(0.5rem, 1.5vw, 0.75rem)",
-                  marginLeft: "clamp(-0.5rem, -1.5vw, -0.75rem)",
-                }}
+              className="transition-all duration-300 hover:opacity-80 active:scale-95 touch-manipulation p-2 sm:p-2.5"
               >
                 <Github 
-                  style={{
-                    width: "clamp(1rem, 2.5vw, 1.25rem)",
-                    height: "clamp(1rem, 2.5vw, 1.25rem)",
-                  }}
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 />
               </Link>
               <Link 
@@ -101,244 +82,29 @@ export function SiteFooter() {
                 aria-label="LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-all duration-300 hover:opacity-80 active:scale-95 touch-manipulation"
-                style={{
-                  padding: "clamp(0.5rem, 1.5vw, 0.75rem)",
-                }}
+              className="transition-all duration-300 hover:opacity-80 active:scale-95 touch-manipulation p-2 sm:p-2.5"
               >
                 <Linkedin 
-                  style={{
-                    width: "clamp(1rem, 2.5vw, 1.25rem)",
-                    height: "clamp(1rem, 2.5vw, 1.25rem)",
-                  }}
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 />
               </Link>
             </div>
           </div>
 
-          {/* Quick Links - Content Adaptive */}
-          <div>
-            <h4 
-              className="font-semibold text-fg-primary uppercase tracking-wider"
-              style={{
-                marginBottom: "clamp(0.75rem, 2vh, 1rem)",
-                fontSize: "clamp(0.75rem, 1.8vw, 0.875rem)",
-              }}
-            >
-              Quick Links
-            </h4>
-            <ul 
-              style={{
-                gap: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <li>
-                <Link 
-                  href="/"
-                  className="text-fg-secondary hover:text-fg-primary transition-colors duration-300 block touch-manipulation"
-                  style={{
-                    paddingTop: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    paddingBottom: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                    minHeight: "clamp(2rem, 5vw, 2.5rem)",
-                  }}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/projects"
-                  className="text-fg-secondary hover:text-fg-primary transition-colors duration-300 block touch-manipulation"
-                  style={{
-                    paddingTop: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    paddingBottom: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                    minHeight: "clamp(2rem, 5vw, 2.5rem)",
-                  }}
-                >
-                  Projects
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/about"
-                  className="text-fg-secondary hover:text-fg-primary transition-colors duration-300 block touch-manipulation"
-                  style={{
-                    paddingTop: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    paddingBottom: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                    minHeight: "clamp(2rem, 5vw, 2.5rem)",
-                  }}
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/contact"
-                  className="text-fg-secondary hover:text-fg-primary transition-colors duration-300 block touch-manipulation"
-                  style={{
-                    paddingTop: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    paddingBottom: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                    fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                    minHeight: "clamp(2rem, 5vw, 2.5rem)",
-                  }}
-                >
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Services - Content Adaptive */}
-          <div>
-            <h4 
-              className="font-semibold text-fg-primary uppercase tracking-wider"
-              style={{
-                marginBottom: "clamp(0.75rem, 2vh, 1rem)",
-                fontSize: "clamp(0.75rem, 1.8vw, 0.875rem)",
-              }}
-            >
-              Services
-            </h4>
-            <ul 
-              className="text-fg-secondary"
-              style={{
-                gap: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <li 
-                style={{
-                  fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                  lineHeight: "1.6",
-                  paddingTop: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                  paddingBottom: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                }}
-              >
-                Backend Development
-              </li>
-              <li 
-                style={{
-                  fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                  lineHeight: "1.6",
-                  paddingTop: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                  paddingBottom: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                }}
-              >
-                API Design & Integration
-              </li>
-              <li 
-                style={{
-                  fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                  lineHeight: "1.6",
-                  paddingTop: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                  paddingBottom: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                }}
-              >
-                Cloud Architecture
-              </li>
-              <li 
-                style={{
-                  fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                  lineHeight: "1.6",
-                  paddingTop: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                  paddingBottom: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                }}
-              >
-                AI Integration
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info - Content Adaptive */}
-          <div 
-            className="col-span-2 md:col-span-1"
-            style={{
-              marginTop: "clamp(0.75rem, 2vh, 1rem)",
-            }}
-          >
-            <h4 
-              className="font-semibold text-fg-primary uppercase tracking-wider"
-              style={{
-                marginBottom: "clamp(0.75rem, 2vh, 1rem)",
-                fontSize: "clamp(0.75rem, 1.8vw, 0.875rem)",
-              }}
-            >
-              Get in Touch
-            </h4>
-            <Text 
-              size="body-sm" 
-              color="secondary"
-              className="leading-relaxed"
-              style={{
-                fontSize: "clamp(0.8125rem, 2vw, 0.9375rem)",
-                lineHeight: "1.65",
-              }}
-            >
-              Open to new opportunities and collaborations. Let's build something great together.
-            </Text>
-          </div>
-        </div>
-
-        {/* Bottom Bar - Content Adaptive */}
+        {/* Bottom Bar - Clean Centered */}
         <div 
-          className="border-t border-border-primary/20 flex flex-col sm:flex-row items-center justify-center sm:justify-between"
-          style={{
-            paddingTop: "clamp(0.75rem, 2vh + 0.25rem, 1.25rem)",
-            gap: "clamp(0.75rem, 2vh, 1rem)",
-          }}
+          className="border-t border-border-primary/20 flex flex-col items-center justify-center pt-2.5 sm:pt-3 md:pt-3.5 gap-1.5 sm:gap-2"
         >
           <Text 
             size="body-sm" 
             color="tertiary"
+            className="text-center"
             style={{
-              fontSize: "clamp(0.75rem, 1.5vw, 0.875rem)",
+              fontSize: "clamp(0.7rem, 1.5vw, 0.8rem)",
             }}
           >
             © {currentYear} Ranjith Eggadi. All rights reserved.
           </Text>
-          <div 
-            className="flex items-center"
-            style={{
-              gap: "clamp(0.75rem, 2vw, 1rem)",
-            }}
-          >
-            <Link 
-              href="#" 
-              className="text-fg-secondary hover:text-fg-primary transition-colors duration-300 touch-manipulation"
-              style={{
-                paddingTop: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                paddingBottom: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                fontSize: "clamp(0.75rem, 1.5vw, 0.875rem)",
-              }}
-            >
-              Privacy
-            </Link>
-            <span 
-              className="text-fg-tertiary"
-              style={{
-                fontSize: "clamp(0.75rem, 1.5vw, 0.875rem)",
-              }}
-            >
-              •
-            </span>
-            <Link 
-              href="#" 
-              className="text-fg-secondary hover:text-fg-primary transition-colors duration-300 touch-manipulation"
-              style={{
-                paddingTop: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                paddingBottom: "clamp(0.25rem, 0.75vh, 0.5rem)",
-                fontSize: "clamp(0.75rem, 1.5vw, 0.875rem)",
-              }}
-            >
-              Terms
-            </Link>
-          </div>
         </div>
       </Container>
     </footer>

@@ -1,27 +1,20 @@
 /**
- * About Preview Component - PREMIUM GSAP ANIMATIONS
- * Professional animations with lazy-loading and error handling
+ * About Preview Component
+ * Professional layout with error handling
  */
 
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Heading, Text, Button } from "@/components/ui";
 import { useRouter } from "next/navigation";
-import { useReducedMotion } from "framer-motion";
 import { ArrowRight, Award, Code2, Cloud } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
+import Image from "next/image";
 import {
   ABOUT_CONTENT,
 } from "@/constants/aboutPreview";
-import {
-  animateFadeInUp,
-  animateStagger,
-  animateScrollFadeIn,
-  animateCounter,
-  cleanupGSAP,
-  prefersReducedMotion as checkReducedMotion,
-} from "@/lib/gsapAnimations";
-import { getPortfolioData } from "@/lib/adminData";
+import { getPortfolioData, clearCache } from "@/lib/adminData";
 
 // Icon mapping
 const iconMap = {
@@ -32,54 +25,43 @@ const iconMap = {
 
 export function AboutPreviewSection() {
   const router = useRouter();
-  const prefersReducedMotion = useReducedMotion();
-  const [isMounted, setIsMounted] = useState(false);
+  const { theme } = useTheme();
   const [aboutData, setAboutData] = useState({
     description: "",
-    stats: [] as Array<{ label: string; value: string }>,
     highlights: [] as Array<{ iconName: keyof typeof iconMap; title: string; description: string }>,
+    profileImage: "/profile.png", // Default profile image path
   });
-  
-  // Refs for GSAP animations - Content side
-  const sectionRef = useRef<HTMLElement>(null);
-  const contentSideRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLParagraphElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const paragraphRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const highlightRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  
-  // Refs for GSAP animations - Stats side
-  const statsSideRef = useRef<HTMLDivElement>(null);
-  const statCardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const statValueRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Load about data from admin
+  // Load about data from admin - Server-side data
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const loadAboutData = () => {
+    const loadAboutData = async (force: boolean = false) => {
+      setIsLoading(true);
+      setHasError(false);
+      
       try {
-        const data = getPortfolioData();
+        // Fetch from server-side API
+        // Force refresh when update event is triggered, otherwise use cache
+        const data = await getPortfolioData(force);
         
-        // Get description from personalInfo
-        const description = data?.personalInfo?.description || "";
+        if (!data) {
+          throw new Error("No data received from server");
+        }
         
-        // Get stats from admin data
-        const stats = [
-          {
-            label: "Production APIs",
-            value: data?.stats?.productionAPIs || "10+",
-          },
-          {
-            label: "Years Experience",
-            value: data?.stats?.yearsExperience || "3+",
-          },
-          {
-            label: "Cloud Deployments",
-            value: data?.stats?.cloudDeployments || "5+",
-          },
-        ];
+        // Get description from personalInfo - ALWAYS use server data, no fallback
+        // This ensures we show what's actually saved in the admin panel
+        const description = data?.personalInfo?.description?.trim() || "";
+        
+        // Get profile image from personalInfo or use default
+        // Also handle legacy profile.jpg path and convert to profile.png
+        let profileImage = data?.personalInfo?.profileImage || "/profile.png";
+        if (profileImage === "/profile.jpg") {
+          profileImage = "/profile.png";
+        }
 
         // Generate highlights from certifications and skills
         const highlights = [];
@@ -114,32 +96,35 @@ export function AboutPreviewSection() {
           }
         }
 
-        setAboutData({ description, stats, highlights });
+        setAboutData({ description, highlights, profileImage });
+        setIsLoading(false);
       } catch (error) {
+        console.error("Error loading about data from server:", error);
+        setHasError(true);
+        setIsLoading(false);
         // Keep default values on error
       }
     };
 
-    loadAboutData();
+    // Initial load - always fetch fresh data to ensure we get latest from admin
+    loadAboutData(true);
 
-    // Listen for updates
-    const handlePortfolioUpdate = () => {
-      loadAboutData();
+    // Listen for updates from admin panel
+    const handlePortfolioUpdate = async () => {
+      // Clear cache first
+      clearCache();
+      // Add a small delay to ensure server has finished writing
+      await new Promise(resolve => setTimeout(resolve, 100));
+      // Force refresh to get latest data from server
+      loadAboutData(true);
     };
 
     window.addEventListener("portfolio-data-updated", handlePortfolioUpdate);
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "portfolio_admin_data" || e.key === null) {
-        loadAboutData();
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener("portfolio-data-updated", handlePortfolioUpdate);
-      window.removeEventListener("storage", handleStorageChange);
     };
-  }, []);
+  }, [refreshKey]); // Add refreshKey as dependency to allow manual refresh
 
   // Error handling for navigation
   const handleCTAClick = async () => {
@@ -152,226 +137,109 @@ export function AboutPreviewSection() {
     }
   };
 
-  // Track if animations have been initialized
-  const animationsInitializedRef = useRef(false);
-  
-  // Initialize GSAP animations - Wait for page fully loaded
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    // Prevent re-triggering
-    if (animationsInitializedRef.current) return;
-    
-    setIsMounted(true);
-    
-    if (prefersReducedMotion || checkReducedMotion()) {
-      return;
-    }
-    
-    const cleanupFunctions: Array<() => void> = [];
-    
-    // Wait for page to fully load before starting animations
-    const startAnimations = () => {
-      // Prevent re-triggering
-      if (animationsInitializedRef.current) return;
-      animationsInitializedRef.current = true;
-      // Content side animations
-      if (labelRef.current) {
-        animateFadeInUp(labelRef.current, {
-          delay: 0.2,
-          duration: 1.4,
-          y: 40,
-        });
-      }
-
-      if (titleRef.current) {
-        animateFadeInUp(titleRef.current, {
-          delay: 0.4,
-          duration: 1.6,
-          y: 50,
-        });
-      }
-
-      // Paragraphs stagger
-      setTimeout(() => {
-        const paragraphs = paragraphRefs.current.filter(Boolean) as HTMLElement[];
-        if (paragraphs.length > 0) {
-          animateStagger(paragraphs, {
-            delay: 0.2,
-            duration: 1.3,
-            stagger: 0.15,
-            y: 40,
-          });
-        }
-      }, 800);
-
-      // Highlights stagger - Scroll-triggered
-      setTimeout(() => {
-        const highlights = highlightRefs.current.filter(Boolean) as HTMLElement[];
-        if (highlights.length > 0) {
-          const cleanup = animateScrollFadeIn(highlights[0]?.parentElement || null, {
-            start: "top 80%",
-            end: "top 55%",
-            y: 50,
-          });
-          if (cleanup) cleanupFunctions.push(cleanup);
-
-          animateStagger(highlights, {
-            delay: 0.3,
-            duration: 1.2,
-            stagger: 0.12,
-            y: 40,
-          });
-        }
-      }, 1000);
-
-      // CTA button - Scroll-triggered
-      if (ctaRef.current) {
-        const cleanup = animateScrollFadeIn(ctaRef.current, {
-          start: "top 85%",
-          end: "top 60%",
-          y: 40,
-        });
-        if (cleanup) cleanupFunctions.push(cleanup);
-      }
-
-      // Stats side - Scroll-triggered
-      if (statsSideRef.current) {
-        const cleanup = animateScrollFadeIn(statsSideRef.current, {
-          start: "top 75%",
-          end: "top 45%",
-          y: 60,
-        });
-        if (cleanup) cleanupFunctions.push(cleanup);
-
-        // Stagger stat cards
-        setTimeout(() => {
-          const cards = statCardRefs.current.filter(Boolean) as HTMLElement[];
-          if (cards.length > 0) {
-            animateStagger(cards, {
-              delay: 0.2,
-              duration: 1.2,
-              stagger: 0.15,
-              y: 50,
-            });
-          }
-
-          // Animate stat counters
-          statValueRefs.current.forEach((ref, index) => {
-            if (ref && ref.textContent) {
-              setTimeout(() => {
-                animateCounter(ref, ref.textContent || "", {
-                  delay: index * 0.2,
-                  duration: 2.2,
-                });
-              }, 500);
-            }
-          });
-        }, 600);
-      }
-    };
-
-    // Wait for page to be fully loaded
-    if (document.readyState === "complete") {
-      setTimeout(startAnimations, 500);
-    } else {
-      window.addEventListener("load", () => {
-        setTimeout(startAnimations, 500);
-      }, { once: true });
-    }
-    
-    return () => {
-      cleanupGSAP(cleanupFunctions);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run once on mount
 
   return (
     <section 
-      ref={sectionRef} 
       className="relative overflow-hidden"
       style={{
-        paddingTop: "clamp(1.5rem, 3vh + 0.5rem, 2.5rem)",
-        paddingBottom: "clamp(1.5rem, 3vh + 0.5rem, 2.5rem)",
+        paddingTop: "clamp(2rem, 4vh + 1rem, 4rem)", // Optimized for all resolutions
+        paddingBottom: "clamp(2rem, 4vh + 1rem, 4rem)", // Optimized for all resolutions
+        paddingLeft: "clamp(0.5rem, 2vw, 1rem)", // Side padding for very small screens
+        paddingRight: "clamp(0.5rem, 2vw, 1rem)", // Side padding for very small screens
+        backgroundColor: theme === "dark" ? "var(--color-bg-primary)" : "#FAFAFA",
       }}
     >
-      {/* Background gradient orbs - Responsive sizing */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute top-1/3 -right-1/4 bg-cyan-500/20 dark:bg-cyan-400/10 rounded-full blur-3xl"
-          style={{
-            width: "clamp(12rem, 30vw, 24rem)",
-            height: "clamp(12rem, 30vw, 24rem)",
-          }}
-        />
-        <div 
-          className="absolute bottom-1/3 -left-1/4 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl"
-          style={{
-            width: "clamp(12rem, 30vw, 24rem)",
-            height: "clamp(12rem, 30vw, 24rem)",
-          }}
-        />
-      </div>
 
-      <Container size="lg" className="relative z-10">
+      <Container size="lg" className="relative z-10" style={{ paddingLeft: "clamp(0.75rem, 3vw, 2rem)", paddingRight: "clamp(0.75rem, 3vw, 2rem)" }}>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-fg-secondary" style={{ fontSize: "clamp(0.875rem, 1.5vw, 1rem)" }}>
+              Loading...
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {hasError && !isLoading && (
+          <div className="text-center py-8">
+            <Text color="secondary" style={{ fontSize: "clamp(0.875rem, 1.5vw, 1rem)" }}>
+              Unable to load data. Please refresh the page.
+            </Text>
+      </div>
+        )}
+
+        {/* Main Content - Redesigned for all resolutions */}
+        {!isLoading && !hasError && (
         <div 
-          className="grid lg:grid-cols-2 items-center"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center"
           style={{
-            gap: "clamp(1rem, 3vw + 0.5rem, 2rem)",
+              gap: "clamp(2rem, 5vw + 1rem, 4rem)", // Responsive gap
           }}
         >
-          {/* Content Side */}
-          <div ref={contentSideRef}>
+            {/* Content Side - Left on desktop, bottom on mobile */}
+            <div className="w-full order-2 lg:order-1 flex flex-col justify-center">
             <Text
-              ref={labelRef}
               size="body-sm"
               color="primary"
               className="font-semibold uppercase tracking-wider"
               style={{
-                marginBottom: "clamp(0.5rem, 1.5vh, 0.75rem)",
-                fontSize: "clamp(0.75rem, 1vw + 0.5rem, 0.875rem)",
+                fontSize: "clamp(0.6875rem, 1.25vw + 0.2rem, 0.9375rem)", // Better scaling
+                marginBottom: "clamp(0.75rem, 1.5vh, 1rem)", // Optimized spacing
+                letterSpacing: "clamp(0.05em, 0.1vw, 0.15em)", // Responsive letter spacing
               }}
             >
               {ABOUT_CONTENT.label}
             </Text>
 
             <Heading
-              ref={titleRef}
               as="h2"
               size="h2"
-              className="dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-              style={{ 
-                textShadow: "0 2px 30px rgba(0,0,0,0.2)",
-                marginBottom: "clamp(0.75rem, 2vh, 1.25rem)",
-                fontSize: "clamp(1.75rem, 4vw + 0.5rem, 3rem)",
-                lineHeight: "1.2",
+              className="text-shadow-theme"
+              style={{
+                fontSize: "clamp(1.75rem, 4.5vw + 0.75rem, 3.5rem)", // Better scaling across resolutions
+                lineHeight: "1.15",
+                letterSpacing: "clamp(-0.025em, -0.015vw, -0.01em)", // Responsive letter spacing
+                marginBottom: "clamp(1rem, 2vh, 1.5rem)", // Optimized spacing
               }}
             >
               {ABOUT_CONTENT.title.prefix}
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
+              {" "}
+              <span
+                style={{
+                  backgroundImage: theme === "dark"
+                    ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                    : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  MozBackgroundClip: "text" as any,
+                  MozTextFillColor: "transparent" as any,
+                  boxDecorationBreak: "clone",
+                  WebkitBoxDecorationBreak: "clone",
+                  transition: "background-image 0.4s ease-in-out",
+                }}
+              >
                 {ABOUT_CONTENT.title.highlight}
               </span>
             </Heading>
 
             <div 
-            className="mb-4"
+              className="space-y-3 sm:space-y-4"
             style={{
-              gap: "clamp(0.5rem, 1.5vh, 1rem)",
-                display: "flex",
-                flexDirection: "column",
+                marginBottom: "clamp(1.25rem, 3vh, 2.5rem)", // Optimized spacing
               }}
             >
               {aboutData.description ? (
                 <Text
-                  ref={(el) => {
-                    paragraphRefs.current[0] = el;
-                  }}
                   size="body-lg"
                   color="primary"
                   className="leading-relaxed"
                   style={{
-                    fontSize: "clamp(1rem, 1.8vw + 0.5rem, 1.125rem)",
-                    lineHeight: "1.7",
+                    fontSize: "clamp(0.875rem, 1.5vw + 0.4rem, 1.25rem)", // Better scaling
+                    lineHeight: 1.7, // Better readability
+                    letterSpacing: "clamp(0.005em, 0.01vw, 0.015em)", // Responsive letter spacing
+                    maxWidth: "100%",
                   }}
                 >
                   {aboutData.description}
@@ -380,17 +248,15 @@ export function AboutPreviewSection() {
                 ABOUT_CONTENT.paragraphs.map((paragraph, index) => (
                   <Text
                     key={index}
-                    ref={(el) => {
-                      paragraphRefs.current[index] = el;
-                  }}
                   size={index === 0 ? "body-lg" : "body"}
                   color={index === 0 ? "primary" : "secondary"}
                   className="leading-relaxed"
                   style={{
                     fontSize: index === 0 
-                      ? "clamp(1rem, 1.8vw + 0.5rem, 1.125rem)"
-                      : "clamp(0.875rem, 1.5vw + 0.5rem, 1rem)",
-                    lineHeight: "1.7",
+                        ? "clamp(0.875rem, 1.5vw + 0.4rem, 1.25rem)" // Better scaling
+                        : "clamp(0.8125rem, 1.3vw + 0.3rem, 1.125rem)", // Better scaling
+                      lineHeight: 1.7, // Better readability
+                      letterSpacing: "clamp(0.005em, 0.01vw, 0.015em)", // Responsive letter spacing
                   }}
                   dangerouslySetInnerHTML={{ __html: paragraph }}
                 />
@@ -398,13 +264,11 @@ export function AboutPreviewSection() {
               )}
             </div>
 
-            {/* Highlights - Professional mobile layout */}
+            {/* Highlights - Modern mobile layout */}
             <div 
-            className="mb-4"
+              className="space-y-2 sm:space-y-3"
             style={{
-              gap: "clamp(0.375rem, 1.25vh, 0.625rem)",
-                display: "flex",
-                flexDirection: "column",
+                marginBottom: "clamp(1rem, 2.5vh, 2rem)", // Optimized spacing
               }}
             >
               {(aboutData.highlights.length > 0 ? aboutData.highlights : [
@@ -416,42 +280,28 @@ export function AboutPreviewSection() {
                 return (
                   <div
                     key={highlight.title}
-                    ref={(el) => {
-                      highlightRefs.current[index] = el;
-                    }}
-                    className="flex items-start glass-base rounded-xl border border-border-primary/50"
-                    style={{
-                      gap: "clamp(0.75rem, 2vw, 1rem)",
-                      padding: "clamp(0.875rem, 2vw, 1rem)",
-                    }}
+                    className="flex items-start glass-base rounded-xl border border-border-primary/50 hover:border-border-primary/80 transition-all duration-300 p-3 sm:p-4"
                   >
                     <div 
-                      className="rounded-lg bg-primary/10 text-fg-primary flex-shrink-0"
-                      style={{
-                        padding: "clamp(0.5rem, 1.5vw, 0.625rem)",
-                      }}
+                      className="rounded-lg bg-primary/10 text-fg-primary flex-shrink-0 p-2 sm:p-2.5"
                     >
                       <IconComponent 
-                        style={{
-                          width: "clamp(1.25rem, 2vw + 0.5rem, 1.5rem)",
-                          height: "clamp(1.25rem, 2vw + 0.5rem, 1.5rem)",
-                        }}
+                        className="w-5 h-5 sm:w-6 sm:h-6"
                       />
                     </div>
-                    <div>
+                    <div className="ml-3 sm:ml-4 flex-1 min-w-0">
                       <h4 
-                        className="font-semibold text-fg-primary"
+                        className="font-semibold text-fg-primary mb-1 sm:mb-1.5"
                         style={{
-                          marginBottom: "clamp(0.25rem, 0.5vh, 0.375rem)",
-                          fontSize: "clamp(0.875rem, 1.5vw + 0.5rem, 1rem)",
+                          fontSize: "clamp(0.875rem, 2vw, 1rem)",
                         }}
                       >
                         {highlight.title}
                       </h4>
                       <p 
-                        className="text-fg-secondary"
+                        className="text-fg-secondary text-sm sm:text-base"
                         style={{
-                          fontSize: "clamp(0.75rem, 1.2vw + 0.5rem, 0.875rem)",
+                          fontSize: "clamp(0.75rem, 1.5vw, 0.875rem)",
                           lineHeight: "1.5",
                         }}
                       >
@@ -463,84 +313,64 @@ export function AboutPreviewSection() {
               })}
             </div>
 
-            {/* CTA Button - Professional mobile sizing */}
-            <div ref={ctaRef}>
+            {/* CTA Button - Highly responsive across all resolutions */}
+            <div className="w-full sm:w-auto">
               <Button
                 size="lg"
                 onClick={handleCTAClick}
-                className="group transition-all duration-300 hover:opacity-90 active:scale-95 touch-manipulation"
+                className="group transition-all duration-300 hover:opacity-90 active:scale-95 touch-manipulation w-full sm:w-auto flex items-center justify-center"
                 style={{
-                  fontSize: "clamp(0.875rem, 1.2vw + 0.5rem, 1rem)",
-                  paddingTop: "clamp(0.75rem, 1.5vw + 0.5rem, 0.875rem)",
-                  paddingBottom: "clamp(0.75rem, 1.5vw + 0.5rem, 0.875rem)",
-                  paddingLeft: "clamp(1.5rem, 3vw + 0.75rem, 2rem)",
-                  paddingRight: "clamp(1.5rem, 3vw + 0.75rem, 2rem)",
-                  minHeight: "clamp(2.75rem, 5vw + 1.5rem, 3.5rem)",
+                  fontSize: "clamp(0.8125rem, 1.5vw + 0.4rem, 1.125rem)", // Better scaling
+                  paddingTop: "clamp(0.75rem, 1.75vh, 1.125rem)", // Optimized vertical padding
+                  paddingBottom: "clamp(0.75rem, 1.75vh, 1.125rem)", // Optimized vertical padding
+                  paddingLeft: "clamp(1.25rem, 3.5vw + 0.5rem, 2.75rem)", // Optimized horizontal padding
+                  paddingRight: "clamp(1.25rem, 3.5vw + 0.5rem, 2.75rem)", // Optimized horizontal padding
+                  minHeight: "clamp(2.75rem, 5.5vh, 3.5rem)", // Consistent button height
+                  gap: "clamp(0.375rem, 0.75vw, 0.625rem)", // Responsive gap
                 }}
               >
-                {ABOUT_CONTENT.ctaText}
+                <span>{ABOUT_CONTENT.ctaText}</span>
                 <ArrowRight 
-                  className="group-hover:translate-x-1 transition-transform"
+                  className="group-hover:translate-x-1 transition-transform flex-shrink-0"
                   style={{
-                    width: "clamp(1rem, 1.5vw + 0.5rem, 1.25rem)",
-                    height: "clamp(1rem, 1.5vw + 0.5rem, 1.25rem)",
-                    marginLeft: "clamp(0.375rem, 1vw, 0.5rem)",
+                    width: "clamp(0.875rem, 1.25vw + 0.25rem, 1.375rem)", // Better icon scaling
+                    height: "clamp(0.875rem, 1.25vw + 0.25rem, 1.375rem)", // Better icon scaling
+                    marginLeft: "clamp(0.375rem, 0.75vw, 0.625rem)", // Responsive margin
                   }}
                 />
               </Button>
             </div>
           </div>
 
-          {/* Stats Side - Professional responsive grid */}
-          <div ref={statsSideRef} className="relative">
-            {/* Stats Cards - Mobile-first responsive */}
-            <div 
-              className="grid grid-cols-2 sm:grid-cols-2"
-              style={{
-                gap: "clamp(0.75rem, 3vw, 1.5rem)",
-              }}
-            >
-              {aboutData.stats.map((stat, index) => (
-                <div
-                  key={stat.label}
-                  ref={(el) => {
-                    statCardRefs.current[index] = el;
-                  }}
-                  className="glass-card rounded-2xl border-2 border-border-primary/50 hover:border-border-primary hover:shadow-xl transition-all duration-500 active:scale-95 touch-manipulation"
+            {/* Profile Image - Right on desktop, top on mobile - Clean Design */}
+            <div className="w-full flex justify-center lg:justify-end order-1 lg:order-2">
+              <div 
+                className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] lg:max-w-[450px]"
+                style={{
+                  aspectRatio: "1 / 1",
+                }}
+              >
+                <Image
+                  src={aboutData.profileImage}
+                  alt="Profile Picture"
+                  fill
+                  className="object-cover rounded-lg sm:rounded-xl"
+                  sizes="(max-width: 640px) 280px, (max-width: 768px) 320px, (max-width: 1024px) 380px, 450px"
+                  priority
                   style={{
-                    padding: "clamp(1.25rem, 3vw + 0.75rem, 2rem)",
+                    objectFit: "cover",
+                    filter: "brightness(1.02) contrast(1.05)",
                   }}
-                >
-                  <div
-                    ref={(el) => {
-                      statValueRefs.current[index] = el;
-                    }}
-                    className="font-bold text-fg-primary"
-                    style={{
-                      fontSize: "clamp(1.75rem, 4vw + 0.75rem, 2.25rem)",
-                      marginBottom: "clamp(0.375rem, 1vh, 0.5rem)",
-                      lineHeight: "1.2",
-                    }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div 
-                    className="text-fg-secondary"
-                    style={{
-                      fontSize: "clamp(0.75rem, 1.2vw + 0.5rem, 0.875rem)",
-                      lineHeight: "1.4",
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+                  onError={(e) => {
+                    // Fallback to a placeholder if image doesn't exist
+                    const target = e.target as HTMLImageElement;
+                    target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='450' height='450'%3E%3Crect fill='%23ddd' width='450' height='450'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='24' dy='10.5' font-weight='bold' x='50%25' y='50%25' text-anchor='middle'%3EProfile%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+              </div>
             </div>
-
-            {/* Decorative element - Static (no animation for performance) */}
-            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-400/5 dark:to-purple-400/5 rounded-full blur-3xl" />
           </div>
-        </div>
+        )}
       </Container>
     </section>
   );

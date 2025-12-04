@@ -7,6 +7,7 @@ import { AnimatedSection } from "@/components/animations/AnimatedSection";
 import { fadeInUp, staggerContainer } from "@/lib/motionVariants";
 import { Suspense, useEffect, useState } from "react";
 import { getPortfolioData, type Project } from "@/lib/adminData";
+import { useTheme } from "@/context/ThemeContext";
 
 // Helper function to generate slug from title
 function generateSlug(title: string): string {
@@ -17,19 +18,21 @@ function generateSlug(title: string): string {
 }
 
 export default function ProjectsPage() {
+  const { theme } = useTheme();
   const [projects, setProjects] = useState<Project[]>([]);
 
   // Load projects from admin data
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const loadProjects = () => {
+    const loadProjects = async () => {
       try {
-        const data = getPortfolioData();
+        const data = await getPortfolioData();
         if (data?.projects) {
           setProjects(data.projects);
         }
       } catch (error) {
+        console.error("Error loading projects:", error);
         setProjects([]);
       }
     };
@@ -42,40 +45,56 @@ export default function ProjectsPage() {
     };
 
     window.addEventListener("portfolio-data-updated", handlePortfolioUpdate);
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "portfolio_admin_data" || e.key === null) {
-        loadProjects();
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener("portfolio-data-updated", handlePortfolioUpdate);
-      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
   return (
     <main role="main" className="min-h-screen bg-primary">
-      <section className="relative py-32 overflow-hidden bg-primary">
+      <section className="relative py-20 sm:py-24 md:py-32 overflow-hidden bg-primary">
         {/* Background gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 -left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 -right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 -left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-orb-blue rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 -right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-orb-purple rounded-full blur-3xl" />
         </div>
 
         <Container size="lg" className="relative z-10">
           <AnimatedSection variant="stagger">
             {/* Section Header */}
-            <motion.div variants={fadeInUp} className="text-center mb-16">
+            <motion.div variants={fadeInUp} className="text-center mb-12 sm:mb-16 px-4">
               <Heading
                 as="h1"
                 size="h1"
-                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+                className="mb-4 sm:mb-6 text-shadow-theme"
+                style={{
+                  fontSize: "clamp(1.75rem, 7vw, 3.5rem)",
+                  lineHeight: "1.15",
+                  paddingLeft: "clamp(0.5rem, 2vw, 1rem)",
+                  paddingRight: "clamp(0.5rem, 2vw, 1rem)",
+                }}
               >
-                All Projects
+                <span
+                  style={{
+                    backgroundImage: theme === "dark"
+                      ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                      : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozBackgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozTextFillColor: "transparent",
+                    boxDecorationBreak: "clone",
+                    WebkitBoxDecorationBreak: "clone",
+                    transition: "background-image 0.4s ease-in-out",
+                  }}
+                >
+                  All Projects
+                </span>
               </Heading>
-              <Text size="body-lg" color="secondary" className="max-w-2xl mx-auto">
+              <Text size="body-lg" color="secondary" className="max-w-2xl mx-auto px-2 sm:px-4 text-sm sm:text-base md:text-lg">
                 Backend systems built with precision, deployed at scale, and proven in production
               </Text>
             </motion.div>

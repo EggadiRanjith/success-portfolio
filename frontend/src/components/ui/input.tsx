@@ -31,7 +31,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <p
             className={cn(
               "mt-2 text-body-sm",
-              error ? "text-red-500 dark:text-red-400" : "text-tertiary"
+              error ? "text-error" : "text-tertiary"
             )}
           >
             {helperText}

@@ -50,7 +50,7 @@ export default function NotFound() {
       className="min-h-screen flex items-center justify-center relative overflow-hidden bg-primary"
     >
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-cyan-500/10 dark:from-blue-500/5 dark:via-purple-500/5 dark:to-cyan-500/5 animate-pulse" />
+      <div className="absolute inset-0 bg-gradient-primary-orb opacity-50 animate-pulse" />
       
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -64,7 +64,7 @@ export default function NotFound() {
         }, []).map((particle) => (
           <motion.div
             key={particle.key}
-            className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"
+            className="absolute w-2 h-2 rounded-full bg-accent-blue opacity-20"
             style={{
               left: `${particle.left}%`,
               top: `${particle.top}%`,
@@ -89,7 +89,7 @@ export default function NotFound() {
           {/* Large 404 with gradient */}
           <motion.div variants={itemVariants} className="mb-8">
             <motion.h1
-              className="text-[clamp(6rem,15vw,12rem)] font-bold leading-none bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent"
+              className="text-[clamp(6rem,15vw,12rem)] font-bold leading-none text-gradient-primary"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -108,7 +108,7 @@ export default function NotFound() {
 
           {/* Icon */}
           <motion.div variants={itemVariants} className="mb-6">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-border-primary/50 backdrop-blur-sm">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-orb-blue border border-border-primary/50 backdrop-blur-sm">
               <AlertCircle className="w-10 h-10 text-fg-primary" />
             </div>
           </motion.div>
@@ -184,7 +184,7 @@ export default function NotFound() {
                   className="text-body-sm text-fg-secondary hover:text-fg-primary transition-colors relative group"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-blue group-hover:w-full transition-all duration-300" />
                 </button>
               ))}
             </div>

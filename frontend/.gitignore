@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# portfolio data (optional - remove if you want to track it in git)
+/data/portfolio.json

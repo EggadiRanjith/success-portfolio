@@ -108,8 +108,8 @@ export default function AdminLoginPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-2"
                   >
-                    <Text size="body-sm" className="text-red-500 dark:text-red-400 flex items-center gap-2">
-                      <span className="w-1 h-1 rounded-full bg-red-500"></span>
+                    <Text size="body-sm" className="text-error flex items-center gap-2">
+                      <span className="w-1 h-1 rounded-full bg-error"></span>
                       {error}
                     </Text>
                   </motion.div>

@@ -78,7 +78,7 @@ export function PageLoader() {
           exit="exit"
         >
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 shadow-lg shadow-purple-500/50"
+            className="h-full bg-gradient-primary shadow-lg shadow-accent-purple/50"
             variants={barVariants}
             initial="initial"
             animate="animate"

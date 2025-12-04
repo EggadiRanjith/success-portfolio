@@ -52,8 +52,8 @@ export function CertificationsForm({ data, onChange }: CertificationsFormProps) 
               <Text size="body-lg" color="primary" className="font-semibold text-primary">
                 Certification #{index + 1}
               </Text>
-              <Button variant="ghost" size="sm" onClick={() => removeCertification(index)} className="hover:bg-red-500/10">
-                <Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" />
+              <Button variant="ghost" size="sm" onClick={() => removeCertification(index)} className="hover:bg-orb-red">
+                <Trash2 className="w-4 h-4 text-error" />
               </Button>
             </div>
 

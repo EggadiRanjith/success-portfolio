@@ -19,7 +19,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
         {...props}
       >
         {children}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-error ml-1">*</span>}
       </label>
     );
   }

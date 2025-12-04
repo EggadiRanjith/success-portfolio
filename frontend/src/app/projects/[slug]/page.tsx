@@ -11,6 +11,7 @@ import { notFound } from "next/navigation";
 import { ProjectCard } from "@/components/sections/ProjectCard";
 import { use, useEffect, useState } from "react";
 import { getPortfolioData, type Project } from "@/lib/adminData";
+import { useTheme } from "@/context/ThemeContext";
 
 // Helper function to generate slug from title
 function generateSlug(title: string): string {
@@ -27,6 +28,7 @@ function findProjectBySlug(projects: Project[], slug: string): Project | undefin
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const { theme } = useTheme();
   const [project, setProject] = useState<Project | null>(null);
   const [allProjects, setAllProjects] = useState<Project[]>([]);
 
@@ -34,15 +36,16 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const loadProject = () => {
+    const loadProject = async () => {
       try {
-        const data = getPortfolioData();
+        const data = await getPortfolioData();
         if (data?.projects) {
           setAllProjects(data.projects);
           const foundProject = findProjectBySlug(data.projects, slug);
           setProject(foundProject || null);
         }
       } catch (error) {
+        console.error("Error loading project:", error);
         setProject(null);
         setAllProjects([]);
       }
@@ -56,16 +59,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
     };
 
     window.addEventListener("portfolio-data-updated", handlePortfolioUpdate);
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "portfolio_admin_data" || e.key === null) {
-        loadProject();
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener("portfolio-data-updated", handlePortfolioUpdate);
-      window.removeEventListener("storage", handleStorageChange);
     };
   }, [slug]);
 
@@ -100,39 +96,39 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   return (
     <main role="main" className="min-h-screen bg-primary">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-20 sm:pt-24 md:pt-32 pb-16 sm:pb-20 overflow-hidden">
         {/* Background gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 -left-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 -right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-orb-blue rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 -left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-orb-purple rounded-full blur-3xl" />
         </div>
 
         <Container size="lg" className="relative z-10">
           <AnimatedSection variant="stagger">
             {/* Back Button */}
-            <motion.div variants={fadeInUp} className="mb-8">
+            <motion.div variants={fadeInUp} className="mb-6 sm:mb-8 px-2">
               <Link
                 href="/projects"
-                className="inline-flex items-center gap-2 text-fg-secondary hover:text-fg-primary transition-colors group"
+                className="inline-flex items-center gap-2 text-fg-secondary hover:text-fg-primary transition-colors group touch-manipulation py-2"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="font-medium">Back to Projects</span>
+                <span className="font-medium text-sm sm:text-base">Back to Projects</span>
               </Link>
             </motion.div>
 
             {/* Project Header */}
-            <motion.div variants={fadeInUp} className="mb-8">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <Badge variant="glass" size="sm" className="bg-primary/10">
+            <motion.div variants={fadeInUp} className="mb-6 sm:mb-8 px-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+                <Badge variant="glass" size="sm" className="bg-primary/10 text-xs sm:text-sm">
                   {project.category}
                 </Badge>
-                <div className="flex items-center gap-2 text-sm text-fg-tertiary">
-                  <Calendar className="w-4 h-4" />
+                <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-fg-tertiary">
+                  <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{project.year}</span>
                 </div>
                 {project.timeline && (
-                  <div className="flex items-center gap-2 text-sm text-fg-tertiary">
-                    <Clock className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-fg-tertiary">
+                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span>{project.timeline}</span>
                   </div>
                 )}
@@ -140,31 +136,52 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
               <Heading
                 as="h1"
                 size="h1"
-                className="mb-4 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+                className="mb-4 sm:mb-6 text-shadow-theme"
+                style={{
+                  fontSize: "clamp(1.5rem, 7vw, 3.5rem)",
+                  lineHeight: "1.15",
+                }}
               >
-                {project.title}
+                <span
+                  style={{
+                    backgroundImage: theme === "dark"
+                      ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                      : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozBackgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozTextFillColor: "transparent",
+                    boxDecorationBreak: "clone",
+                    WebkitBoxDecorationBreak: "clone",
+                    transition: "background-image 0.4s ease-in-out",
+                  }}
+                >
+                  {project.title}
+                </span>
               </Heading>
-              <Text size="body-lg" color="secondary" className="max-w-3xl mb-6">
+              <Text size="body-lg" color="secondary" className="max-w-3xl mb-6 text-sm sm:text-base md:text-lg leading-relaxed">
                 {project.description}
               </Text>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
                 {project.liveUrl && (
                   <a
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block"
+                    className="inline-block w-full sm:w-auto"
                   >
                     <Button
                       variant="primary"
                       size="lg"
-                      className="group"
+                      className="group w-full sm:w-auto touch-manipulation"
                     >
                       <ExternalLink className="w-4 h-4 mr-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      View Live Demo
+                      <span className="text-sm sm:text-base">View Live Demo</span>
                     </Button>
                   </a>
                 )}
@@ -173,15 +190,15 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block"
+                    className="inline-block w-full sm:w-auto"
                   >
                     <Button
                       variant="glass"
                       size="lg"
-                      className="group"
+                      className="group w-full sm:w-auto touch-manipulation"
                     >
                       <Github className="w-4 h-4 mr-2" />
-                      View on GitHub
+                      <span className="text-sm sm:text-base">View on GitHub</span>
                     </Button>
                   </a>
                 )}
@@ -191,7 +208,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
             {/* Hero Image */}
             <motion.div
               variants={fadeInUp}
-              className="relative w-full h-[500px] md:h-[600px] rounded-2xl overflow-hidden glass-card border border-border-primary/50"
+              className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-xl sm:rounded-2xl overflow-hidden glass-card border border-border-primary/50 mx-2"
             >
               <Image
                 src={project.image}
@@ -208,11 +225,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {/* Project Details */}
-      <section className="relative py-20">
+      <section className="relative py-12 sm:py-16 md:py-20">
         <Container size="lg" className="relative z-10">
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-12">
+            <div className="lg:col-span-2 space-y-8 sm:space-y-10 md:space-y-12 px-2">
               {/* Overview */}
               <AnimatedSection variant="stagger">
                 <motion.div variants={fadeInUp}>
@@ -240,7 +257,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                           custom={index}
                           className="flex items-start gap-3 p-4 glass-card rounded-xl border border-border-primary/50"
                         >
-                          <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
                           <Text size="body" color="primary" className="font-medium">
                             {feature}
                           </Text>
@@ -257,7 +274,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                   <div className="grid md:grid-cols-2 gap-8">
                     <motion.div variants={fadeInUp}>
                       <Heading as="h3" size="h3" className="mb-4 flex items-center gap-2">
-                        <Zap className="w-5 h-5 text-yellow-500" />
+                        <Zap className="w-5 h-5 text-warning" />
                         Challenges
                       </Heading>
                       <ul className="space-y-3">
@@ -273,7 +290,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                     </motion.div>
                     <motion.div variants={fadeInUp}>
                       <Heading as="h3" size="h3" className="mb-4 flex items-center gap-2">
-                        <Code className="w-5 h-5 text-blue-500" />
+                        <Code className="w-5 h-5 text-accent-blue" />
                         Solutions
                       </Heading>
                       <ul className="space-y-3">
@@ -394,7 +411,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
                       <div className="grid grid-cols-2 gap-4">
                         {project.results.map((result: { metric: string; label: string }, index: number) => (
                           <div key={index} className="text-center">
-                            <Text size="body-lg" color="primary" className="font-bold mb-1 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                            <Text size="body-lg" color="primary" className="font-bold mb-1 text-gradient-primary">
                               {result.metric}
                             </Text>
                             <Text size="body-sm" color="tertiary">
@@ -416,15 +433,41 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
       {relatedProjects.length > 0 && (
         <section className="relative py-20 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-cyan-500/20 dark:bg-cyan-400/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/2 -left-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-400/10 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 -right-1/4 w-96 h-96 bg-orb-cyan rounded-full blur-3xl" />
+            <div className="absolute bottom-1/2 -left-1/4 w-96 h-96 bg-orb-purple rounded-full blur-3xl" />
           </div>
 
           <Container size="lg" className="relative z-10">
             <AnimatedSection variant="stagger">
               <motion.div variants={fadeInUp} className="text-center mb-12">
-                <Heading as="h2" size="h2" className="mb-4">
-                  Related Projects
+                <Heading 
+                  as="h2" 
+                  size="h2" 
+                  className="mb-4"
+                  style={{
+                    fontSize: "clamp(1.75rem, 4vw + 0.5rem, 2.5rem)",
+                    lineHeight: "1.2",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundImage: theme === "dark"
+                        ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                        : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      // @ts-ignore - Mozilla-specific properties
+                      MozBackgroundClip: "text",
+                      // @ts-ignore - Mozilla-specific properties
+                      MozTextFillColor: "transparent",
+                      boxDecorationBreak: "clone",
+                      WebkitBoxDecorationBreak: "clone",
+                      transition: "background-image 0.4s ease-in-out",
+                    }}
+                  >
+                    Related Projects
+                  </span>
                 </Heading>
                 <Text size="body" color="secondary">
                   Explore more of my work

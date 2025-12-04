@@ -30,8 +30,8 @@ export const FrostedCard = React.forwardRef<HTMLDivElement, FrostedCardProps>(
         ref={ref}
         className={cn(
           'relative overflow-hidden rounded-2xl',
-          'bg-white/30 dark:bg-white/10',
-          'border border-white/40 dark:border-white/20',
+          'bg-[var(--glass-overlay-light)]',
+          'border border-[var(--glass-border-light)]',
           'backdrop-blur-2xl backdrop-saturate-[180%]',
           intensityMap[intensity],
           glow && 'shadow-glass-lg',
@@ -57,7 +57,7 @@ export const FrostedCard = React.forwardRef<HTMLDivElement, FrostedCardProps>(
           <motion.div
             className="absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none"
             style={{
-              background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
+              background: `linear-gradient(45deg, transparent 30%, var(--glass-shimmer) 50%, transparent 70%)`,
             }}
             whileHover={{
               opacity: 1,

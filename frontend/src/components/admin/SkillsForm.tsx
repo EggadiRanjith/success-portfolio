@@ -76,9 +76,9 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => removeCategory(categoryIndex)}
-                className="ml-4 hover:bg-red-500/10"
+                className="ml-4 hover:bg-orb-red"
               >
-                <Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" />
+                <Trash2 className="w-4 h-4 text-error" />
               </Button>
             </div>
 
@@ -105,13 +105,13 @@ export function SkillsForm({ data, onChange }: SkillsFormProps) {
                       value={item}
                       onChange={(e) => updateSkillItem(categoryIndex, itemIndex, e.target.value)}
                       placeholder="Skill name"
-                      className="px-3 py-1.5 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-3 py-1.5 rounded-lg text-sm bg-secondary border border-border-primary/50 text-fg-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                     />
                     <button
                       onClick={() => removeSkillItem(categoryIndex, itemIndex)}
-                      className="p-1 hover:bg-red-500/10 rounded transition-colors"
+                      className="p-1 hover:bg-orb-red rounded transition-colors"
                     >
-                      <X className="w-4 h-4 text-red-500" />
+                      <X className="w-4 h-4 text-error" />
                     </button>
                   </div>
                 ))}

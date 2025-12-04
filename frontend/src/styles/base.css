@@ -1,16 +1,28 @@
 /* Import Ultra-Luxury Foundation */
 @import url('./luxury-system.css');
+@import url('./luxury-colors.css');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Smooth theme transitions for all elements */
+*,
+*::before,
+*::after {
+  transition-property: color, background-color, border-color, text-shadow, box-shadow, fill, stroke, background, background-image, filter;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 /* ================================================
    CSS CUSTOM PROPERTIES (Luxury Theme Variables)
    ================================================ */
 
 :root {
-  /* Colors - Light Mode */
+  /* ================================================
+     BASE COLORS - Light Mode
+     ================================================ */
   --color-bg-primary: #FFFFFF;
   --color-bg-secondary: #F8F8F8;
   --color-bg-tertiary: #F0F0F0;
@@ -19,22 +31,108 @@
   --color-text-tertiary: #6A6A6A;
   --color-border: #E0E0E0;
   
-  /* Luxury Accent Colors - Light Mode */
-  --color-accent-blue: #3B82F6;
-  --color-accent-purple: #8B5CF6;
-  --color-accent-cyan: #06B6D4;
-  --color-accent-gold: #F59E0B;
+  /* Hero text colors for instant CSS updates */
+  --hero-text-color: #000000;
+  --hero-text-shadow: 0 2px 20px rgba(255, 255, 255, 1), 0 1px 4px rgba(0, 0, 0, 0.15);
   
-  /* Glass Effect Base - Light Mode */
+  /* ================================================
+     ACCENT COLORS - Light Mode
+     ================================================ */
+  --color-accent-blue: #3B82F6;
+  --color-accent-blue-light: #60A5FA;
+  --color-accent-blue-dark: #2563EB;
+  --color-accent-purple: #8B5CF6;
+  --color-accent-purple-light: #A78BFA;
+  --color-accent-purple-dark: #7C3AED;
+  --color-accent-cyan: #06B6D4;
+  --color-accent-cyan-light: #22D3EE;
+  --color-accent-cyan-dark: #0891B2;
+  --color-accent-gold: #F59E0B;
+  --color-accent-gold-light: #FCD34D;
+  --color-accent-gold-dark: #D97706;
+  
+  /* Additional accent colors */
+  --color-accent-green: #10B981;
+  --color-accent-green-light: #34D399;
+  --color-accent-green-dark: #059669;
+  --color-accent-pink: #EC4899;
+  --color-accent-pink-light: #F472B6;
+  --color-accent-pink-dark: #DB2777;
+  --color-accent-orange: #F97316;
+  --color-accent-orange-light: #FB923C;
+  --color-accent-orange-dark: #EA580C;
+  --color-accent-red: #EF4444;
+  --color-accent-red-light: #F87171;
+  --color-accent-red-dark: #DC2626;
+  --color-accent-yellow: #EAB308;
+  --color-accent-yellow-light: #FCD34D;
+  --color-accent-yellow-dark: #CA8A04;
+  
+  /* ================================================
+     SEMANTIC COLORS - Light Mode
+     ================================================ */
+  --color-success: var(--color-accent-green);
+  --color-error: var(--color-accent-red);
+  --color-warning: var(--color-accent-gold);
+  --color-info: var(--color-accent-cyan);
+  
+  /* ================================================
+     GRADIENT ORB COLORS - Light Mode (with opacity)
+     ================================================ */
+  --color-orb-blue: rgba(59, 130, 246, 0.2);
+  --color-orb-purple: rgba(139, 92, 246, 0.2);
+  --color-orb-cyan: rgba(6, 182, 212, 0.2);
+  --color-orb-green: rgba(16, 185, 129, 0.2);
+  --color-orb-pink: rgba(236, 72, 153, 0.2);
+  --color-orb-orange: rgba(249, 115, 22, 0.2);
+  --color-orb-red: rgba(239, 68, 68, 0.2);
+  --color-orb-yellow: rgba(234, 179, 8, 0.2);
+  
+  /* ================================================
+     TEXT SHADOW COLORS - Light Mode
+     ================================================ */
+  --text-shadow-light: 0 2px 30px rgba(0, 0, 0, 0.2);
+  --text-shadow-dark: 0 2px 30px rgba(255, 255, 255, 0.1);
+  
+  /* ================================================
+     GRADIENT PATTERNS - Light Mode
+     ================================================ */
+  --gradient-primary-start: var(--color-accent-blue-dark);
+  --gradient-primary-mid: var(--color-accent-purple-dark);
+  --gradient-primary-end: var(--color-accent-cyan-dark);
+  --gradient-secondary-start: var(--color-accent-green);
+  --gradient-secondary-mid: var(--color-accent-blue);
+  --gradient-secondary-end: var(--color-accent-cyan);
+  --gradient-tertiary-start: var(--color-accent-purple);
+  --gradient-tertiary-mid: var(--color-accent-cyan);
+  --gradient-tertiary-end: var(--color-accent-blue);
+  --gradient-quaternary-start: var(--color-accent-blue);
+  --gradient-quaternary-mid: var(--color-accent-green);
+  --gradient-quaternary-end: var(--color-accent-cyan);
+  --gradient-quinary-start: var(--color-accent-purple);
+  --gradient-quinary-mid: var(--color-accent-pink);
+  --gradient-quinary-end: var(--color-accent-cyan);
+  
+  /* ================================================
+     GLASS EFFECT - Light Mode
+     ================================================ */
   --glass-bg: rgba(255, 255, 255, 0.90);
   --glass-border: rgba(0, 0, 0, 0.1);
   --glass-blur: 40px;
   --glass-blur-mobile: 20px;
   --overlay: rgba(255, 255, 255, 0.95);
+  --glass-overlay-light: rgba(255, 255, 255, 0.3);
+  --glass-overlay-medium: rgba(255, 255, 255, 0.2);
+  --glass-overlay-heavy: rgba(255, 255, 255, 0.1);
+  --glass-border-light: rgba(255, 255, 255, 0.4);
+  --glass-border-medium: rgba(255, 255, 255, 0.2);
+  --glass-shimmer: rgba(255, 255, 255, 0.1);
 }
 
 .dark {
-  /* Colors - Dark Mode */
+  /* ================================================
+     BASE COLORS - Dark Mode
+     ================================================ */
   --color-bg-primary: #000000;
   --color-bg-secondary: #0A0A0A;
   --color-bg-tertiary: #141414;
@@ -43,18 +141,102 @@
   --color-text-tertiary: #A0A0A0;
   --color-border: rgba(255, 255, 255, 0.15);
   
-  /* Luxury Accent Colors - Dark Mode */
-  --color-accent-blue: #60A5FA;
-  --color-accent-purple: #A78BFA;
-  --color-accent-cyan: #22D3EE;
-  --color-accent-gold: #FCD34D;
+  /* Hero text colors for instant CSS updates */
+  --hero-text-color: #FFFFFF;
+  --hero-text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
   
-  /* Glass Effect - Dark Mode */
+  /* ================================================
+     ACCENT COLORS - Dark Mode
+     ================================================ */
+  --color-accent-blue: #60A5FA;
+  --color-accent-blue-light: #93C5FD;
+  --color-accent-blue-dark: #3B82F6;
+  --color-accent-purple: #A78BFA;
+  --color-accent-purple-light: #C4B5FD;
+  --color-accent-purple-dark: #8B5CF6;
+  --color-accent-cyan: #22D3EE;
+  --color-accent-cyan-light: #67E8F9;
+  --color-accent-cyan-dark: #06B6D4;
+  --color-accent-gold: #FCD34D;
+  --color-accent-gold-light: #FDE68A;
+  --color-accent-gold-dark: #F59E0B;
+  
+  /* Additional accent colors */
+  --color-accent-green: #34D399;
+  --color-accent-green-light: #6EE7B7;
+  --color-accent-green-dark: #10B981;
+  --color-accent-pink: #F472B6;
+  --color-accent-pink-light: #F9A8D4;
+  --color-accent-pink-dark: #EC4899;
+  --color-accent-orange: #FB923C;
+  --color-accent-orange-light: #FDBA74;
+  --color-accent-orange-dark: #F97316;
+  --color-accent-red: #F87171;
+  --color-accent-red-light: #FCA5A5;
+  --color-accent-red-dark: #EF4444;
+  --color-accent-yellow: #FCD34D;
+  --color-accent-yellow-light: #FDE68A;
+  --color-accent-yellow-dark: #EAB308;
+  
+  /* ================================================
+     SEMANTIC COLORS - Dark Mode
+     ================================================ */
+  --color-success: var(--color-accent-green);
+  --color-error: var(--color-accent-red);
+  --color-warning: var(--color-accent-gold);
+  --color-info: var(--color-accent-cyan);
+  
+  /* ================================================
+     GRADIENT ORB COLORS - Dark Mode (with opacity)
+     ================================================ */
+  --color-orb-blue: rgba(96, 165, 250, 0.18);
+  --color-orb-purple: rgba(167, 139, 250, 0.18);
+  --color-orb-cyan: rgba(34, 211, 238, 0.15);
+  --color-orb-green: rgba(52, 211, 153, 0.1);
+  --color-orb-pink: rgba(244, 114, 182, 0.1);
+  --color-orb-orange: rgba(251, 146, 60, 0.1);
+  --color-orb-red: rgba(248, 113, 113, 0.1);
+  --color-orb-yellow: rgba(252, 211, 77, 0.1);
+  
+  /* ================================================
+     TEXT SHADOW COLORS - Dark Mode
+     ================================================ */
+  --text-shadow-light: 0 2px 30px rgba(0, 0, 0, 0.2);
+  --text-shadow-dark: 0 2px 30px rgba(255, 255, 255, 0.1);
+  
+  /* ================================================
+     GRADIENT PATTERNS - Dark Mode
+     ================================================ */
+  --gradient-primary-start: var(--color-accent-blue);
+  --gradient-primary-mid: var(--color-accent-purple);
+  --gradient-primary-end: var(--color-accent-cyan);
+  --gradient-secondary-start: var(--color-accent-green);
+  --gradient-secondary-mid: var(--color-accent-blue);
+  --gradient-secondary-end: var(--color-accent-cyan);
+  --gradient-tertiary-start: var(--color-accent-purple);
+  --gradient-tertiary-mid: var(--color-accent-cyan);
+  --gradient-tertiary-end: var(--color-accent-blue);
+  --gradient-quaternary-start: var(--color-accent-blue);
+  --gradient-quaternary-mid: var(--color-accent-green);
+  --gradient-quaternary-end: var(--color-accent-cyan);
+  --gradient-quinary-start: var(--color-accent-purple);
+  --gradient-quinary-mid: var(--color-accent-pink);
+  --gradient-quinary-end: var(--color-accent-cyan);
+  
+  /* ================================================
+     GLASS EFFECT - Dark Mode
+     ================================================ */
   --glass-bg: rgba(10, 10, 10, 0.70);
   --glass-border: rgba(255, 255, 255, 0.15);
   --glass-blur: 40px;
   --glass-blur-mobile: 20px;
   --overlay: rgba(0, 0, 0, 0.9);
+  --glass-overlay-light: rgba(255, 255, 255, 0.1);
+  --glass-overlay-medium: rgba(255, 255, 255, 0.05);
+  --glass-overlay-heavy: rgba(255, 255, 255, 0.02);
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+  --glass-border-medium: rgba(255, 255, 255, 0.1);
+  --glass-shimmer: rgba(255, 255, 255, 0.05);
 }
 
 /* ================================================
@@ -64,11 +246,65 @@
 .text-secondary { color: var(--color-text-secondary); }
 .text-tertiary { color: var(--color-text-tertiary); }
 
-.bg-primary { background: var(--color-bg-primary); }
+.bg-primary { 
+  background: var(--color-bg-primary);
+  transition: background-color 0.4s ease-in-out;
+}
 .bg-secondary { background: var(--color-bg-secondary); }
 .bg-tertiary { background: var(--color-bg-tertiary); }
 
 .border-primary { border-color: var(--color-border); }
+
+/* ================================================
+   ACCENT COLOR UTILITIES - Background
+   ================================================ */
+.bg-accent-blue { background-color: var(--color-accent-blue); }
+.bg-accent-purple { background-color: var(--color-accent-purple); }
+.bg-accent-cyan { background-color: var(--color-accent-cyan); }
+.bg-accent-green { background-color: var(--color-accent-green); }
+.bg-accent-pink { background-color: var(--color-accent-pink); }
+.bg-accent-orange { background-color: var(--color-accent-orange); }
+.bg-accent-red { background-color: var(--color-accent-red); }
+.bg-accent-yellow { background-color: var(--color-accent-yellow); }
+.bg-accent-gold { background-color: var(--color-accent-gold); }
+
+/* ================================================
+   ACCENT COLOR UTILITIES - Text
+   ================================================ */
+.text-accent-blue { color: var(--color-accent-blue); }
+.text-accent-purple { color: var(--color-accent-purple); }
+.text-accent-cyan { color: var(--color-accent-cyan); }
+.text-accent-green { color: var(--color-accent-green); }
+.text-accent-pink { color: var(--color-accent-pink); }
+.text-accent-orange { color: var(--color-accent-orange); }
+.text-accent-red { color: var(--color-accent-red); }
+.text-accent-yellow { color: var(--color-accent-yellow); }
+.text-accent-gold { color: var(--color-accent-gold); }
+
+/* ================================================
+   SEMANTIC COLOR UTILITIES
+   ================================================ */
+.bg-success { background-color: var(--color-success); }
+.bg-error { background-color: var(--color-error); }
+.bg-warning { background-color: var(--color-warning); }
+.bg-info { background-color: var(--color-info); }
+
+.text-success { color: var(--color-success); }
+.text-error { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+.text-info { color: var(--color-info); }
+
+/* ================================================
+   GRADIENT ORB UTILITIES
+   ================================================ */
+.bg-orb-blue { background-color: var(--color-orb-blue); }
+.bg-orb-purple { background-color: var(--color-orb-purple); }
+.bg-orb-cyan { background-color: var(--color-orb-cyan); }
+.bg-orb-green { background-color: var(--color-orb-green); }
+.bg-orb-pink { background-color: var(--color-orb-pink); }
+.bg-orb-orange { background-color: var(--color-orb-orange); }
+.bg-orb-red { background-color: var(--color-orb-red); }
+.bg-orb-yellow { background-color: var(--color-orb-yellow); }
 
 /* ================================================
    LUXURY GRADIENT BACKGROUNDS
@@ -161,9 +397,9 @@
 
 .text-gradient-gold {
   background: linear-gradient(135deg, 
-    #F59E0B 0%, 
-    #F97316 50%, 
-    #DC2626 100%
+    var(--color-accent-gold) 0%, 
+    var(--color-accent-orange) 50%, 
+    var(--color-accent-red-dark) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -172,9 +408,136 @@
 
 .text-gradient-silver {
   background: linear-gradient(135deg, 
-    #6B7280 0%, 
-    #9CA3AF 50%, 
-    #D1D5DB 100%
+    var(--color-text-tertiary) 0%, 
+    var(--color-text-secondary) 50%, 
+    var(--color-text-primary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Primary gradient text - Used consistently across home page */
+.text-gradient-primary {
+  background: linear-gradient(to right, 
+    var(--gradient-primary-start) 0%, 
+    var(--gradient-primary-mid) 50%, 
+    var(--gradient-primary-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Secondary gradient text - For variety pages */
+.text-gradient-secondary {
+  background: linear-gradient(to right, 
+    var(--gradient-secondary-start) 0%, 
+    var(--gradient-secondary-mid) 50%, 
+    var(--gradient-secondary-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Tertiary gradient text */
+.text-gradient-tertiary {
+  background: linear-gradient(to right, 
+    var(--gradient-tertiary-start) 0%, 
+    var(--gradient-tertiary-mid) 50%, 
+    var(--gradient-tertiary-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Quaternary gradient text */
+.text-gradient-quaternary {
+  background: linear-gradient(to right, 
+    var(--gradient-quaternary-start) 0%, 
+    var(--gradient-quaternary-mid) 50%, 
+    var(--gradient-quaternary-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Quinary gradient text */
+.text-gradient-quinary {
+  background: linear-gradient(to right, 
+    var(--gradient-quinary-start) 0%, 
+    var(--gradient-quinary-mid) 50%, 
+    var(--gradient-quinary-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Text shadow utility */
+.text-shadow-theme {
+  text-shadow: var(--text-shadow-light);
+}
+
+.dark .text-shadow-theme {
+  text-shadow: var(--text-shadow-dark);
+}
+
+/* Error gradient background */
+.bg-gradient-error {
+  background: linear-gradient(to bottom right, 
+    var(--color-orb-red), 
+    var(--color-orb-orange), 
+    var(--color-orb-yellow)
+  );
+}
+
+/* Primary gradient background for not-found */
+.bg-gradient-primary-orb {
+  background: linear-gradient(to bottom right, 
+    var(--color-orb-blue), 
+    var(--color-orb-purple), 
+    var(--color-orb-cyan)
+  );
+}
+
+/* Primary gradient background (solid colors) */
+.bg-gradient-primary {
+  background: linear-gradient(to right, 
+    var(--color-accent-blue) 0%, 
+    var(--color-accent-purple) 50%, 
+    var(--color-accent-cyan) 100%
+  );
+}
+
+/* Stats gradient text utilities */
+.text-gradient-stats-blue {
+  background: linear-gradient(to right, 
+    var(--gradient-stats-blue-start) 0%, 
+    var(--gradient-stats-blue-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-stats-yellow {
+  background: linear-gradient(to right, 
+    var(--gradient-stats-yellow-start) 0%, 
+    var(--gradient-stats-yellow-end) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-stats-green {
+  background: linear-gradient(to right, 
+    var(--gradient-stats-green-start) 0%, 
+    var(--gradient-stats-green-end) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -362,6 +725,18 @@ html {
   outline: 2px solid var(--color-accent-blue);
   outline-offset: 4px;
   border-radius: 4px;
+}
+
+/* Focus ring utility - Theme-aware */
+.focus-ring-primary {
+  --tw-ring-color: var(--color-accent-blue);
+}
+
+.focus-ring-primary:focus {
+  outline: none;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
 /* Reduced motion support */
@@ -651,6 +1026,16 @@ body:has([data-loader-active="true"]) {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Luxury Gold Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 

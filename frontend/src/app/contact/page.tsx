@@ -7,29 +7,31 @@ import { fadeInUp, staggerContainer } from "@/lib/motionVariants";
 import { Mail, Github, Linkedin, Code2, Send } from "lucide-react";
 import { useState } from "react";
 import { trackEvent } from "@/components/Analytics";
+import { useTheme } from "@/context/ThemeContext";
 
 const SOCIAL_LINKS = [
   {
     name: "GitHub",
     icon: <Github className="w-6 h-6" />,
     href: "https://github.com/EggadiRanjith",
-    color: "hover:text-gray-900 dark:hover:text-gray-100",
+    color: "hover:text-fg-primary",
   },
   {
     name: "LinkedIn",
     icon: <Linkedin className="w-6 h-6" />,
     href: "https://linkedin.com/in/ranjitheggadi",
-    color: "hover:text-blue-600 dark:hover:text-blue-400",
+    color: "hover:text-accent-blue",
   },
   {
     name: "LeetCode",
     icon: <Code2 className="w-6 h-6" />,
     href: "https://leetcode.com/ranjitheggadi",
-    color: "hover:text-orange-500 dark:hover:text-orange-400",
+    color: "hover:text-accent-orange",
   },
 ];
 
 export default function ContactPage() {
+  const { theme } = useTheme();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -95,39 +97,59 @@ export default function ContactPage() {
 
   return (
     <main role="main" className="min-h-screen bg-primary">
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-20 sm:py-24 md:py-32 overflow-hidden">
         {/* Background gradient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 -left-1/4 w-96 h-96 bg-pink-500/20 dark:bg-pink-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 -right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-orb-purple rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 -left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-orb-pink rounded-full blur-3xl" />
         </div>
 
         <Container size="lg" className="relative z-10">
           <AnimatedSection variant="stagger">
             {/* Header */}
-            <motion.div variants={fadeInUp} className="text-center mb-16">
-              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4">
+            <motion.div variants={fadeInUp} className="text-center mb-12 sm:mb-16 px-4">
+              <Text size="body-sm" color="primary" className="font-semibold uppercase tracking-wider mb-4 text-xs sm:text-sm">
                 Get In Touch
               </Text>
               <Heading
                 as="h1"
                 size="h1"
-                className="mb-6 dark:[text-shadow:0_2px_30px_rgba(255,255,255,0.1)]"
-                style={{ textShadow: "0 2px 30px rgba(0,0,0,0.2)" }}
+                className="mb-6 text-shadow-theme"
+                style={{
+                  fontSize: "clamp(1.5rem, 6vw, 3.5rem)",
+                  lineHeight: "1.15",
+                  paddingLeft: "clamp(0.5rem, 2vw, 1rem)",
+                  paddingRight: "clamp(0.5rem, 2vw, 1rem)",
+                }}
               >
-                Let's Build Something{" "}
-                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 dark:from-purple-400 dark:via-pink-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                  Amazing Together
+                <span
+                  style={{
+                    backgroundImage: theme === "dark"
+                      ? "linear-gradient(135deg, #60A5FA, #A78BFA, #22D3EE)"
+                      : "linear-gradient(135deg, #1E40AF, #5B21B6, #0C4A6E)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozBackgroundClip: "text",
+                    // @ts-ignore - Mozilla-specific properties
+                    MozTextFillColor: "transparent",
+                    boxDecorationBreak: "clone",
+                    WebkitBoxDecorationBreak: "clone",
+                    transition: "background-image 0.4s ease-in-out",
+                  }}
+                >
+                  Let's Build Something Amazing Together
                 </span>
               </Heading>
-              <Text size="body-lg" color="secondary" className="max-w-2xl mx-auto">
+              <Text size="body-lg" color="secondary" className="max-w-2xl mx-auto px-2 text-sm sm:text-base md:text-lg">
                 Have a project in mind? Want to collaborate? I&apos;m always open to discussing new opportunities.
               </Text>
             </motion.div>
 
-            <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-start px-2">
               {/* Contact Info */}
-              <motion.div variants={staggerContainer} className="space-y-8">
+              <motion.div variants={staggerContainer} className="space-y-6 sm:space-y-8">
                 <motion.div variants={fadeInUp}>
                   <div className="flex items-center gap-4 mb-4">
                     <div className="p-3 rounded-xl glass-base border border-border-primary/50">
@@ -147,10 +169,10 @@ export default function ContactPage() {
                 </motion.div>
 
                 <motion.div variants={fadeInUp}>
-                  <Heading as="h3" size="h4" className="mb-6">
+                  <Heading as="h3" size="h4" className="mb-4 sm:mb-6">
                     Connect With Me
                   </Heading>
-                  <div className="flex gap-4">
+                  <div className="flex gap-3 sm:gap-4">
                     {SOCIAL_LINKS.map((social, index) => (
                       <motion.a
                         key={social.name}
@@ -159,12 +181,12 @@ export default function ContactPage() {
                         rel="noopener noreferrer"
                         variants={fadeInUp}
                         custom={index}
-                        className={`p-4 rounded-xl glass-base border border-border-primary/50 text-fg-secondary transition-all ${social.color}`}
+                        className={`p-3 sm:p-4 rounded-xl glass-base border border-border-primary/50 text-fg-secondary transition-all ${social.color} touch-manipulation`}
                         whileHover={{ y: -4, scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         aria-label={social.name}
                       >
-                        {social.icon}
+                        <div className="w-5 h-5 sm:w-6 sm:h-6">{social.icon}</div>
                       </motion.a>
                     ))}
                   </div>
@@ -182,8 +204,8 @@ export default function ContactPage() {
 
               {/* Contact Form with FrostedCard */}
               <motion.div variants={fadeInUp}>
-                <FrostedCard intensity="heavy" glow shimmer className="p-8">
-                  <form onSubmit={handleSubmit} className="space-y-2">
+                <FrostedCard intensity="heavy" glow shimmer className="p-6 sm:p-8">
+                  <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
                     <FormField
                       label="Name"
                       value={formData.name}
@@ -224,13 +246,13 @@ export default function ContactPage() {
                     <motion.div
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="pt-2"
+                      className="pt-3 sm:pt-4"
                     >
                       <Button
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
-                        className="w-full group"
+                        className="w-full group touch-manipulation text-base sm:text-lg"
                       >
                         {isSubmitting ? (
                           "Sending..."

@@ -13,7 +13,7 @@ export const Error = React.forwardRef<HTMLDivElement, ErrorProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center gap-2 text-red-400",
+          "flex items-center gap-2 text-error",
           size === "sm" ? "text-body-sm" : "text-body",
           className
         )}

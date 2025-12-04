@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useTheme } from '@/hooks/use-theme';
+import { useTheme } from '@/context/ThemeContext';
 import React from 'react';
 
 interface RainbowShimmerProps {

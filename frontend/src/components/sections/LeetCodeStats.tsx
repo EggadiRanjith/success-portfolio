@@ -99,7 +99,7 @@ export function LeetCodeStats({ username, profileUrl, stats }: LeetCodeStatsProp
 
       {/* Hover shine effect */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+        <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-fg-primary/5 to-transparent" />
       </div>
     </motion.div>
   );

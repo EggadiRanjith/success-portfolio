@@ -1,20 +1,15 @@
-import { HeroSection } from "@/components/sections/HeroSection";
-import { FeaturedProjectsSection } from "@/components/sections/FeaturedProjectsSection";
-import { AboutPreviewSection } from "@/components/sections/AboutPreviewSection";
-import { TechStackSection } from "@/components/sections/TechStackSection";
+"use client";
 
-export const metadata = {
-  title: "Home",
-  description: "Premium frontend portfolio with glassmorphism, animation, and 3D.",
-};
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-  return (
-    <main role="main" className="min-h-screen bg-primary" aria-label="Main content">
-      <HeroSection />
-      <FeaturedProjectsSection />
-      <AboutPreviewSection />
-      <TechStackSection />
-    </main>
-  );
+export default function RootPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Always redirect to home page when user enters
+    router.push("/home");
+  }, [router]);
+
+  return null;
 }

@@ -64,7 +64,7 @@ export function FormField({
         className={labelClasses}
       >
         {label}
-        {required && <span className="text-red-500 dark:text-red-400 ml-1">*</span>}
+        {required && <span className="text-error ml-1">*</span>}
       </label>
 
       {type === 'textarea' ? (
@@ -106,7 +106,7 @@ export function FormField({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
+            <p className="text-error text-sm mt-2 flex items-center gap-1">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -131,7 +131,7 @@ export function FormField({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <p className="text-green-500 text-sm mt-2 flex items-center gap-1">
+            <p className="text-success text-sm mt-2 flex items-center gap-1">
               <svg
                 className="w-4 h-4"
                 fill="none"

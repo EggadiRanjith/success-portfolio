@@ -53,8 +53,8 @@ export function EducationForm({ data, onChange }: EducationFormProps) {
                 Education #{index + 1}
               </Text>
               {data.length > 1 && (
-                <Button variant="ghost" size="sm" onClick={() => removeEducation(index)} className="hover:bg-red-500/10">
-                  <Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" />
+                <Button variant="ghost" size="sm" onClick={() => removeEducation(index)} className="hover:bg-orb-red">
+                  <Trash2 className="w-4 h-4 text-error" />
                 </Button>
               )}
             </div>

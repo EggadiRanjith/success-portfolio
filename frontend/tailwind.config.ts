@@ -18,8 +18,6 @@ const config: Config = {
   			'medium-gray': '#A0A0A0',
   			charcoal: '#2A2A2A',
   			'deep-black': '#0A0A0A',
-  			'void-black': '#000000',
-  			'deep-space': '#0A0A0A',
   			'dark-charcoal': '#141414',
   			'rich-slate': '#1F1F1F',
   			'silver-gray': '#8B8B8B',
@@ -37,6 +35,30 @@ const config: Config = {
   			overlay: 'var(--overlay)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+  			/* Accent Colors */
+  			'accent-blue': 'var(--color-accent-blue)',
+  			'accent-purple': 'var(--color-accent-purple)',
+  			'accent-cyan': 'var(--color-accent-cyan)',
+  			'accent-green': 'var(--color-accent-green)',
+  			'accent-pink': 'var(--color-accent-pink)',
+  			'accent-orange': 'var(--color-accent-orange)',
+  			'accent-red': 'var(--color-accent-red)',
+  			'accent-yellow': 'var(--color-accent-yellow)',
+  			'accent-gold': 'var(--color-accent-gold)',
+  			/* Semantic Colors */
+  			success: 'var(--color-success)',
+  			error: 'var(--color-error)',
+  			warning: 'var(--color-warning)',
+  			info: 'var(--color-info)',
+  			/* Orb Colors */
+  			'orb-blue': 'var(--color-orb-blue)',
+  			'orb-purple': 'var(--color-orb-purple)',
+  			'orb-cyan': 'var(--color-orb-cyan)',
+  			'orb-green': 'var(--color-orb-green)',
+  			'orb-pink': 'var(--color-orb-pink)',
+  			'orb-orange': 'var(--color-orb-orange)',
+  			'orb-red': 'var(--color-orb-red)',
+  			'orb-yellow': 'var(--color-orb-yellow)',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -68,6 +90,7 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+  			'accent-blue': 'var(--color-accent-blue)',
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
